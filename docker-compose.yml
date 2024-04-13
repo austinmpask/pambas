@@ -1,15 +1,49 @@
 version: "3"
 
 services:
+  db:
+    image: postgres:alpine
+    networks:
+      - flask-net
+    volumes:
+      - pg-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=taskr_user
+      - POSTGRES_DB=taskr_db
   api:
     build: ./api
     ports:
       - 8080:5000
     volumes:
       - ./api:/app
+    networks:
+      - flask-net
+    environment:
+      - DATABASE_URL=postgresql://taskr_user:password@db/taskr_db
+      - SECRET_KEY=DOzgtjXN/rbYd4iYK6/XhNcCVBPavZpu/0PFDrwpmBPCrbBinEzdGxuj1qwDmpZ4
+    command:
+      [
+        "./wait-for",
+        "db:5432",
+        "--",
+        "python",
+        "-m",
+        "flask",
+        "run",
+        "--host=0.0.0.0",
+      ]
 
-  # db:
+    depends_on:
+      - db
 
   # react:
 
   # auth:
+
+volumes:
+  pg-db:
+
+networks:
+  flask-net:
+    driver: bridge

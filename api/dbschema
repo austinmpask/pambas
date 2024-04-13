@@ -1,0 +1,65 @@
+Table domains {
+  id integer [primary key]
+  domain_name varchar
+}
+
+Table users {
+  id integer [primary key]
+  username varchar
+  role varchar
+  created_at timestamp
+
+  domain_id integer
+}
+
+Ref: users.domain_id > domains.id
+
+Table project_types {
+  id integer [primary key]
+  project_type varchar
+}
+
+Table user_projects {
+  id integer [primary key]
+  user_project_name varchar
+  user_project_issuance timestamp
+  user_project_budget integer
+  user_project_billed integer
+  created_at timestamp
+
+  project_type_id integer
+  user_id integer
+}
+
+Ref: user_projects.project_type_id > project_types.id
+Ref: user_projects.user_id > users.id
+
+
+Table section_types {
+  id integer [primary key]
+  section_type varchar
+}
+
+Table project_section {
+  id integer [primary key]
+  section_number integer
+  custom_section_type varchar
+  created_at timestamp
+
+  section_type_id integer
+  user_project_id integer
+}
+
+Ref: project_section.section_type_id > section_types.id
+Ref: project_section.user_project_id > user_projects.id
+
+Table line_item {
+  id integer [primary key]
+  flag bool
+  item varchar
+  created_at timestamp
+
+  project_section_id integer
+}
+
+Ref: line_item.project_section_id > project_section.id

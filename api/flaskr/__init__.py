@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from .config import Configuration
 from .models import db, Domain
 
@@ -9,6 +10,7 @@ app.config.from_object(Configuration)
 
 # Init DB
 db.init_app(app)
+Migrate(app, db)
 
 
 @app.route("/")

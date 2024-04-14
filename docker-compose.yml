@@ -22,17 +22,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://taskr_user:password@db/taskr_db
       - SECRET_KEY=DOzgtjXN/rbYd4iYK6/XhNcCVBPavZpu/0PFDrwpmBPCrbBinEzdGxuj1qwDmpZ4
-    command:
-      [
-        "./wait-for",
-        "db:5432",
-        "--",
-        "python",
-        "-m",
-        "flask",
-        "run",
-        "--host=0.0.0.0",
-      ]
+    command: ["./wait-for", "db:5432", "--", "./start-script"]
 
     depends_on:
       - db

@@ -1,4 +1,3 @@
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import String, Integer, DateTime, Date, Boolean
 from sqlalchemy.orm import relationship
@@ -6,7 +5,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 
 db = SQLAlchemy()
-Base = declarative_base()
 
 genStringLen = 60
 hashLen = 60
@@ -14,7 +12,7 @@ emailLen = 100
 usernameLen = 20
 
 
-class Domain(Base):
+class Domain(db.Model):
     __tablename__ = "domains"
     id = Column(Integer, primary_key=True)
     domain_name = Column(String(genStringLen))
@@ -23,7 +21,7 @@ class Domain(Base):
     users = relationship("User", back_populates="domain")
 
 
-class User(Base):
+class User(db.Model):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
     user_name = Column(String(usernameLen))
@@ -37,13 +35,13 @@ class User(Base):
     projects = relationship("UserProject", back_populates="user")
 
 
-class ProjectType(Base):
+class ProjectType(db.Model):
     __tablename__ = "project_types"
     id = Column(Integer, primary_key=True)
     project_type = Column(String(genStringLen))
 
 
-class UserProject(Base):
+class UserProject(db.Model):
     __tablename__ = "user_projects"
     id = Column(Integer, primary_key=True)
     user_project_name = Column(String(genStringLen))
@@ -60,14 +58,14 @@ class UserProject(Base):
     sections = relationship("ProjectSection", back_populates="user_project")
 
 
-class SectionType(Base):
+class SectionType(db.Model):
     __tablename__ = "section_types"
     id = Column(Integer, primary_key=True)
     section_type = Column(String(genStringLen))
     default_section_number = Column(Integer)
 
 
-class ProjectSection(Base):
+class ProjectSection(db.Model):
     __tablename__ = "project_sections"
     id = Column(Integer, primary_key=True)
     section_number = Column(Integer)
@@ -83,7 +81,7 @@ class ProjectSection(Base):
     line_items = relationship("LineItem", back_populates="project_section")
 
 
-class LineItem(Base):
+class LineItem(db.Model):
     __tablename__ = "line_items"
     id = Column(Integer, primary_key=True)
     flag = Column(Boolean)

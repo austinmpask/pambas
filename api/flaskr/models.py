@@ -1,5 +1,6 @@
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import String, Integer, DateTime, Date, Boolean
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 
@@ -16,9 +17,12 @@ class Domain(db.Model):
     __tablename__ = "domains"
     id = Column(Integer, primary_key=True)
     domain_name = Column(String(genStringLen))
-    created_at = Column(DateTime)
+    created_at = Column(DateTime, server_default=func.now())
 
     users = relationship("User", back_populates="domain")
+
+    def toDict(self):
+        return {self.domain_name: {"created_at": self.created_at}}
 
 
 class User(db.Model):
@@ -27,7 +31,7 @@ class User(db.Model):
     user_name = Column(String(usernameLen))
     email = Column(String(emailLen))
     password_hash = Column(String(hashLen))
-    created_at = Column(DateTime)
+    created_at = Column(DateTime, server_default=func.now())
 
     domain_id = Column(Integer, ForeignKey("domains.id"))
     domain = relationship("Domain", back_populates="users")

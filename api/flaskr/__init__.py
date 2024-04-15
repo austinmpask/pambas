@@ -5,9 +5,8 @@ from .config import Configuration
 from .models import db, Domain
 from .blueprints.test import test_bp
 
-# Config flask
 
-
+# App factory
 def createApp():
     app = Flask(__name__)
     app.config.from_object(Configuration)

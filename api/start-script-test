@@ -1,0 +1,7 @@
+#!/bin/sh
+
+flask db upgrade
+# python seed-data.py
+# flask run --host=0.0.0.0
+
+pytest

@@ -29,6 +29,21 @@ services:
     depends_on:
       - db
 
+  test-api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.test
+    volumes:
+      - ./api:/app
+    networks:
+      - flask-net
+    command: ["./wait-for", "db:5432", "--", "./start-script-test"]
+    environment:
+      - DATABASE_URL=postgresql://taskr_user:password@db/taskr_db
+      - SECRET_KEY=DOzgtjXN/rbYd4iYK6/XhNcCVBPavZpu/0PFDrwpmBPCrbBinEzdGxuj1qwDmpZ4
+    depends_on:
+      - db
+
   # react:
 
   # auth:

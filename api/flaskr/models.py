@@ -73,7 +73,7 @@ class SectionType(db.Model):
 class ProjectSection(db.Model):
     __tablename__ = "project_sections"
     id = Column(Integer, primary_key=True)
-    section_number = Column(Integer, nullable=False)
+    section_number = Column(Integer, nullable=False)  # FIX, this should be nullable
     custom_section_type = Column(String(genStringLen))
 
     created_at = Column(DateTime, default=datetime.now())
@@ -90,7 +90,9 @@ class LineItem(db.Model):
     __tablename__ = "line_items"
     id = Column(Integer, primary_key=True)
     flag = Column(Boolean, nullable=False, default=False)
-    item = Column(String(genStringLen), nullable=False, default="")  # to be updated
+    item = Column(
+        String(genStringLen), nullable=False, default=""
+    )  # FIX, to be updated
     created_at = Column(DateTime, default=datetime.now())
 
     project_section_id = Column(

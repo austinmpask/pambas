@@ -87,7 +87,7 @@ def sample_project_section(app, sample_section_type, sample_user_project):
 
         """Provide valid data for making a project section"""
         return {
-            "section_number": 1,  # FIX, this sould be nullable
+            "custom_section_number": None,
             "custom_section_type": None,
             "created_at": datetime.now(),
             "section_type_id": sectionType.id,
@@ -127,6 +127,18 @@ def test_timestamp_domain(app):
         assert domain.created_at is not None
 
 
+def test_unique_domain_name(app):
+    """Domain name must be unique"""
+    name = "test"
+    domain1 = Domain(domain_name=name)
+    domain2 = Domain(domain_name=name)
+
+    with app.app_context():
+        db.session.add_all([domain1, domain2])
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+
+
 def test_non_nullable_domain_name(app):
     """Domain name should be non nullable"""
     domain = Domain()
@@ -157,6 +169,32 @@ def test_timestamp_user(app, sample_user):
         db.session.add(user)
         db.session.commit()
         assert user.created_at is not None
+
+
+def test_unique_user_name(app, sample_user):
+    """User name must be unique"""
+    sample_user["email"] = "email1@gmail.com"
+    user1 = User(**sample_user)
+    sample_user["email"] = "email2@gmail.com"
+    user2 = User(**sample_user)
+
+    with app.app_context():
+        db.session.add_all([user1, user2])
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+
+
+def test_unique_email(app, sample_user):
+    """User email must be unique"""
+    sample_user["user_name"] = "user1"
+    user1 = User(**sample_user)
+    sample_user["user_name"] = "user2"
+    user2 = User(**sample_user)
+
+    with app.app_context():
+        db.session.add_all([user1, user2])
+        with pytest.raises(IntegrityError):
+            db.session.commit()
 
 
 def test_non_nullable_user_name(app, sample_user):
@@ -225,6 +263,16 @@ def test_length_password_hash(app, sample_user):
 ################################
 
 
+def test_unique_project_type(app, sample_project_type):
+    """Project type must be unique"""
+    proj1 = ProjectType(**sample_project_type)
+    proj2 = ProjectType(**sample_project_type)
+    with app.app_context():
+        db.session.add_all([proj1, proj2])
+        with pytest.raises(IntegrityError):
+            db.session.commit()
+
+
 def test_non_nullable_project_type(app, sample_project_type):
     """Project type should be non nullable"""
     del sample_project_type["project_type"]
@@ -252,7 +300,6 @@ def test_max_length_project_type(app, sample_project_type):
 
 def test_timestamp_user_project(app, sample_user_project):
     """User project records should automatically include a timestamp"""
-
     proj = UserProject(**sample_user_project)
     with app.app_context():
         db.session.add(proj)
@@ -278,26 +325,6 @@ def test_non_nullable_user_project_issuance(app, sample_user_project):
         db.session.add(proj)
         with pytest.raises(IntegrityError):
             db.session.commit()
-
-
-# def test_non_nullable_user_project_budget(app, sample_user_project):
-#     """User project budget should be non nullable"""
-#     del sample_user_project["user_project_budget"]
-#     proj = UserProject(**sample_user_project)
-#     with app.app_context():
-#         db.session.add(proj)
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()
-
-
-# def test_non_nullable_user_project_billed(app, sample_user_project):
-#     """User project billed amount should be non nullable"""
-#     del sample_user_project["user_project_billed"]
-#     proj = UserProject(**sample_user_project)
-#     with app.app_context():
-#         db.session.add(proj)
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()
 
 
 def test_non_nullable_user_project_type_id(app, sample_user_project):
@@ -399,34 +426,96 @@ def test_timestamp_project_section(app, sample_project_section):
         assert section.created_at is not None
 
 
-# FIX, this should be nullable later
-def test_non_nullable_project_section_number(app, sample_project_section):
-    """Project section number should be non nullable"""
-    del sample_project_section["section_number"]
+def test_builtin_section_type_overrides_custom(app, sample_project_section):
+    """If a project is built using a section_type_id foreign key,
+    the custom_section_type and custom_section_number will always be Null"""
+
+    """Sample project section includes a valid foreign key reference, and custom fields set to None"""
+    section1 = ProjectSection(**sample_project_section)
+
+    """Populate sample custom data to be supplied along with valid foreign key"""
+    sample_project_section["custom_section_number"] = 32
+    sample_project_section["custom_section_type"] = "custom"
+
+    section2 = ProjectSection(**sample_project_section)
+
+    with app.app_context():
+        db.session.add_all([section1, section2])
+        db.session.commit()
+        assert (
+            section1.custom_section_number is None
+            and section1.custom_section_type is None
+            and section2.custom_section_number is None
+            and section2.custom_section_type is None
+        )
+
+
+def test_no_builtin_section_type_or_custom_type_raise(app, sample_project_section):
+    """If a project's section_type_id foreign key is null,
+    and custom_section_type and custom_section_number are not populated,
+    an error is raised"""
+
+    sample_project_section["section_type_id"] = None
+
     section = ProjectSection(**sample_project_section)
+
     with app.app_context():
         db.session.add(section)
-        with pytest.raises(IntegrityError):
+        with pytest.raises():
             db.session.commit()
 
 
-def test_nullable_project_section_custom_type(app, sample_project_section):
-    """Project section custom type should be nullable"""
+def test_valid_custom_type(app, sample_project_section):
+    """If a project's section_type_id foreign key is null,
+    and custom_section_type and custom_section_number are populated,
+    custom section is assigned"""
+
+    custom = "customtype"
+
+    sample_project_section["section_type_id"] = None
+    sample_project_section["custom_section_number"] = 32
+    sample_project_section["custom_section_type"] = custom
+
     section = ProjectSection(**sample_project_section)
+
     with app.app_context():
         db.session.add(section)
         db.session.commit()
-        assert section.custom_section_type is None
+        assert (
+            section.custom_section_number == 32
+            and section.custom_section_type == custom
+            and section.section_type_id is None
+        )
 
 
-def test_non_nullable_project_section_type_id(app, sample_project_section):
-    """Project section type id should be non nullable"""
-    del sample_project_section["section_type_id"]
-    section = ProjectSection(**sample_project_section)
-    with app.app_context():
-        db.session.add(section)
-        with pytest.raises(IntegrityError):
-            db.session.commit()
+# FIX, this should be nullable later
+# def test_non_nullable_project_section_number(app, sample_project_section):
+#     """Project section number should be non nullable"""
+#     del sample_project_section["section_number"]
+#     section = ProjectSection(**sample_project_section)
+#     with app.app_context():
+#         db.session.add(section)
+#         with pytest.raises(IntegrityError):
+#             db.session.commit()
+
+
+# def test_nullable_project_section_custom_type(app, sample_project_section):
+#     """Project section custom type should be nullable"""
+#     section = ProjectSection(**sample_project_section)
+#     with app.app_context():
+#         db.session.add(section)
+#         db.session.commit()
+#         assert section.custom_section_type is None
+
+
+# def test_non_nullable_project_section_type_id(app, sample_project_section):
+#     """Project section type id should be non nullable"""
+#     del sample_project_section["section_type_id"]
+#     section = ProjectSection(**sample_project_section)
+#     with app.app_context():
+#         db.session.add(section)
+#         with pytest.raises(IntegrityError):
+#             db.session.commit()
 
 
 def test_non_nullable_project_section_user_project_id(app, sample_project_section):

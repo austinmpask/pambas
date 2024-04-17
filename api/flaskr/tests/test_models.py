@@ -14,21 +14,6 @@ from sqlalchemy.exc import IntegrityError, DataError
 from datetime import datetime
 
 
-@pytest.mark.parametrize(
-    "invalid_email",
-    [
-        "invalid",
-        "",
-        "email@gmailcom",
-        "@gmail.com",
-        "gmail.com",
-        "@.",
-        "skdjfhskdjhfsjkdhfksjfhsdjkhfdskjfhsdjfhsjfdhk",
-        "email@gmail.123",
-        ".@",
-        "joe@mail.c",
-    ],
-)
 @pytest.fixture(scope="function")
 def app():
     """Fixture to create a clean app context for each test.
@@ -196,6 +181,21 @@ def test_timestamp_user(app, sample_user):
         assert user.created_at is not None
 
 
+@pytest.mark.parametrize(
+    "invalid_email",
+    [
+        "invalid",
+        "",
+        "email@gmailcom",
+        "@gmail.com",
+        "gmail.com",
+        "@.",
+        "skdjfhskdjhfsjkdhfksjfhsdjkhfdskjfhsdjfhsjfdhk",
+        "email@gmail.123",
+        ".@",
+        "joe@mail.c",
+    ],
+)
 def test_valid_email(app, sample_user, invalid_email):
     """Emails recorded must be valid"""
     sample_user["email"] = invalid_email

@@ -14,6 +14,21 @@ from sqlalchemy.exc import IntegrityError, DataError
 from datetime import datetime
 
 
+@pytest.mark.parametrize(
+    "invalid_email",
+    [
+        "invalid",
+        "",
+        "email@gmailcom",
+        "@gmail.com",
+        "gmail.com",
+        "@.",
+        "skdjfhskdjhfsjkdhfksjfhsdjkhfdskjfhsdjfhsjfdhk",
+        "email@gmail.123",
+        ".@",
+        "joe@mail.c",
+    ],
+)
 @pytest.fixture(scope="function")
 def app():
     """Fixture to create a clean app context for each test.
@@ -177,8 +192,20 @@ def test_timestamp_user(app, sample_user):
     user = User(**sample_user)
     with app.app_context():
         db.session.add(user)
-        db.session.flush()
+        db.session.commit()
         assert user.created_at is not None
+
+
+def test_valid_email(app, sample_user, invalid_email):
+    """Emails recorded must be valid"""
+    sample_user["email"] = invalid_email
+
+    user = User(**sample_user)
+
+    with app.app_context():
+        db.session.add(user)
+        with pytest.raises():
+            db.session.commit()
 
 
 def test_unique_user_name(app, sample_user):
@@ -249,7 +276,7 @@ def test_max_length_user_name(app, sample_user):
 
 def test_max_length_email(app, sample_user):
     """Email should adhere to a maximum length of 100 characters"""
-    sample_user["email"] = "a" * 101
+    sample_user["email"] = "a" * 100 + "@gmail.com"
     user = User(**sample_user)
     with app.app_context():
         db.session.add(user)

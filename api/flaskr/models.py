@@ -1,9 +1,10 @@
 from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import String, Integer, DateTime, Date, Boolean
 from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, validates
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import re
 
 
 db = SQLAlchemy()
@@ -39,6 +40,45 @@ class User(db.Model):
 
     projects = relationship("UserProject", back_populates="user")
 
+    @validates("email")
+    def validate_email(self, key, value):
+
+        # Specify an error message
+        e = "Invalid email!"
+
+        # Basic elimination
+        if "@" not in value or "." not in value:
+            raise ValueError(e)
+
+        # Regex to define valid characters for email substrings
+        localValids = r"[!#$%&\'*+\-./=?^_`{|}~a-zA-Z0-9.]+"
+        domainValids = r"^[a-zA-Z0-9-]+$"
+        tldValids = r"^[a-zA-Z0-9]{2,}$"
+
+        # Incorrect formatted email check
+        atIndex = value.rfind("@")
+        dotIndex = value.rfind(".")
+
+        if atIndex > dotIndex:
+            raise ValueError(e)
+
+        # Make substrings
+        local = value[:atIndex]
+        domain = value[atIndex + 1 : dotIndex]
+        tld = value[dotIndex + 1 :]
+
+        # Test substrings against respective patterns
+        lmatch = re.fullmatch(localValids, local)
+        dmatch = re.fullmatch(domainValids, domain)
+        tmatch = re.fullmatch(tldValids, tld)
+
+        # If any failed, raise error
+        if not (lmatch and dmatch and tmatch):
+            raise ValueError(e)
+
+        # Valid email
+        return value
+
 
 class ProjectType(db.Model):
     __tablename__ = "project_types"
@@ -73,14 +113,12 @@ class SectionType(db.Model):
 class ProjectSection(db.Model):
     __tablename__ = "project_sections"
     id = Column(Integer, primary_key=True)
-    custom_section_number = Column(
-        Integer, nullable=False
-    )  # FIX, this should be nullable
+    custom_section_number = Column(Integer)
     custom_section_type = Column(String(genStringLen))
 
     created_at = Column(DateTime, default=datetime.now())
 
-    section_type_id = Column(Integer, ForeignKey("section_types.id"), nullable=False)
+    section_type_id = Column(Integer, ForeignKey("section_types.id"))
 
     user_project_id = Column(Integer, ForeignKey("user_projects.id"), nullable=False)
     user_project = relationship("UserProject", back_populates="sections")

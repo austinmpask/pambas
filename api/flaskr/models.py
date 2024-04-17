@@ -17,7 +17,7 @@ usernameLen = 20
 class Domain(db.Model):
     __tablename__ = "domains"
     id = Column(Integer, primary_key=True)
-    domain_name = Column(String(genStringLen), nullable=False)
+    domain_name = Column(String(genStringLen), nullable=False, unique=True)
     created_at = Column(DateTime, default=datetime.now())
 
     users = relationship("User", back_populates="domain")
@@ -29,8 +29,8 @@ class Domain(db.Model):
 class User(db.Model):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
-    user_name = Column(String(usernameLen), nullable=False)
-    email = Column(String(emailLen), nullable=False)
+    user_name = Column(String(usernameLen), nullable=False, unique=True)
+    email = Column(String(emailLen), nullable=False, unique=True)
     password_hash = Column(String(hashLen), nullable=False)
     created_at = Column(DateTime, default=datetime.now())
 
@@ -43,7 +43,7 @@ class User(db.Model):
 class ProjectType(db.Model):
     __tablename__ = "project_types"
     id = Column(Integer, primary_key=True)
-    project_type = Column(String(genStringLen), nullable=False)
+    project_type = Column(String(genStringLen), nullable=False, unique=True)
 
 
 class UserProject(db.Model):
@@ -73,7 +73,9 @@ class SectionType(db.Model):
 class ProjectSection(db.Model):
     __tablename__ = "project_sections"
     id = Column(Integer, primary_key=True)
-    section_number = Column(Integer, nullable=False)  # FIX, this should be nullable
+    custom_section_number = Column(
+        Integer, nullable=False
+    )  # FIX, this should be nullable
     custom_section_type = Column(String(genStringLen))
 
     created_at = Column(DateTime, default=datetime.now())

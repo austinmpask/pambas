@@ -21,8 +21,11 @@ def app():
     app = createApp(testing=True)
 
     with app.app_context():
+        db.create_all()
         yield app
+
         db.session.rollback()
+        db.drop_all()
 
 
 @pytest.fixture(scope="function")
@@ -30,17 +33,18 @@ def sample_user(app):
     """Create and commit valid domain"""
     domain = Domain(domain_name="Example domain")
 
-    with app.app_context():
-        db.session.add(domain)
-        db.session.commit()
+    db.session.add(domain)
+    db.session.commit()
 
-        """Provide dictionary with valid user data"""
-        return {
-            "user_name": "username",
-            "email": "email@website.com",
-            "password_hash": "xxxxxxxxxxxx",
-            "domain_id": domain.id,
-        }
+    """Provide dictionary with valid user data"""
+    yield {
+        "user_name": "username",
+        "email": "email@website.com",
+        "password_hash": "xxxxxxxxxxxx",
+        "domain_id": domain.id,
+    }
+
+    db.session.rollback()
 
 
 @pytest.fixture(scope="function")
@@ -65,7 +69,7 @@ def sample_user_project(app, sample_user, sample_project_type):
         db.session.commit()
 
         """Provide valid data for making a user project"""
-        return {
+        yield {
             "user_project_name": "Valid name",
             "user_project_issuance": datetime.now(),
             "user_project_budget": 60,
@@ -73,6 +77,8 @@ def sample_user_project(app, sample_user, sample_project_type):
             "project_type_id": projectType.id,
             "user_id": user.id,
         }
+
+        db.session.rollback()
 
 
 @pytest.fixture(scope="function")
@@ -86,13 +92,15 @@ def sample_project_section(app, sample_section_type, sample_user_project):
         db.session.commit()
 
         """Provide valid data for making a project section"""
-        return {
+        yield {
             "custom_section_number": None,
             "custom_section_type": None,
             "created_at": datetime.now(),
             "section_type_id": sectionType.id,
             "user_project_id": project.id,
         }
+
+        db.session.rollback()
 
 
 @pytest.fixture(scope="function")
@@ -105,12 +113,14 @@ def sample_line_item(app, sample_project_section):
         db.session.commit()
 
         """Provide valid data for making a line item"""
-        return {
+        yield {
             "flag": None,
             "item": "word",
             "created_at": datetime.now(),
             "project_section_id": section.id,
         }
+
+        db.session.rollback()
 
 
 ################################
@@ -167,7 +177,7 @@ def test_timestamp_user(app, sample_user):
     user = User(**sample_user)
     with app.app_context():
         db.session.add(user)
-        db.session.commit()
+        db.session.flush()
         assert user.created_at is not None
 
 

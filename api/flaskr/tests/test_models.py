@@ -516,36 +516,6 @@ def test_valid_custom_type(app, sample_project_section):
         )
 
 
-# FIX, this should be nullable later
-# def test_non_nullable_project_section_number(app, sample_project_section):
-#     """Project section number should be non nullable"""
-#     del sample_project_section["section_number"]
-#     section = ProjectSection(**sample_project_section)
-#     with app.app_context():
-#         db.session.add(section)
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()
-
-
-# def test_nullable_project_section_custom_type(app, sample_project_section):
-#     """Project section custom type should be nullable"""
-#     section = ProjectSection(**sample_project_section)
-#     with app.app_context():
-#         db.session.add(section)
-#         db.session.commit()
-#         assert section.custom_section_type is None
-
-
-# def test_non_nullable_project_section_type_id(app, sample_project_section):
-#     """Project section type id should be non nullable"""
-#     del sample_project_section["section_type_id"]
-#     section = ProjectSection(**sample_project_section)
-#     with app.app_context():
-#         db.session.add(section)
-#         with pytest.raises(IntegrityError):
-#             db.session.commit()
-
-
 def test_non_nullable_project_section_user_project_id(app, sample_project_section):
     """Project section user id should be non nullable"""
     del sample_project_section["user_project_id"]

@@ -40,6 +40,7 @@ class User(db.Model):
 
     projects = relationship("UserProject", back_populates="user")
 
+    # Resuire a valid email address
     @validates("email")
     def validate_email(self, key, value):
 
@@ -113,8 +114,8 @@ class SectionType(db.Model):
 class ProjectSection(db.Model):
     __tablename__ = "project_sections"
     id = Column(Integer, primary_key=True)
-    custom_section_number = Column(Integer)
-    custom_section_type = Column(String(genStringLen))
+    custom_section_number = Column(Integer, default=None)
+    custom_section_type = Column(String(genStringLen), default=None)
 
     created_at = Column(DateTime, default=datetime.now())
 
@@ -124,6 +125,26 @@ class ProjectSection(db.Model):
     user_project = relationship("UserProject", back_populates="sections")
 
     line_items = relationship("LineItem", back_populates="project_section")
+
+    """Require a section type id foreign key specified OR custom section data specified.
+    If foreign key specified, custom section details nullified"""
+
+    @validates("section_type_id")
+    def validate_user_project_id(self, key, value):
+
+        # Specify an error message
+        e = "A custom section number and type must be defined if a prebuilt option is not selected!"
+
+        # If a valid section type id is present, ensure that custom section number and custom section type are null
+        if value:
+            self.custom_section_number = None
+            self.custom_section_type = None
+            return value
+
+        # If there is not a section type id set, custom section number and type must be present
+        else:
+            if not (self.custom_section_number and self.custom_section_type):
+                raise ValueError(e)
 
 
 class LineItem(db.Model):

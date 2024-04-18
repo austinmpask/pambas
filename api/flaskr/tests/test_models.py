@@ -489,12 +489,8 @@ def test_no_builtin_section_type_or_custom_type_raise(app, sample_project_sectio
 
     sample_project_section["section_type_id"] = None
 
-    section = ProjectSection(**sample_project_section)
-
-    with app.app_context():
-        db.session.add(section)
-        with pytest.raises():
-            db.session.commit()
+    with pytest.raises(ValueError):
+        section = ProjectSection(**sample_project_section)
 
 
 def test_valid_custom_type(app, sample_project_section):

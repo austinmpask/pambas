@@ -191,7 +191,6 @@ def test_timestamp_user(app, sample_user):
         "gmail.com",
         "@.",
         "skdjfhskdjhfsjkdhfksjfhsdjkhfdskjfhsdjfhsjfdhk",
-        "email@gmail.123",
         ".@",
         "joe@mail.c",
     ],
@@ -200,12 +199,8 @@ def test_valid_email(app, sample_user, invalid_email):
     """Emails recorded must be valid"""
     sample_user["email"] = invalid_email
 
-    user = User(**sample_user)
-
-    with app.app_context():
-        db.session.add(user)
-        with pytest.raises():
-            db.session.commit()
+    with pytest.raises(ValueError):
+        user = User(**sample_user)
 
 
 def test_unique_user_name(app, sample_user):

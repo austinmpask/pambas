@@ -14,11 +14,19 @@ from flaskr import createApp
 app = createApp()
 
 with app.app_context():
-    domain = Domain(domain_name="Big Company", created_at=datetime.now())
+
+    ################################
+    # Sample domain
+    ################################
+
+    domain = Domain(domain_name="Big Company")
     db.session.add(domain)
     db.session.commit()
 
-    # PROJECT AND SECTION TYPES
+    ################################
+    # Built in project types
+    ################################
+
     soc1type1 = ProjectType(project_type="SOC 1 Type 1")
     soc1type2 = ProjectType(project_type="SOC 1 Type 2")
     soc2type1 = ProjectType(project_type="SOC 2 Type 1")
@@ -28,6 +36,10 @@ with app.app_context():
 
     db.session.add_all(projectTypes)
     db.session.commit()
+
+    ################################
+    # Built in section types
+    ################################
 
     sectionType1 = SectionType(
         section_type="Control Environment", default_section_number=1
@@ -40,6 +52,10 @@ with app.app_context():
 
     db.session.add_all(sectionTypes)
     db.session.commit()
+
+    ################################
+    # 2 Sample users
+    ################################
 
     user1 = User(
         user_name="Big John",
@@ -60,12 +76,15 @@ with app.app_context():
     db.session.add_all(users)
     db.session.commit()
 
+    ################################
+    # 2 Sample user projects
+    ################################
+
     proj1 = UserProject(
         user_project_name="Example Project Title for User 1",
         user_project_issuance=datetime.now(),
         user_project_budget=61,
         user_project_billed=11,
-        created_at=datetime.now(),
         project_type_id=soc1type1.id,
         user_id=user1.id,
     )
@@ -74,7 +93,6 @@ with app.app_context():
         user_project_issuance=datetime.now(),
         user_project_budget=62,
         user_project_billed=22,
-        created_at=datetime.now(),
         project_type_id=soc2type2.id,
         user_id=user2.id,
     )
@@ -83,30 +101,33 @@ with app.app_context():
     db.session.add_all(userProjects)
     db.session.commit()
 
+    ################################
+    # 4 Sections, 2 built in, 2 custom
+    ################################
+
+    # Built in 1
     section1 = ProjectSection(
-        section_number=sectionType1.default_section_number,
-        created_at=datetime.now(),
         section_type_id=sectionType1.id,
         user_project_id=proj1.id,
     )
 
+    # Custom 1
     section2 = ProjectSection(
-        section_number=sectionType2.default_section_number,
-        created_at=datetime.now(),
-        section_type_id=sectionType2.id,
+        custom_section_number=32,
+        custom_section_type="Custom section type1, for user1's proj1",
         user_project_id=proj1.id,
     )
 
+    # Built in 2
     section3 = ProjectSection(
-        section_number=sectionType3.default_section_number,
-        created_at=datetime.now(),
         section_type_id=sectionType3.id,
         user_project_id=proj2.id,
     )
+
+    # Custom 2
     section4 = ProjectSection(
-        section_number=sectionType4.default_section_number,
-        created_at=datetime.now(),
-        section_type_id=sectionType4.id,
+        custom_section_number=33,
+        custom_section_type="Custom section type2, for user2's proj1",
         user_project_id=proj2.id,
     )
 
@@ -115,97 +136,84 @@ with app.app_context():
     db.session.add_all(sections)
     db.session.commit()
 
-    # PROJ 1 LINE ITEMS
+    ################################
+    # Line items
+    ################################
 
-    # PROJ 1 SECTION 1 LINEITEMS
+    # Proj1 section 1
     line1 = LineItem(
         flag=True,
         item="Text for lineitem1, in section 1",
-        created_at=datetime.now(),
         project_section_id=section1.id,
     )
     line2 = LineItem(
         flag=False,
         item="Text for lineitem2, in section 1",
-        created_at=datetime.now(),
         project_section_id=section1.id,
     )
-    # PROJ 1 SECTION 2 LINEITEMS
+    # Proj1 section 2
     line3 = LineItem(
         flag=True,
         item="Text for lineitem3, in section 2",
-        created_at=datetime.now(),
         project_section_id=section2.id,
     )
     line4 = LineItem(
         flag=False,
         item="Text for lineitem4, in section 2",
-        created_at=datetime.now(),
         project_section_id=section2.id,
     )
     line5 = LineItem(
         flag=True,
         item="Text for lineitem5, in section 2",
-        created_at=datetime.now(),
         project_section_id=section2.id,
     )
 
-    # PROJ 2 LINE ITEMS
-    # PROJ 2 SECTION 3 LINE ITEMS
+    # Proj2 section 32
     line6 = LineItem(
         flag=True,
-        item="Text for lineitem6, in section 3",
-        created_at=datetime.now(),
+        item="Text for lineitem6, in section 32",
         project_section_id=section3.id,
     )
     line7 = LineItem(
         flag=False,
-        item="Text for lineitem7, in section 3",
-        created_at=datetime.now(),
+        item="Text for lineitem7, in section 32",
         project_section_id=section3.id,
     )
     line8 = LineItem(
         flag=True,
-        item="Text for lineitem8, in section 3",
-        created_at=datetime.now(),
+        item="Text for lineitem8, in section 32",
         project_section_id=section3.id,
     )
     line9 = LineItem(
         flag=False,
-        item="Text for lineitem9, in section 3",
-        created_at=datetime.now(),
+        item="Text for lineitem9, in section 32",
         project_section_id=section3.id,
     )
 
-    # PROJ 2 SECTION 4 LINE ITEMS
+    # Proj2 section 33
     line10 = LineItem(
         flag=True,
-        item="Text for lineitem10, in section 4",
-        created_at=datetime.now(),
+        item="Text for lineitem10, in section 33",
         project_section_id=section4.id,
     )
     line11 = LineItem(
         flag=False,
-        item="Text for lineitem11, in section 4",
-        created_at=datetime.now(),
+        item="Text for lineitem11, in section 33",
         project_section_id=section4.id,
     )
     line12 = LineItem(
         flag=True,
-        item="Text for lineitem12, in section 4",
-        created_at=datetime.now(),
+        item="Text for lineitem12, in section 33",
         project_section_id=section4.id,
     )
     line13 = LineItem(
         flag=False,
-        item="Text for lineitem13, in section 4",
-        created_at=datetime.now(),
+        item="Text for lineitem13, in section 33",
         project_section_id=section4.id,
     )
     line14 = LineItem(
         flag=True,
-        item="Text for lineitem14, in section 4",
-        created_at=datetime.now(),
+        item="Text for lineitem14, in section 33",
         project_section_id=section4.id,
     )
 
@@ -228,13 +236,3 @@ with app.app_context():
 
     db.session.add_all(lines)
     db.session.commit()
-
-    # 1 Domain with 2 users.
-    # Each user has 1 project:
-    #   User 1 has sections 1+2, User 2 has sections 3+4.
-    # Sections have n + 1 line items
-
-    # db.session.add_all(
-    #     [domain] + projectTypes + sectionTypes + users + userProjects + sections + lines
-    # )
-    # db.session.commit()

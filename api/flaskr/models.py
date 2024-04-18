@@ -114,6 +114,9 @@ class SectionType(db.Model):
 class ProjectSection(db.Model):
     __tablename__ = "project_sections"
     id = Column(Integer, primary_key=True)
+
+    """Custom section information will be Null
+    unless no section_type_id foreign key present"""
     custom_section_number = Column(Integer, default=None)
     custom_section_type = Column(String(genStringLen), default=None)
 

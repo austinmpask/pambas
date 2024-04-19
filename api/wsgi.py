@@ -3,9 +3,9 @@ from flaskr import createApp
 app = createApp()
 
 
-@app.route("/users")
+@app.route("/users/")
 def index():
-    return "it worked"
+    return "it worked (USERS)"
 
 
 if __name__ == "__main__":

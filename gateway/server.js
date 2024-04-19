@@ -16,6 +16,26 @@ app.use(helmet());
 //Logging middleware
 app.use(morgan("tiny"));
 
+//Forward requests
+services.forEach(({ route, target }) => {
+  app.use(
+    route,
+    createProxyMiddleware({
+      target: target,
+      changeOrigin: true,
+    })
+  );
+});
+
+//404 not found error
+app.use((_req, res) => {
+  res.status(404).json({
+    code: 404,
+    status: "Error",
+    message: "Invalid request.",
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Gateway is listening on port ${PORT}`);
 });

@@ -2,7 +2,7 @@
 const services = [
   {
     route: "/users",
-    target: "localhost:5000/users",
+    target: "http://api:5000/users",
   },
 ];
 

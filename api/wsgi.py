@@ -3,7 +3,7 @@ from flaskr import createApp
 app = createApp()
 
 
-@app.route("/users/")
+@app.route("/")
 def index():
     return "it worked (USERS)"
 

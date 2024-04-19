@@ -16,13 +16,18 @@ app.use(helmet());
 //Logging middleware
 app.use(morgan("tiny"));
 
-//Forward requests
+//Forward requests to services
 services.forEach(({ route, target }) => {
   app.use(
     route,
     createProxyMiddleware({
       target: target,
       changeOrigin: true,
+      pathRewrite: (path) => {
+        segments = path.split("/");
+        segments.pop();
+        return segments.join("/");
+      },
     })
   );
 });

@@ -32,6 +32,11 @@ services.forEach(({ route, target }) => {
   );
 });
 
+app.get("/test", (req, res) => {
+  res.status(200);
+  res.end("hello");
+});
+
 //404 not found error
 app.use((_req, res) => {
   res.status(404).json({
@@ -44,3 +49,5 @@ app.use((_req, res) => {
 app.listen(PORT, () => {
   console.log(`Gateway is listening on port ${PORT}`);
 });
+
+module.exports = app;

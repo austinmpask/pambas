@@ -3,6 +3,7 @@ FROM python:3.12-alpine3.18
 WORKDIR /app
 COPY . .
 ENV FLASK_APP=wsgi.py
+ENV PYTHONPATH /app
 ENV FLASK_DEBUG=1
 
-RUN chmod +x wait-for && chmod +x start-script && pip install -r requirements.txt
+RUN chmod +x wait-for && chmod +x start-script && chmod +x start-script-test && pip install -r requirements.txt

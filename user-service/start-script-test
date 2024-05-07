@@ -1,3 +1,13 @@
 #!/bin/sh
 
-pytest
+echo !! Running db upgrade
+flask db upgrade
+echo !! Success
+
+echo !! Running unit tests
+pytest tests/unit
+echo !! Success
+
+echo !! Running integration tests
+pytest tests/integration
+echo !! Success

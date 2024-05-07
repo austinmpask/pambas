@@ -5,13 +5,9 @@ from .models import db
 
 
 # App factory
-def createApp(testing=False):
+def createApp():
     app = Flask(__name__)
     app.config.from_object(Configuration)
-
-    if testing:
-        app.config["TESTING"] = True
-        # TO IMPLEMENT SEPARATE DB
 
     # Init DB
     db.init_app(app)

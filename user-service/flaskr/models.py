@@ -38,8 +38,6 @@ class User(db.Model):
     domain_id = Column(Integer, ForeignKey("domains.id"), nullable=False)
     domain = relationship("Domain", back_populates="users")
 
-    projects = relationship("UserProject", back_populates="user")
-
     # Resuire a valid email address
     @validates("email")
     def validate_email(self, key, value):

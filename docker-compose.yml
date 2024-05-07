@@ -29,6 +29,30 @@ services:
 
     command: ["./wait-for", "user-db:5432", "--", "./start-script"]
 
+  test-user-service:
+    build: ./user-service
+    networks:
+      - backend
+    volumes:
+      - ./user-service:/app
+    environment:
+      - DATABASE_URL=postgresql://test_user_service_user:${USER_DB_PASSWORD}@test-user-db/testuserdb
+    depends_on:
+      - test-user-db
+
+    command: ["./wait-for", "test-user-db:5432", "--", "./start-script-test"]
+
+  test-user-db:
+    image: postgres:alpine
+    networks:
+      - backend
+    volumes:
+      - test-user-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=testuserdb
+      - POSTGRES_USER=test_user_service_user
+      - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
+
   user-db:
     image: postgres:alpine
     networks:
@@ -42,6 +66,7 @@ services:
 
 volumes:
   user-db-data:
+  test-user-db-data:
 
 networks:
   backend:

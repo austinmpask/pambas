@@ -23,6 +23,7 @@ services.forEach(({ route, target }) => {
     createProxyMiddleware({
       target: target,
       changeOrigin: true,
+      //Remove redundant service naming in path
       pathRewrite: (path) => {
         segments = path.split("/");
         segments.pop();
@@ -32,7 +33,7 @@ services.forEach(({ route, target }) => {
   );
 });
 
-app.get("/test", (req, res) => {
+app.get("/test", (_req, res) => {
   res.status(200);
   res.end("hello");
 });

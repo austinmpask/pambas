@@ -1,41 +1,18 @@
 version: "3"
 
 services:
-  api-gateway:
-    build: ./gateway
-    networks:
-      - backend
-    environment:
-      - NODE_ENV=development
-      - PORT=3000
-    ports:
-      - 8080:3000
-    depends_on:
-      - user-service
-    command: ["npm", "run", "dev"]
-
-  user-service:
-    build: ./user-service
-    networks:
-      - backend
-    volumes:
-      - ./user-service:/app
-    environment:
-      - DATABASE_URL=postgresql://user_service_user:${USER_DB_PASSWORD}@user-db/userdb
-    depends_on:
-      - user-db
-
-  user-db:
+  db:
     image: postgres:alpine
     networks:
       - backend
+    ports:
+      - 5432:5432
     volumes:
       - pg-db:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=userdb
-      - POSTGRES_USER=user_service_user
-      - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
-
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=taskr_user
+      - POSTGRES_DB=taskr_db
   api:
     build: ./api
     ports:
@@ -51,6 +28,20 @@ services:
 
     depends_on:
       - db
+
+  gateway:
+    build: ./gateway
+    networks:
+      - backend
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+    command: ["npm", "run", "dev"]
 
   # gateway-test:
   #   build: ./gateway

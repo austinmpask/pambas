@@ -1,11 +1,12 @@
 from flaskr import createApp
+from flask import request
 
 app = createApp()
 
 
 @app.route("/")
 def index():
-    return "it worked (USERS)"
+    return {"msg": "it worked", "service": "api"}
 
 
 if __name__ == "__main__":

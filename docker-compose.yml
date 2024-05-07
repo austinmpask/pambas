@@ -81,6 +81,8 @@ services:
     image: postgres:alpine
     networks:
       - backend
+    ports:
+      - 5432:5432
     volumes:
       - auth-db-data:/var/lib/postgresql/data
     environment:

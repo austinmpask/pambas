@@ -1,6 +1,7 @@
-from flask import Flask
+from flask import Flask, jsonify, request, make_response
 from flask_migrate import Migrate
 from .config import Configuration
+from .routes import configureRoutes
 from .models import db
 
 
@@ -15,13 +16,3 @@ def createApp():
     db.init_app(app)
     Migrate(app, db)
     return app
-
-
-def configureRoutes(app):
-    @app.route("/")
-    def index():
-        return "rootrouteauth"
-
-    @app.route("/test")
-    def test():
-        return "testrouteauth"

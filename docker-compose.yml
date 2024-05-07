@@ -10,6 +10,8 @@ services:
       - PORT=3000
     ports:
       - 8080:3000
+    volumes:
+      - ./gateway:/usr/src/app
     depends_on:
       - user-service
     command: ["npm", "run", "dev"]
@@ -25,66 +27,21 @@ services:
     depends_on:
       - user-db
 
+    command: ["./wait-for", "user-db:5432", "--", "./start-script"]
+
   user-db:
     image: postgres:alpine
     networks:
       - backend
     volumes:
-      - pg-db:/var/lib/postgresql/data
+      - user-db-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=userdb
       - POSTGRES_USER=user_service_user
       - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
 
-  api:
-    build: ./api
-    ports:
-      - 8080:5000
-    volumes:
-      - ./api:/app
-    networks:
-      - backend
-    environment:
-      - DATABASE_URL=postgresql://taskr_user:password@db/taskr_db
-      - SECRET_KEY=DOzgtjXN/rbYd4iYK6/XhNcCVBPavZpu/0PFDrwpmBPCrbBinEzdGxuj1qwDmpZ4
-    command: ["./wait-for", "db:5432", "--", "./start-script"]
-
-    depends_on:
-      - db
-
-  # gateway-test:
-  #   build: ./gateway
-  #   networks:
-  #     - backend
-  #   environment:
-  #     - NODE_ENV=development
-  #     - PORT=3000
-  #   # depends_on:
-  #   #   - api
-
-  #   command: ["npm", "test"]
-
-  # test-api:
-  #   build:
-  #     context: ./api
-  #     dockerfile: Dockerfile.test
-  #   volumes:
-  #     - ./api:/app
-  #   networks:
-  #     - backend
-  #   command: ["./wait-for", "db:5432", "--", "./start-script-test"]
-  #   environment:
-  #     - DATABASE_URL=postgresql://taskr_user:password@db/taskr_db
-  #     - SECRET_KEY=DOzgtjXN/rbYd4iYK6/XhNcCVBPavZpu/0PFDrwpmBPCrbBinEzdGxuj1qwDmpZ4
-  #   depends_on:
-  #     - db
-
-  # react:
-
-  # auth:
-
 volumes:
-  pg-db:
+  user-db-data:
 
 networks:
   backend:

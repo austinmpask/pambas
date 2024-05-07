@@ -2,7 +2,7 @@
 const services = [
   {
     route: "/users",
-    target: "http://api:5000",
+    target: "http://user-service:5000",
   },
 ];
 

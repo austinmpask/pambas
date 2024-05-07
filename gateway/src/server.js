@@ -23,19 +23,16 @@ services.forEach(({ route, target }) => {
     createProxyMiddleware({
       target: target,
       changeOrigin: true,
-      //Remove redundant service naming in path
+      //Optional trailing "/" for endpoints
       pathRewrite: (path) => {
-        segments = path.split("/");
-        segments.pop();
-        return segments.join("/");
+        const len = path.length;
+        if (len > 1 && path[len - 1] === "/") {
+          path = path.slice(0, -1);
+        }
+        return path;
       },
     })
   );
-});
-
-app.get("/test", (_req, res) => {
-  res.status(200);
-  res.end("hello");
 });
 
 //404 not found error

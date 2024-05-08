@@ -45,10 +45,12 @@ app.post("/register", async (req, res) => {
   //Extract needed components from req body
   const username = req.body.username;
   const email = req.body.email;
+  const firstName = req.body.first_name;
+  const lastName = req.body.last_name;
   const password = req.body.password;
 
   //Ensure not undefined or empty
-  if (username && email && password) {
+  if (username && email && password && firstName && lastName) {
     //Get hosts for microservices
     const authHost = services.find((item) => item.route === "/auth").target;
     const userHost = services.find((item) => item.route === "/users").target;
@@ -60,22 +62,39 @@ app.post("/register", async (req, res) => {
     const userRegUrl = userHost + endpoint;
 
     //Tell auth service to handle registration
+    let authResponse;
     try {
-      const authResponse = await fetch(authRegUrl, {
+      authResponse = await fetch(authRegUrl, {
         method: "POST",
         body: JSON.stringify(req.body),
         headers: { "Content-Type": "application/json" },
       });
-      res.status(201).end("success");
     } catch (e) {
       res.status(500).json({
         code: 500,
         status: "Error",
-        message: "Internal server error",
+        message: "Internal auth server error",
       });
     }
 
-    //Tell user service to handle registration
+    //If successful, tell user service to handle registration
+    if (authResponse && authResponse.status === 201) {
+      const responseBody = await authResponse.json();
+      const uuid = responseBody.uuid;
+
+      //Successful registration
+      res.status(201).json({
+        code: 201,
+        status: "Success",
+      });
+    } else {
+      //If no auth response or non OK status
+      res.status(500).json({
+        code: 500,
+        status: "Error",
+        message: "No response from auth server/invalid response",
+      });
+    }
   } else {
     res.status(400).json({
       code: 400,

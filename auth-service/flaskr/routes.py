@@ -53,14 +53,11 @@ def configureRoutes(app):
                         db.session.rollback()
                         return jsonify({"Error": str(e)}), 400
 
-                    # Successfully registered user
+                    # Successfully registered user, return the UUID for use in User service
                     return (
                         jsonify(
                             {
-                                "message": "Success",
-                                "id": str(newUser.id),
-                                "username": username,
-                                "email": email,
+                                "uuid": str(newUser.uuid),
                             }
                         ),
                         201,

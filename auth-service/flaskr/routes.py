@@ -58,9 +58,9 @@ def configureRoutes(app):
                         jsonify(
                             {
                                 "message": "Success",
+                                "id": str(newUser.id),
                                 "username": username,
                                 "email": email,
-                                "hash": passwordHash,
                             }
                         ),
                         201,

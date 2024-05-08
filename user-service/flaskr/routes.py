@@ -1,42 +1,40 @@
 from flask import jsonify, request, make_response
-from flask_bcrypt import Bcrypt
 from .models import db, User
+import uuid
 
 
 def configureRoutes(app):
-
-    bcrypt = Bcrypt(app)
-
     with app.app_context():
         genericError = jsonify({"Error": "Bad request"})
 
-        # Register a new user
+        # Register a new user in user DB
         @app.route("/register", methods=["POST"])
         def register():
             if request.is_json:
 
                 # Parse the request body
                 data = request.get_json()
+                # Catch error if UUID is none or "" or otherwise invalid
+                try:
+                    user_uuid = uuid.UUID(data.get("uuid"))
+                except Exception as e:
+                    return jsonify({"Error": "Invalid UUID"}), 400
 
-                username = data.get("username")
-                email = data.get("email")
-                password = data.get("password")
+                firstName = data.get("first_name")
+                lastName = data.get("last_name")
 
-                # Validate that all three items are present and are not empty strings
-                if username and email and password:
-
-                    # Hash password for storage
-                    passwordHash = bcrypt.generate_password_hash(password).decode(
-                        "utf-8"
-                    )
+                # Validate that all three items are present and not empty
+                if user_uuid and firstName and lastName:
+                    # Clean up first and last name
+                    firstName = firstName.title()
+                    lastName = lastName.title()
 
                     # Create user in the auth DB and commit
                     # Ensure that constraints and validators are passed
                     try:
                         newUser = User(
-                            user_name=username, email=email, password_hash=passwordHash
+                            uuid=user_uuid, firstName=firstName, lastName=lastName
                         )
-
                         db.session.add(newUser)
                         db.session.commit()
 
@@ -50,20 +48,18 @@ def configureRoutes(app):
                             201,
                         )
 
-                    # Catch model validator errors
-                    except ValueError as e:
-                        db.session.rollback()
-                        return jsonify({"Error": "Validation failed: " + str(e)}), 400
-                    # Catch-all
+                    # Catch errors from model constraints
                     except Exception as e:
                         db.session.rollback()
-                        return jsonify({"Error": str(e)}), 400
-
+                        return (
+                            jsonify(
+                                {"Error": "Could not add to user database: " + str(e)}
+                            ),
+                            400,
+                        )
                 else:
                     # One or more of the request fields was None/empty
                     return (
-                        jsonify({"Error": "Invalid username/email/password"}),
+                        jsonify({"Error": "Invalid UUID/firstname/lastname"}),
                         400,
                     )
-
-            return genericError, 400

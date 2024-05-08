@@ -33,6 +33,8 @@ services:
     image: postgres:alpine
     networks:
       - backend
+    ports:
+      - 5433:5432
     volumes:
       - user-db-data:/var/lib/postgresql/data
     environment:

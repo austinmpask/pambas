@@ -2,6 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from .config import Configuration
 from .models import db
+from .routes import configureRoutes
 
 
 # App factory
@@ -15,13 +16,3 @@ def createApp():
     db.init_app(app)
     Migrate(app, db)
     return app
-
-
-def configureRoutes(app):
-    @app.route("/")
-    def index():
-        return "rootroute"
-
-    @app.route("/test")
-    def test():
-        return "testroute"

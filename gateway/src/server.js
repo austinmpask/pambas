@@ -80,13 +80,41 @@ app.post("/register", async (req, res) => {
     //If successful, tell user service to handle registration
     if (authResponse && authResponse.status === 201) {
       const responseBody = await authResponse.json();
-      const uuid = responseBody.uuid;
+      const user_uuid = responseBody.uuid;
+
+      let userResponse;
+      try {
+        userResponse = await fetch(userRegUrl, {
+          method: "POST",
+          body: JSON.stringify({
+            first_name: firstName,
+            last_name: lastName,
+            uuid: user_uuid,
+          }),
+          headers: { "Content-Type": "application/json" },
+        });
+      } catch (e) {
+        res.status(500).json({
+          code: 500,
+          status: "Error",
+          message: "Internal user server error",
+        });
+      }
 
       //Successful registration
-      res.status(201).json({
-        code: 201,
-        status: "Success",
-      });
+      if (userResponse && userResponse.status === 201) {
+        res.status(201).json({
+          code: 201,
+          status: "Success",
+        });
+      } else {
+        //If no user response or non OK status
+        res.status(500).json({
+          code: 500,
+          status: "Error",
+          message: "No response from user server/invalid response",
+        });
+      }
     } else {
       //If no auth response or non OK status
       res.status(500).json({

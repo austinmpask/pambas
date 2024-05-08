@@ -1,6 +1,7 @@
 from flask import jsonify, request, make_response
 from flask_bcrypt import Bcrypt
 from .models import db, User
+import uuid
 
 
 def configureRoutes(app):
@@ -10,7 +11,41 @@ def configureRoutes(app):
     with app.app_context():
         genericError = jsonify({"Error": "Bad request"})
 
-        # Register a new user
+        @app.route("/shallowdelete", methods=["DELETE"])
+        def shallowDelete():
+            if request.is_json:
+                data = request.get_json()
+
+                # Convert to UUID object
+                try:
+                    user_uuid = uuid.UUID(data.get("uuid"))
+                except Exception as e:
+                    return jsonify({"Error": "Invalid UUID"}), 400
+
+                # Lookup user by UUID and delete
+                user = db.session.query(User).filter_by(uuid=user_uuid).first()
+
+                if user:
+                    try:
+                        db.session.delete(user)
+                        db.session.commit()
+                        return (
+                            jsonify(
+                                {
+                                    "Deleted": str(user.uuid),
+                                }
+                            ),
+                            204,
+                        )
+
+                    except Exception as e:
+                        db.session.rollback()
+                        return jsonify({"Error": "Could not delete user"}), 400
+
+                else:
+                    return jsonify({"Error": "UUID not found"}), 400
+
+        # Register a new user in auth DB
         @app.route("/register", methods=["POST"])
         def register():
             if request.is_json:

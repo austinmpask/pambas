@@ -6,6 +6,7 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 const fetch = require("node-fetch");
 
 const services = require("./services");
+const { sendJsonResponse } = require("./util");
 
 const app = express();
 
@@ -56,9 +57,11 @@ app.post("/register", async (req, res) => {
     const userHost = services.find((item) => item.route === "/users").target;
 
     const endpoint = "/register";
+    const removeEndpoint = "/shallowdelete";
 
     //Construct the microservice endpoints
     const authRegUrl = authHost + endpoint;
+    const authRemUrl = authHost + removeEndpoint;
     const userRegUrl = userHost + endpoint;
 
     //Tell auth service to handle registration
@@ -70,11 +73,7 @@ app.post("/register", async (req, res) => {
         headers: { "Content-Type": "application/json" },
       });
     } catch (e) {
-      res.status(500).json({
-        code: 500,
-        status: "Error",
-        message: "Internal auth server error",
-      });
+      sendJsonResponse(res, 500, "Internal auth server error: ", String(e));
     }
 
     //If successful, tell user service to handle registration
@@ -94,51 +93,70 @@ app.post("/register", async (req, res) => {
           headers: { "Content-Type": "application/json" },
         });
       } catch (e) {
-        res.status(500).json({
-          code: 500,
-          status: "Error",
-          message: "Internal user server error",
+        //Remove user from auth DB since user was not added to the user DB
+        await fetch(authRemUrl, {
+          method: "DELETE",
+          body: JSON.stringify({
+            uuid: user_uuid,
+          }),
+          headers: { "Content-Type": "application/json" },
         });
+
+        //Send error response
+        sendJsonResponse(res, 500, "Internal user server error", String(e));
       }
 
       //Successful registration
       if (userResponse && userResponse.status === 201) {
-        res.status(201).json({
-          code: 201,
-          status: "Success",
-        });
+        sendJsonResponse(res, 201, "Successful registration");
       } else {
         //If no user response or non OK status
-        res.status(500).json({
-          code: 500,
-          status: "Error",
-          message: "No response from user server/invalid response",
+
+        //Remove user from auth DB since user was not added to the user DB
+        await fetch(authRemUrl, {
+          method: "DELETE",
+          body: JSON.stringify({
+            uuid: user_uuid,
+          }),
+          headers: { "Content-Type": "application/json" },
         });
+
+        //Forward the error stack
+        let userResponseBody;
+        if (userResponse) {
+          userResponseBody = await userResponse.json();
+        }
+
+        sendJsonResponse(
+          res,
+          500,
+          "No response/invalid response from user server",
+          JSON.stringify(userResponseBody)
+        );
       }
     } else {
       //If no auth response or non OK status
-      res.status(500).json({
-        code: 500,
-        status: "Error",
-        message: "No response from auth server/invalid response",
-      });
+
+      //Forward the error stack
+      let authResponseBody;
+      if (authResponse) {
+        authResponseBody = await authResponse.json();
+      }
+      sendJsonResponse(
+        res,
+        500,
+        "No response/invalid response from auth server:",
+        JSON.stringify(authResponseBody)
+      );
     }
   } else {
-    res.status(400).json({
-      code: 400,
-      status: "Error",
-      message: "Missing registration arguments",
-    });
+    sendJsonResponse(res, 400, "Missing registration arguments");
   }
 });
 
 //404 not found error
 app.use((_req, res) => {
-  res.status(404).json({
-    code: 404,
-    status: "Error",
-    message: "Invalid request.",
-  });
+  sendJsonResponse(res, 404, "Bad request");
 });
 
 app.listen(PORT, () => {

@@ -1,10 +1,11 @@
 from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.types import String, Integer, DateTime, Date, Boolean
+from sqlalchemy.types import String, Integer, DateTime, Date, Boolean, UUID
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship, validates
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import re
+import uuid
 
 
 db = SQLAlchemy()
@@ -18,6 +19,9 @@ usernameLen = 20
 class User(db.Model):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
+    uuid = Column(
+        UUID(as_uuid=True), default=uuid.uuid4, unique=True, nullable=False
+    )  # Link across services
     user_name = Column(String(usernameLen), nullable=False, unique=True)
     email = Column(String(emailLen), nullable=False, unique=True)
     password_hash = Column(String(hashLen), nullable=False)

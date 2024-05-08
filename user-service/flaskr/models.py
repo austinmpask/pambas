@@ -1,5 +1,5 @@
 from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.types import String, Integer, DateTime, Date, Boolean
+from sqlalchemy.types import String, Integer, DateTime, Date, Boolean, UUID
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship, validates
 from flask_sqlalchemy import SQLAlchemy
@@ -18,6 +18,7 @@ usernameLen = 20
 class Domain(db.Model):
     __tablename__ = "domains"
     id = Column(Integer, primary_key=True)
+
     domain_name = Column(String(genStringLen), nullable=False, unique=True)
     created_at = Column(DateTime, default=datetime.now())
 
@@ -30,9 +31,11 @@ class Domain(db.Model):
 class User(db.Model):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True)
-    user_name = Column(String(usernameLen), nullable=False, unique=True)
-    email = Column(String(emailLen), nullable=False, unique=True)
-    password_hash = Column(String(hashLen), nullable=False)
+    uuid = Column(
+        UUID(as_uuid=True), unique=True, nullable=False
+    )  # Link to auth service DB
+    firstName = Column(String(20), nullable=False)
+    lastName = Column(String(20), nullable=False)
     created_at = Column(DateTime, default=datetime.now())
 
     domain_id = Column(Integer, ForeignKey("domains.id"), nullable=False)

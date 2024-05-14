@@ -6,35 +6,26 @@ services:
     networks:
       - backend
     environment:
-      - NODE_ENV=development
       - PORT=3000
-    ports:
-      - 8080:3000
-    volumes:
-      - ./gateway:/usr/src/app
     depends_on:
       - user-service
-    command: ["npm", "run", "dev"]
+      - auth-service
+    command: ["npm", "run", "start"]
 
   user-service:
     build: ./user-service
     networks:
       - backend
-    volumes:
-      - ./user-service:/app
     environment:
       - DATABASE_URL=postgresql://user_service_user:${USER_DB_PASSWORD}@user-db/userdb
     depends_on:
       - user-db
-
     command: ["./wait-for", "user-db:5432", "--", "./start-script"]
 
   user-db:
     image: postgres:alpine
     networks:
       - backend
-    ports:
-      - 5433:5432
     volumes:
       - user-db-data:/var/lib/postgresql/data
     environment:
@@ -42,36 +33,10 @@ services:
       - POSTGRES_USER=user_service_user
       - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
 
-  # test-user-service:
-  #   build: ./user-service
-  #   networks:
-  #     - backend
-  #   volumes:
-  #     - ./user-service:/app
-  #   environment:
-  #     - DATABASE_URL=postgresql://test_user_service_user:${USER_DB_PASSWORD}@test-user-db/testuserdb
-  #   depends_on:
-  #     - test-user-db
-
-  #   command: ["./wait-for", "test-user-db:5432", "--", "./start-script-test"]
-
-  # test-user-db:
-  #   image: postgres:alpine
-  #   networks:
-  #     - backend
-  #   volumes:
-  #     - test-user-db-data:/var/lib/postgresql/data
-  #   environment:
-  #     - POSTGRES_DB=testuserdb
-  #     - POSTGRES_USER=test_user_service_user
-  #     - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
-
   auth-service:
     build: ./auth-service
     networks:
       - backend
-    volumes:
-      - ./auth-service:/app
     environment:
       - DATABASE_URL=postgresql://auth_service_user:${AUTH_DB_PASSWORD}@auth-db/authdb
     depends_on:
@@ -83,8 +48,6 @@ services:
     image: postgres:alpine
     networks:
       - backend
-    ports:
-      - 5432:5432
     volumes:
       - auth-db-data:/var/lib/postgresql/data
     environment:
@@ -94,7 +57,6 @@ services:
 
 volumes:
   user-db-data:
-  test-user-db-data:
   auth-db-data:
 
 networks:

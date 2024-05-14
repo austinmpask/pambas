@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  api-gateway:
+    # Change node env.
+    environment:
+      - NODE_ENV=test
+    # Run jest
+    command: ["npm", "run", "test"]
+
+  user-service:
+    # Use separate test database
+    environment:
+      - DATABASE_URL=postgresql://test_user_service_user:${USER_DB_PASSWORD}@test-user-db/testuserdb
+    depends_on:
+      - test-user-db
+    command: ["./wait-for", "test-user-db:5432", "--", "./start-script-test"]
+
+  # Test database for user service
+  test-user-db:
+    image: postgres:alpine
+    networks:
+      - backend
+    volumes:
+      - test-user-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=testuserdb
+      - POSTGRES_USER=test_user_service_user
+      - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
+
+volumes:
+  test-user-db-data:

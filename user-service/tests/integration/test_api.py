@@ -1,5 +1,5 @@
 import pytest
-from flaskr.models import db, Domain, User
+from flaskr.models import db, User
 from flaskr import createApp
 
 
@@ -11,25 +11,17 @@ def client():
     with app.app_context():
         db.create_all()
 
-        # Sample domain
-        domain = Domain(domain_name="Big Company")
-
-        db.session.add(domain)
-        db.session.commit()
-
         # 2 Sample users
         user1 = User(
             user_name="Big John",
             email="bigjohn@cowlife.net",
             password_hash="fsjhfdskjfhsk",
-            domain_id=domain.id,
         )
 
         user2 = User(
             user_name="Little Joe",
             email="littlejoe@mouselife.net",
             password_hash="dfsfjkdfhshk",
-            domain_id=domain.id,
         )
 
         users = [user1, user2]

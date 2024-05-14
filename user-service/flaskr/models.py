@@ -9,11 +9,6 @@ import re
 
 db = SQLAlchemy()
 
-genStringLen = 60
-hashLen = 60
-emailLen = 100
-usernameLen = 20
-
 
 class User(db.Model):
     __tablename__ = "users"

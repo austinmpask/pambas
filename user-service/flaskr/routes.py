@@ -1,5 +1,6 @@
 from flask import jsonify, request, make_response
 from .models import db, User
+from .util import sendJsonResponse
 import uuid
 
 
@@ -18,7 +19,7 @@ def configureRoutes(app):
                 try:
                     user_uuid = uuid.UUID(data.get("uuid"))
                 except Exception as e:
-                    return jsonify({"Error": "Invalid UUID"}), 400
+                    return sendJsonResponse(400, "Invalid UUID", e)
 
                 firstName = data.get("first_name")
                 lastName = data.get("last_name")
@@ -63,3 +64,5 @@ def configureRoutes(app):
                         jsonify({"Error": "Invalid UUID/firstname/lastname"}),
                         400,
                     )
+            else:
+                return sendJsonResponse(app, 400, "Must be JSON request")

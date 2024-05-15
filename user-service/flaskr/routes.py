@@ -1,4 +1,4 @@
-from flask import jsonify, request, make_response
+from flask import jsonify, request
 from .models import db, User
 from .util import sendJsonResponse
 import uuid
@@ -6,7 +6,6 @@ import uuid
 
 def configureRoutes(app):
     with app.app_context():
-        genericError = jsonify({"Error": "Bad request"})
 
         # Register a new user in user DB
         @app.route("/register", methods=["POST"])
@@ -19,7 +18,7 @@ def configureRoutes(app):
                 try:
                     user_uuid = uuid.UUID(data.get("uuid"))
                 except Exception as e:
-                    return sendJsonResponse(400, "Invalid UUID", e)
+                    return sendJsonResponse(app, 400, "Invalid UUID", e)
 
                 firstName = data.get("first_name")
                 lastName = data.get("last_name")
@@ -30,7 +29,7 @@ def configureRoutes(app):
                     firstName = firstName.title()
                     lastName = lastName.title()
 
-                    # Create user in the auth DB and commit
+                    # Create user in the user DB and commit
                     # Ensure that constraints and validators are passed
                     try:
                         newUser = User(
@@ -40,29 +39,14 @@ def configureRoutes(app):
                         db.session.commit()
 
                         # Successfully registered user, return the UUID for use in User service
-                        return (
-                            jsonify(
-                                {
-                                    "uuid": str(newUser.uuid),
-                                }
-                            ),
-                            201,
-                        )
+                        return sendJsonResponse(app, 201, newUser.uuid)
 
                     # Catch errors from model constraints
                     except Exception as e:
                         db.session.rollback()
-                        return (
-                            jsonify(
-                                {"Error": "Could not add to user database: " + str(e)}
-                            ),
-                            400,
-                        )
+                        return sendJsonResponse(app, 400, "User DB Error", e)
                 else:
                     # One or more of the request fields was None/empty
-                    return (
-                        jsonify({"Error": "Invalid UUID/firstname/lastname"}),
-                        400,
-                    )
+                    return sendJsonResponse(app, 400, "Missing UUID/firstname/lastname")
             else:
                 return sendJsonResponse(app, 400, "Must be JSON request")

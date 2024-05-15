@@ -10,7 +10,6 @@ import uuid
 
 db = SQLAlchemy()
 
-genStringLen = 60
 hashLen = 60
 emailLen = 100
 usernameLen = 20

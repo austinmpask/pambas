@@ -36,7 +36,7 @@ def test_no_json_request(client):
     response = client.post("/register", data="not JSON", content_type="text/plain")
     responseJson = response.get_json()
 
-    assert response.status_code == 400
+    assert response.status_code == 400, "Incorrect response status"
 
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
@@ -54,7 +54,7 @@ def test_valid_uuid(client, validRegistrationData, sampleUUID):
     response = client.post("/register", json=validRegistrationData)
     responseJson = response.get_json()
 
-    assert response.status_code == 400
+    assert response.status_code == 400, "Incorrect response status"
 
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
@@ -71,7 +71,7 @@ def test_none_uuid(client, validRegistrationData):
     response = client.post("/register", json=validRegistrationData)
     responseJson = response.get_json()
 
-    assert response.status_code == 400
+    assert response.status_code == 400, "Incorrect response status"
 
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
@@ -89,7 +89,7 @@ def test_required_req_data_none(client, validRegistrationData, attribute):
     response = client.post("/register", json=validRegistrationData)
     responseJson = response.get_json()
 
-    assert response.status_code == 400
+    assert response.status_code == 400, "Incorrect response status"
 
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
@@ -107,7 +107,7 @@ def test_required_req_data_blank(client, validRegistrationData, attribute):
     response = client.post("/register", json=validRegistrationData)
     responseJson = response.get_json()
 
-    assert response.status_code == 400
+    assert response.status_code == 400, "Incorrect response status"
 
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
@@ -121,7 +121,7 @@ def test_valid_addition(client, validRegistrationData):
     response = client.post("/register", json=validRegistrationData)
     responseJson = response.get_json()
 
-    assert response.status_code == 201
+    assert response.status_code == 201, "Incorrect response status"
 
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 201

@@ -22,7 +22,7 @@ def app():
 
 
 @pytest.fixture(scope="function")
-def sample_user(app):
+def sampleUser(app):
     """Provide dictionary with valid user data"""
     sample_uuid = uuid.uuid4()
     yield {"uuid": sample_uuid, "firstName": "Joe", "lastName": "John"}
@@ -33,132 +33,132 @@ def sample_user(app):
 ################################
 
 
-def test_timestamp_user(app, sample_user):
+def test_timestamp_user(app, sampleUser):
     """User records should automatically include a timestamp"""
-    user = User(**sample_user)
+    user = User(**sampleUser)
 
     db.session.add(user)
     db.session.commit()
-    assert user.created_at is not None
+    assert user.created_at is not None, "No timestamp created"
 
 
-def test_non_nullable_uuid(app, sample_user):
+def test_non_nullable_uuid(app, sampleUser):
     """UUID must be present"""
-    del sample_user["uuid"]
-    user = User(**sample_user)
+    del sampleUser["uuid"]
+    user = User(**sampleUser)
     db.session.add(user)
     with pytest.raises(IntegrityError):
         db.session.commit()
 
 
-def test_uuid_is_uuid(app, sample_user):
+def test_uuid_is_uuid(app, sampleUser):
     """Non UUID types should not be valid"""
-    sample_user["uuid"] = "asdfasdfasdf"
-    user = User(**sample_user)
+    sampleUser["uuid"] = "asdfasdfasdf"
+    user = User(**sampleUser)
     db.session.add(user)
     with pytest.raises(DataError):
         db.session.commit()
 
 
-def test_unique_uuid(app, sample_user):
+def test_unique_uuid(app, sampleUser):
     """UUID name must be unique"""
-    user1 = User(**sample_user)
-    user2 = User(**sample_user)
+    user1 = User(**sampleUser)
+    user2 = User(**sampleUser)
 
     db.session.add_all([user1, user2])
     with pytest.raises(IntegrityError):
         db.session.commit()
 
 
-def test_non_nullable_first(app, sample_user):
+def test_non_nullable_first(app, sampleUser):
     """First name should be non nullable"""
-    del sample_user["firstName"]
-    user = User(**sample_user)
+    del sampleUser["firstName"]
+    user = User(**sampleUser)
     db.session.add(user)
     with pytest.raises(IntegrityError):
         db.session.commit()
 
 
-def test_empty_first(app, sample_user):
+def test_empty_first(app, sampleUser):
     """First name must not be empty string"""
-    sample_user["firstName"] = ""
+    sampleUser["firstName"] = ""
     with pytest.raises(ValueError):
-        user = User(**sample_user)
+        user = User(**sampleUser)
         db.session.add(user)
         db.session.commit()
 
 
 @pytest.mark.parametrize("exampleName", ["1", "@", "."])
-def test_alpha_first(app, sample_user, exampleName):
+def test_alpha_first(app, sampleUser, exampleName):
     """First name must only contain a-z A-Z"""
-    sample_user["firstName"] = exampleName
+    sampleUser["firstName"] = exampleName
     with pytest.raises(ValueError):
-        user = User(**sample_user)
+        user = User(**sampleUser)
         db.session.add(user)
         db.session.commit()
 
 
-def test_max_length_first_name(app, sample_user):
+def test_max_length_first_name(app, sampleUser):
     """First name should adhere to a maximum length of 20 characters"""
-    sample_user["firstName"] = "a" * 21
-    user = User(**sample_user)
+    sampleUser["firstName"] = "a" * 21
+    user = User(**sampleUser)
     db.session.add(user)
     with pytest.raises(DataError):
         db.session.commit()
 
 
 @pytest.mark.parametrize("exampleName", ["john", "John", "JOHN", "jOHN"])
-def test_title_case_first_name(app, sample_user, exampleName):
+def test_title_case_first_name(app, sampleUser, exampleName):
     """First name should be made title case"""
-    sample_user["firstName"] = exampleName
-    user = User(**sample_user)
+    sampleUser["firstName"] = exampleName
+    user = User(**sampleUser)
     db.session.add(user)
     db.session.commit()
-    assert user.firstName == "John"
+    assert user.firstName == "John", "First name not title case"
 
 
-def test_non_nullable_last(app, sample_user):
+def test_non_nullable_last(app, sampleUser):
     """Last name should be non nullable"""
-    del sample_user["lastName"]
-    user = User(**sample_user)
+    del sampleUser["lastName"]
+    user = User(**sampleUser)
     db.session.add(user)
     with pytest.raises(IntegrityError):
         db.session.commit()
 
 
-def test_empty_last(app, sample_user):
+def test_empty_last(app, sampleUser):
     """Last name must not be empty string"""
-    sample_user["lastName"] = ""
+    sampleUser["lastName"] = ""
     with pytest.raises(ValueError):
-        user = User(**sample_user)
+        user = User(**sampleUser)
         db.session.add(user)
         db.session.commit()
 
 
 @pytest.mark.parametrize("exampleName", ["1", "@", "."])
-def test_alpha_last(app, sample_user, exampleName):
+def test_alpha_last(app, sampleUser, exampleName):
     """Last name must only contain a-z A-Z"""
-    sample_user["lastName"] = exampleName
+    sampleUser["lastName"] = exampleName
     with pytest.raises(ValueError):
-        user = User(**sample_user)
+        user = User(**sampleUser)
         db.session.add(user)
         db.session.commit()
 
 
-def test_max_length_last_name(app, sample_user):
+def test_max_length_last_name(app, sampleUser):
     """Last name should adhere to a maximum length of 20 characters"""
-    sample_user["lastName"] = "a" * 21
-    user = User(**sample_user)
+    sampleUser["lastName"] = "a" * 21
+    user = User(**sampleUser)
     db.session.add(user)
     with pytest.raises(DataError):
         db.session.commit()
 
 
 @pytest.mark.parametrize("exampleName", ["john", "John", "JOHN", "jOHN"])
-def test_title_case_last_name(app, sample_user, exampleName):
+def test_title_case_last_name(app, sampleUser, exampleName):
     """Last name should be made title case"""
-    sample_user["lastName"] = exampleName
-    user = User(**sample_user)
+    sampleUser["lastName"] = exampleName
+    user = User(**sampleUser)
     db.session.add(user)
     db.session.commit()
-    assert user.lastName == "John"
+    assert user.lastName == "John", "Last name not title case"

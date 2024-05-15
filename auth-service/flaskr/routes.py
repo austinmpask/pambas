@@ -1,15 +1,18 @@
 from flask import jsonify, request, make_response
 from flask_bcrypt import Bcrypt
 from .models import db, User
+from .util import sendJsonResponse
 import uuid
 
 
 def configureRoutes(app):
 
+    # Standard response for non JSON request for use across routes
+    invalidJSONResponse = sendJsonResponse(app, 400, "Must be JSON request")
+
     bcrypt = Bcrypt(app)
 
     with app.app_context():
-        genericError = jsonify({"Error": "Bad request"})
 
         @app.route("/shallowdelete", methods=["DELETE"])
         def shallowDelete():
@@ -19,9 +22,8 @@ def configureRoutes(app):
                 # Convert to UUID object
                 try:
                     user_uuid = uuid.UUID(data.get("uuid"))
-                except Exception as e:
-                    return jsonify({"Error": "Invalid UUID"}), 400
-
+                except Exception:
+                    return sendJsonResponse(app, 400, "Invalid UUID")
                 # Lookup user by UUID and delete
                 user = db.session.query(User).filter_by(uuid=user_uuid).first()
 
@@ -29,14 +31,7 @@ def configureRoutes(app):
                     try:
                         db.session.delete(user)
                         db.session.commit()
-                        return (
-                            jsonify(
-                                {
-                                    "Deleted": str(user.uuid),
-                                }
-                            ),
-                            204,
-                        )
+                        return sendJsonResponse(app, 204, user.uuid)
 
                     except Exception as e:
                         db.session.rollback()
@@ -44,6 +39,10 @@ def configureRoutes(app):
 
                 else:
                     return jsonify({"Error": "UUID not found"}), 400
+
+            else:
+                # Non JSON body request rec.
+                return invalidJSONResponse
 
         # Register a new user in auth DB
         @app.route("/register", methods=["POST"])
@@ -76,29 +75,20 @@ def configureRoutes(app):
                         db.session.commit()
 
                         # Successfully registered user, return the UUID for use in User service
-                        return (
-                            jsonify(
-                                {
-                                    "uuid": str(newUser.uuid),
-                                }
-                            ),
-                            201,
-                        )
+                        return sendJsonResponse(app, 201, newUser.uuid)
 
                     # Catch model validator errors
                     except ValueError as e:
                         db.session.rollback()
-                        return jsonify({"Error": "Validation failed: " + str(e)}), 400
+                        return sendJsonResponse(app, 400, "ValueError from auth DB", e)
                     # Catch-all
                     except Exception as e:
                         db.session.rollback()
-                        return jsonify({"Error": str(e)}), 400
+                        return sendJsonResponse(app, 400, "Error from auth DB", e)
 
                 else:
                     # One or more of the request fields was None/empty
-                    return (
-                        jsonify({"Error": "Invalid username/email/password"}),
-                        400,
-                    )
-
-            return genericError, 400
+                    return sendJsonResponse(app, 400, "Missing username/email/password")
+            else:
+                # Non JSON body request rec.
+                return invalidJSONResponse

@@ -49,4 +49,5 @@ def configureRoutes(app):
                     # One or more of the request fields was None/empty
                     return sendJsonResponse(app, 400, "Missing UUID/firstname/lastname")
             else:
+                # Non JSON body request rec.
                 return sendJsonResponse(app, 400, "Must be JSON request")

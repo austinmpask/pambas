@@ -31,7 +31,7 @@ def configureRoutes(app):
                     try:
                         db.session.delete(user)
                         db.session.commit()
-                        return sendJsonResponse(app, 204, user.uuid)
+                        return sendJsonResponse(app, 200, user.uuid)
 
                     except Exception as e:
                         db.session.rollback()

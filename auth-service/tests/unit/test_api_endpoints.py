@@ -144,3 +144,26 @@ def test_none_uuid(client):
     assert responseJson["code"] == 400
     assert responseJson["status"] == "Error"
     assert responseJson["message"] == "Invalid UUID"
+
+
+def test_valid_shallow_deletion(client, validRegistrationData):
+    """If valid request body/UUID is provided, the response should indicate success,
+    and the deleted UUID should be included in the response"""
+
+    # Create a user
+    postResponse = client.post("/register", json=validRegistrationData)
+    postJson = postResponse.get_json()
+
+    # Get user's UUID
+    uuidToDel = postJson["message"]
+
+    # Send request to delete
+    delResponse = client.delete("/shallowdelete", json={"uuid": uuidToDel})
+    responseJson = delResponse.get_json()
+
+    assert delResponse.status_code == 200, "Incorrect response status"
+
+    # Standardized JSON response expected with detail
+    assert responseJson["code"] == 200
+    assert responseJson["status"] == "Success"
+    assert responseJson["message"] == uuidToDel

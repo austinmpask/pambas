@@ -17,6 +17,8 @@ services:
     # Live file updates
     volumes:
       - ./user-service:/app
+    environment:
+      - FLASK_DEBUG=1
 
   user-db:
     # Expose port for DB viewing on local machine
@@ -27,6 +29,8 @@ services:
     # Live file updates
     volumes:
       - ./auth-service:/app
+    environment:
+      - FLASK_DEBUG=1
 
   auth-db:
     # Expose port for DB viewing on local machine

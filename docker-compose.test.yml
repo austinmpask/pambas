@@ -28,5 +28,26 @@ services:
       - POSTGRES_USER=test_user_service_user
       - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
 
+  auth-service:
+    # Use separate test database
+    environment:
+      - DATABASE_URL=postgresql://test_auth_service_user:${AUTH_DB_PASSWORD}@test-auth-db/testauthdb
+    depends_on:
+      - test-auth-db
+    command: ["./wait-for", "test-auth-db:5432", "--", "./start-script-test"]
+
+  # Test database for auth service
+  test-auth-db:
+    image: postgres:alpine
+    networks:
+      - backend
+    volumes:
+      - test-auth-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=testauthdb
+      - POSTGRES_USER=test_auth_service_user
+      - POSTGRES_PASSWORD=${AUTH_DB_PASSWORD}
+
 volumes:
   test-user-db-data:
+  test-auth-db-data:

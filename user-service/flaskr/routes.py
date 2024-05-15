@@ -7,6 +7,11 @@ import uuid
 def configureRoutes(app):
     with app.app_context():
 
+        # Test route for gateway
+        @app.route("/", methods=["GET"])
+        def index():
+            return sendJsonResponse(app, 200, "ok")
+
         # Register a new user in user DB
         @app.route("/register", methods=["POST"])
         def register():

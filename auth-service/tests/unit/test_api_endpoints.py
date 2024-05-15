@@ -146,9 +146,28 @@ def test_none_uuid(client):
     assert responseJson["message"] == "Invalid UUID"
 
 
+def test_uuid_no_match(client):
+    """If UUID is not found in DB, an appropriate error should be raised"""
+
+    # DB is blank, UUID will not match
+    testUUID = uuid.uuid4()
+
+    response = client.delete("/shallowdelete", json={"uuid": testUUID})
+    responseJson = response.get_json()
+
+    assert response.status_code == 400, "Incorrect response status"
+
+    # Standardized JSON response expected with detail
+    assert responseJson["code"] == 400
+    assert responseJson["status"] == "Error"
+    assert responseJson["message"] == "UUID not found"
+
+
 def test_valid_shallow_deletion(client, validRegistrationData):
     """If valid request body/UUID is provided, the response should indicate success,
     and the deleted UUID should be included in the response"""
+
+    """This is a test of the API response only, test of database mutation occurs in integration/test_auth_db"""
 
     # Create a user
     postResponse = client.post("/register", json=validRegistrationData)

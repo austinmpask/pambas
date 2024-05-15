@@ -16,29 +16,34 @@ def configureRoutes(app):
 
         @app.route("/shallowdelete", methods=["DELETE"])
         def shallowDelete():
+            # Only accept application/json requests
             if request.is_json:
                 data = request.get_json()
 
-                # Convert to UUID object
+                # Convert to UUID object, but catch error if request uuid is invalid format
                 try:
                     user_uuid = uuid.UUID(data.get("uuid"))
                 except Exception:
                     return sendJsonResponse(app, 400, "Invalid UUID")
+
                 # Lookup user by UUID and delete
                 user = db.session.query(User).filter_by(uuid=user_uuid).first()
 
                 if user:
                     try:
+                        # Successful deletion of user, send OK response
                         db.session.delete(user)
                         db.session.commit()
                         return sendJsonResponse(app, 200, user.uuid)
 
                     except Exception as e:
+                        # If there is a DB error, rollback and forward the error in response
                         db.session.rollback()
-                        return jsonify({"Error": "Could not delete user"}), 400
+                        return sendJsonResponse(app, 400, "Error from auth DB", e)
 
                 else:
-                    return jsonify({"Error": "UUID not found"}), 400
+                    # DB query returned no results for valid UUID
+                    return sendJsonResponse(app, 400, "UUID not found")
 
             else:
                 # Non JSON body request rec.

@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request, make_response
 from flask_migrate import Migrate
-from .config import Configuration
-from .routes import configureRoutes
+from .config import Configuration, bcrypt
+from .config_routes import configureRoutes
 from .models import db
 
 
@@ -11,6 +11,7 @@ def createApp():
     app.config.from_object(Configuration)
 
     configureRoutes(app)
+    bcrypt.init_app(app)
 
     # Init DB
     db.init_app(app)

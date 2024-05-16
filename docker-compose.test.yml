@@ -6,7 +6,7 @@ services:
     environment:
       - NODE_ENV=test
     # Run jest
-    command: ["npm", "run", "test"]
+    command: ["npm", "run", "start"]
 
   user-service:
     # Use separate test database

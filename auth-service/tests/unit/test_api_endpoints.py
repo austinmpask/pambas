@@ -29,14 +29,26 @@ def validRegistrationData():
     }
 
 
+@pytest.fixture(scope="function")
+def registerUser(client, validRegistrationData):
+    """Register a user to test login functionality"""
+    response = client.post("/register", json=validRegistrationData)
+    responseJson = response.get_json()
+
+    # Yield UUID
+    yield responseJson["message"]
+
+
 ################################
 # /register
 ################################
 
 
-def test_no_json_request_post(client):
+# For /register and /login
+@pytest.mark.parametrize("endpoint", ["/register", "/login"])
+def test_no_json_request_post(client, endpoint):
     """If body is not JSON, an appropriate error should be raised"""
-    response = client.post("/register", data="not JSON", content_type="text/plain")
+    response = client.post(endpoint, data="not JSON", content_type="text/plain")
     responseJson = response.get_json()
 
     assert response.status_code == 400, "Incorrect response status"
@@ -186,3 +198,153 @@ def test_valid_shallow_deletion(client, validRegistrationData):
     assert responseJson["code"] == 200
     assert responseJson["status"] == "Success"
     assert responseJson["message"] == uuidToDel
+
+
+################################
+# /login
+################################
+def test_missing_login_credentials(client, validRegistrationData):
+    """If neither a username or email is provided in the request,
+    an appropriate error should be raised"""
+    del validRegistrationData["email"]
+    del validRegistrationData["username"]
+
+    response = client.post("/login", data=validRegistrationData)
+    responseJson = response.get_json()
+
+    assert response.status_code == 400, "Incorrect response status"
+
+    assert responseJson["code"] == 400
+    assert responseJson["status"] == "Error"
+    assert responseJson["message"] == "Login credential missing"
+
+
+def test_blank_login_credentials(client, validRegistrationData):
+    """If both the username or email provided in the request is "",
+    an appropriate error should be raised"""
+    validRegistrationData["email"] = ""
+    validRegistrationData["username"] = ""
+
+    response = client.post("/login", data=validRegistrationData)
+    responseJson = response.get_json()
+
+    assert response.status_code == 400, "Incorrect response status"
+
+    assert responseJson["code"] == 400
+    assert responseJson["status"] == "Error"
+    assert responseJson["message"] == "Login credential missing"
+
+
+def test_missing_login_password(client, validRegistrationData):
+    """If password is missing from the request,
+    an appropriate error should be raised"""
+    del validRegistrationData["password"]
+
+    response = client.post("/login", data=validRegistrationData)
+    responseJson = response.get_json()
+
+    assert response.status_code == 400, "Incorrect response status"
+
+    assert responseJson["code"] == 400
+    assert responseJson["status"] == "Error"
+    assert responseJson["message"] == "Password missing"
+
+
+def test_blank_login_password(client, validRegistrationData):
+    """If password is "" in the request,
+    an appropriate error should be raised"""
+    validRegistrationData["password"] = ""
+
+    response = client.post("/login", data=validRegistrationData)
+    responseJson = response.get_json()
+
+    assert response.status_code == 400, "Incorrect response status"
+
+    assert responseJson["code"] == 400
+    assert responseJson["status"] == "Error"
+    assert responseJson["message"] == "Password missing"
+
+
+@pytest.mark.parametrize("credential", ["email", "username"])
+def test_single_login_credential_undefined(
+    registerUser, validRegistrationData, credential
+):
+    """If the one credential (username/email) is not submitted (None),
+    but the other is valid, the valid credential is used to authenticate"""
+
+    del validRegistrationData[credential]
+
+    response = client.post("/login", data=validRegistrationData)
+    responseJson = response.get_json()
+
+    assert response.status_code == 200, "Incorrect response status"
+
+    assert responseJson["code"] == 200
+    assert responseJson["status"] == "Success"
+    assert responseJson["message"]  # JWT token
+
+
+@pytest.mark.parametrize("credential", ["email", "username"])
+def test_single_login_credential_blank(registerUser, validRegistrationData, credential):
+    """If the one credential (username/email) is "",
+    but the other is valid, the valid credential is used to authenticate"""
+
+    validRegistrationData[credential] = ""
+
+    response = client.post("/login", data=validRegistrationData)
+    responseJson = response.get_json()
+
+    assert response.status_code == 200, "Incorrect response status"
+
+    assert responseJson["code"] == 200
+    assert responseJson["status"] == "Success"
+    assert responseJson["message"]  # JWT token
+
+
+def test_login_credential_not_found(registerUser, validRegistrationData):
+    """If the username/email is incorrect/not found,
+    the response should be 401 Unauthorized"""
+
+    # Invaliate login credentials
+    validRegistrationData["email"] = "incorrectcredential"
+    validRegistrationData["username"] = "incorrectcredential"
+
+    response = client.post("/login", data=validRegistrationData)
+    responseJson = response.get_json()
+
+    assert response.status_code == 401, "Incorrect response status"
+
+    assert responseJson["code"] == 401
+    assert responseJson["status"] == "Error"
+    assert responseJson["message"] == "Unauthorized: Incorrect login"
+
+
+def test_login_incorrect_password(registerUser, validRegistrationData):
+    """If the password is incorrect,
+    the response should be 401 Unauthorized"""
+
+    # Invaliate login credentials
+    validRegistrationData["password"] = "incorrectpassword"
+
+    response = client.post("/login", data=validRegistrationData)
+    responseJson = response.get_json()
+
+    assert response.status_code == 401, "Incorrect response status"
+
+    assert responseJson["code"] == 401
+    assert responseJson["status"] == "Error"
+    assert responseJson["message"] == "Unauthorized: Incorrect login"
+
+
+def test_both_login_credentials_success(registerUser, validRegistrationData):
+    """If correct username + email (both credentials) and password is submitted,
+    a JWT token is generated and returned. Email is the default credential used"""
+
+    response = client.post("/login", data=validRegistrationData)
+    responseJson = response.get_json()
+
+    assert response.status_code == 200, "Incorrect response status"
+
+    assert responseJson["code"] == 200
+    assert responseJson["status"] == "Success"
+    assert responseJson["message"]  # JWT token

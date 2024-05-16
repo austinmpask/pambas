@@ -267,14 +267,14 @@ def test_blank_login_password(client, validRegistrationData):
 
 @pytest.mark.parametrize("credential", ["email", "username"])
 def test_single_login_credential_undefined(
-    registerUser, validRegistrationData, credential
+    client, registerUser, validRegistrationData, credential
 ):
     """If the one credential (username/email) is not submitted (None),
     but the other is valid, the valid credential is used to authenticate"""
 
     del validRegistrationData[credential]
 
-    response = client.post("/login", data=validRegistrationData)
+    response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
 
     assert response.status_code == 200, "Incorrect response status"
@@ -285,13 +285,15 @@ def test_single_login_credential_undefined(
 
 
 @pytest.mark.parametrize("credential", ["email", "username"])
-def test_single_login_credential_blank(registerUser, validRegistrationData, credential):
+def test_single_login_credential_blank(
+    client, registerUser, validRegistrationData, credential
+):
     """If the one credential (username/email) is "",
     but the other is valid, the valid credential is used to authenticate"""
 
     validRegistrationData[credential] = ""
 
-    response = client.post("/login", data=validRegistrationData)
+    response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
 
     assert response.status_code == 200, "Incorrect response status"
@@ -301,7 +303,7 @@ def test_single_login_credential_blank(registerUser, validRegistrationData, cred
     assert responseJson["message"]  # JWT token
 
 
-def test_login_credential_not_found(registerUser, validRegistrationData):
+def test_login_credential_not_found(client, registerUser, validRegistrationData):
     """If the username/email is incorrect/not found,
     the response should be 401 Unauthorized"""
 
@@ -309,7 +311,7 @@ def test_login_credential_not_found(registerUser, validRegistrationData):
     validRegistrationData["email"] = "incorrectcredential"
     validRegistrationData["username"] = "incorrectcredential"
 
-    response = client.post("/login", data=validRegistrationData)
+    response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
 
     assert response.status_code == 401, "Incorrect response status"
@@ -319,14 +321,14 @@ def test_login_credential_not_found(registerUser, validRegistrationData):
     assert responseJson["message"] == "Unauthorized: Incorrect login"
 
 
-def test_login_incorrect_password(registerUser, validRegistrationData):
+def test_login_incorrect_password(client, registerUser, validRegistrationData):
     """If the password is incorrect,
     the response should be 401 Unauthorized"""
 
     # Invaliate login credentials
     validRegistrationData["password"] = "incorrectpassword"
 
-    response = client.post("/login", data=validRegistrationData)
+    response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
 
     assert response.status_code == 401, "Incorrect response status"
@@ -336,11 +338,11 @@ def test_login_incorrect_password(registerUser, validRegistrationData):
     assert responseJson["message"] == "Unauthorized: Incorrect login"
 
 
-def test_both_login_credentials_success(registerUser, validRegistrationData):
+def test_both_login_credentials_success(client, registerUser, validRegistrationData):
     """If correct username + email (both credentials) and password is submitted,
     a JWT token is generated and returned. Email is the default credential used"""
 
-    response = client.post("/login", data=validRegistrationData)
+    response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
 
     assert response.status_code == 200, "Incorrect response status"
@@ -348,3 +350,7 @@ def test_both_login_credentials_success(registerUser, validRegistrationData):
     assert responseJson["code"] == 200
     assert responseJson["status"] == "Success"
     assert responseJson["message"]  # JWT token
+
+
+"""If an invalid email address format is provided,
+among no other valid credential, an appropriate error should be raised"""

@@ -209,7 +209,7 @@ def test_missing_login_credentials(client, validRegistrationData):
     del validRegistrationData["email"]
     del validRegistrationData["username"]
 
-    response = client.post("/login", data=validRegistrationData)
+    response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
 
     assert response.status_code == 400, "Incorrect response status"
@@ -225,7 +225,7 @@ def test_blank_login_credentials(client, validRegistrationData):
     validRegistrationData["email"] = ""
     validRegistrationData["username"] = ""
 
-    response = client.post("/login", data=validRegistrationData)
+    response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
 
     assert response.status_code == 400, "Incorrect response status"
@@ -240,7 +240,7 @@ def test_missing_login_password(client, validRegistrationData):
     an appropriate error should be raised"""
     del validRegistrationData["password"]
 
-    response = client.post("/login", data=validRegistrationData)
+    response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
 
     assert response.status_code == 400, "Incorrect response status"
@@ -255,7 +255,7 @@ def test_blank_login_password(client, validRegistrationData):
     an appropriate error should be raised"""
     validRegistrationData["password"] = ""
 
-    response = client.post("/login", data=validRegistrationData)
+    response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
 
     assert response.status_code == 400, "Incorrect response status"

@@ -14,6 +14,11 @@ def configureRoutes(app):
 
     with app.app_context():
 
+        # Test route for gateway
+        @app.route("/", methods=["GET"])
+        def index():
+            return sendJsonResponse(app, 200, "ok from auth service")
+
         @app.route("/shallowdelete", methods=["DELETE"])
         def shallowDelete():
             # Only accept application/json requests

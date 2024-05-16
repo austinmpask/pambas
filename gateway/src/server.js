@@ -5,8 +5,8 @@ const morgan = require("morgan");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const fetch = require("node-fetch");
 
-const services = require("./services");
-const { sendJsonResponse } = require("./util");
+const { services, forbiddenEndpoints } = require("./services");
+const { sendJsonResponse, forbiddenObjToArray } = require("./util");
 
 const app = express();
 
@@ -18,6 +18,20 @@ app.use(helmet());
 
 //Logging middleware
 app.use(morgan("tiny"));
+
+//Forbid direct access to certain microservice endpoints
+const blockDirectAccess = (req, res, next) => {
+  //Convert the forbidden endpoints object into just an array of the endpoint literals
+  const paths = forbiddenObjToArray(forbiddenEndpoints);
+
+  //Send forbidden response if path is matched
+  if (paths.includes(req.path)) {
+    sendJsonResponse(res, 403, "Forbidden");
+  }
+  next();
+};
+
+app.use(blockDirectAccess);
 
 //Forward requests to services
 services.forEach(({ route, target }) => {

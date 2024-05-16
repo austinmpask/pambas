@@ -10,7 +10,7 @@ def configureRoutes(app):
         # Test route for gateway
         @app.route("/", methods=["GET"])
         def index():
-            return sendJsonResponse(app, 200, "ok")
+            return sendJsonResponse(app, 200, "ok from user service")
 
         # Register a new user in user DB
         @app.route("/register", methods=["POST"])

@@ -29,6 +29,11 @@ def validRegistrationData():
 @pytest.fixture(scope="function")
 def registerUser(client, validRegistrationData):
     """Register a user and then provide UUID"""
+    validRegistrationData["firstName"] = validRegistrationData["first_name"]
+    del validRegistrationData["first_name"]
+
+    validRegistrationData["lastName"] = validRegistrationData["last_name"]
+    del validRegistrationData["last_name"]
 
     user = User(**validRegistrationData)
     db.session.add(user)
@@ -42,11 +47,9 @@ def registerUser(client, validRegistrationData):
 ################################
 
 
-# /register and /userdata
-@pytest.mark.parametrize("endpoint", ["/register", "/userdata"])
-def test_no_json_request(client, endpoint):
+def test_no_json_request(client):
     """If body is not JSON, an appropriate error should be raised"""
-    response = client.post(endpoint, data="not JSON", content_type="text/plain")
+    response = client.post("/register", data="not JSON", content_type="text/plain")
     responseJson = response.get_json()
 
     assert response.status_code == 400, "Incorrect response status"
@@ -145,10 +148,25 @@ def test_valid_addition(client, validRegistrationData):
 ################################
 # GET /userdata
 ################################
+
+
+def test_no_json_request(client):
+    """If body is not JSON, an appropriate error should be raised"""
+    response = client.get("/userdata", data="not JSON", content_type="text/plain")
+    responseJson = response.get_json()
+
+    assert response.status_code == 400, "Incorrect response status"
+
+    # Standardized JSON response expected with detail
+    assert responseJson["code"] == 400
+    assert responseJson["status"] == "Error"
+    assert responseJson["message"] == "Must be JSON request"
+
+
 def test_no_UUID_userdata(client):
     """If UUID key is not provided in request,
     an appropriate error should be raised"""
-    response = client.get("/userdata")
+    response = client.get("/userdata", json={})
     responseJson = response.get_json()
 
     assert response.status_code == 400, "Incorrect response status"
@@ -204,7 +222,7 @@ def test_match_UUID_userdata(client, registerUser):
     user = registerUser[0]
 
     expectedResponse = {
-        "uuid": user.uuid,
+        "uuid": str(user.uuid),
         "first_name": user.firstName,
         "last_name": user.lastName,
     }
@@ -218,14 +236,14 @@ def test_match_UUID_userdata(client, registerUser):
 
 
 ################################
-# POST /userdata
+# PUT /userdata
 ################################
 
 
-def test_no_UUID_post_userdata(client):
+def test_no_UUID_put_userdata(client):
     """If UUID key is not provided in request,
     an appropriate error should be raised"""
-    response = client.post("/userdata")
+    response = client.put("/userdata", json={})
     responseJson = response.get_json()
 
     assert response.status_code == 400, "Incorrect response status"
@@ -237,13 +255,13 @@ def test_no_UUID_post_userdata(client):
 
 
 @pytest.mark.parametrize("badUUID", ["", "asdfasdf", None])
-def test_bad_UUID_post_userdata(client, badUUID):
+def test_bad_UUID_put_userdata(client, badUUID):
     """If UUID is invalid format,
     an appropriate error should be raised"""
 
     body = {"uuid": badUUID}
 
-    response = client.post("/userdata", json=body)
+    response = client.put("/userdata", json=body)
     responseJson = response.get_json()
 
     assert response.status_code == 400, "Incorrect response status"
@@ -254,13 +272,13 @@ def test_bad_UUID_post_userdata(client, badUUID):
     assert responseJson["message"] == "Missing UUID"
 
 
-def test_no_match_UUID_post_userdata(client, registerUser):
+def test_no_match_UUID_put_userdata(client, registerUser):
     """If UUID produces no database match,
     an appropriate error should be raised"""
 
     registerUser[1]["uuid"] = uuid.uuid4()
 
-    response = client.post("/userdata", json=registerUser[1])
+    response = client.put("/userdata", json=registerUser[1])
     responseJson = response.get_json()
 
     assert response.status_code == 404, "Incorrect response status"
@@ -271,11 +289,11 @@ def test_no_match_UUID_post_userdata(client, registerUser):
     assert responseJson["message"] == "User not found"
 
 
-def test_no_fields_post_userdata(client, registerUser):
+def test_no_fields_put_userdata(client, registerUser):
     """If no information is provided with UUID,
     an appropriate error is raised"""
 
-    response = client.post("/userdata", json=registerUser[1])
+    response = client.put("/userdata", json=registerUser[1])
     responseJson = response.get_json()
 
     assert response.status_code == 400, "Incorrect response status"
@@ -286,29 +304,37 @@ def test_no_fields_post_userdata(client, registerUser):
     assert responseJson["message"] == "Missing attributes"
 
 
-def test_invalid_key_post_userdata(client, registerUser):
+def test_invalid_key_put_userdata(client, registerUser):
     """If an invalid data key is included in the request,
-    an appropriate error should be raised"""
+    it is ignored"""
 
     registerUser[1]["invalidkey"] = "something"
-    response = client.post("/userdata", json=registerUser[1])
+    response = client.put("/userdata", json=registerUser[1])
     responseJson = response.get_json()
 
-    assert response.status_code == 400, "Incorrect response status"
+    user = registerUser[0]
+
+    expectedResponse = {
+        "uuid": str(user.uuid),
+        "first_name": "Joe",
+        "last_name": "John",
+    }
+
+    assert response.status_code == 200, "Incorrect response status"
 
     # Standardized JSON response expected with detail
-    assert responseJson["code"] == 400
-    assert responseJson["status"] == "Error"
-    assert responseJson["message"] == "Invalid key"
+    assert responseJson["code"] == 200
+    assert responseJson["status"] == "Success"
+    assert responseJson["message"] == expectedResponse
 
 
-def test_fail_constraint_post_userdata(client, registerUser):
+def test_fail_constraint_put_userdata(client, registerUser):
     """If model constraints/validators fail,
     an appropriate error should be raised"""
 
     # Invalid first name
-    registerUser[1]["firstName"] = "$$$"
-    response = client.post("/userdata", json=registerUser[1])
+    registerUser[1]["first_name"] = "$$$"
+    response = client.put("/userdata", json=registerUser[1])
     responseJson = response.get_json()
 
     assert response.status_code == 400, "Incorrect response status"
@@ -316,18 +342,18 @@ def test_fail_constraint_post_userdata(client, registerUser):
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
     assert responseJson["status"] == "Error"
-    assert responseJson["message"] == "Database constraint/validator error"
+    assert responseJson["message"] == "User DB error"
 
 
-@pytest.mark.parametrize("attribute", ["firstName", "lastName"])
-def test_valid_single_change_post_userdata(client, registerUser, attribute):
+@pytest.mark.parametrize("attribute", ["first_name", "last_name"])
+def test_valid_single_change_put_userdata(client, registerUser, attribute):
     """If a valid data key with valid data is submitted with valid UUID,
     the response should indicate success"""
 
     # Replace an attribute
     registerUser[1][attribute] = "newname"
 
-    response = client.post("/userdata", json=registerUser[1])
+    response = client.put("/userdata", json=registerUser[1])
     responseJson = response.get_json()
 
     assert response.status_code == 200, "Incorrect response status"
@@ -335,31 +361,31 @@ def test_valid_single_change_post_userdata(client, registerUser, attribute):
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 200
     assert responseJson["status"] == "Success"
-    assert responseJson["message"][attribute] == "newname"
+    assert responseJson["message"][attribute] == "Newname"
 
 
-def test_valid_double_change_post_userdata(client, registerUser):
+def test_valid_double_change_put_userdata(client, registerUser):
     """Endpoint will accept any number of valid keys and update all that are provided,
     so long as they match DB columns"""
 
-    # Replace both currently available attributes, single replacements tested in test_valid_single_change_post_userdata
-    registerUser[1]["firstName"] = "newname"
-    registerUser[1]["lastName"] = "lastname"
+    # Replace both currently available attributes, single replacements tested in test_valid_single_change_put_userdata
+    registerUser[1]["first_name"] = "newname"
+    registerUser[1]["last_name"] = "lastname"
 
-    response = client.post("/userdata", json=registerUser[1])
+    response = client.put("/userdata", json=registerUser[1])
     responseJson = response.get_json()
 
     user = registerUser[0]
 
     expectedResponse = {
-        "uuid": user.uuid,
-        "first_name": "newname",
-        "last_name": "lastname",
+        "uuid": str(user.uuid),
+        "first_name": "Newname",
+        "last_name": "Lastname",
     }
 
-    assert response.status_code == 400, "Incorrect response status"
+    assert response.status_code == 200, "Incorrect response status"
 
     # Standardized JSON response expected with detail
-    assert responseJson["code"] == 400
-    assert responseJson["status"] == "Error"
+    assert responseJson["code"] == 200
+    assert responseJson["status"] == "Success"
     assert responseJson["message"] == expectedResponse

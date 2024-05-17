@@ -39,3 +39,11 @@ class User(db.Model):
 
         # Title case the valid name
         return name.title()
+
+    # Return user info as a dictionary
+    def toDict(self):
+        return {
+            "uuid": self.uuid,
+            "first_name": self.firstName,
+            "last_name": self.lastName,
+        }

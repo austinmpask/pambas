@@ -1,4 +1,4 @@
-from flaskr.routes import register
+from flaskr.routes import register, userdata
 import flaskr.routes
 
 
@@ -8,3 +8,4 @@ def configureRoutes(app):
         # Register blueprints for API endpoints
         app.register_blueprint(flaskr.routes.index_bp)
         app.register_blueprint(register.register_bp)
+        app.register_blueprint(userdata.userdata_bp)

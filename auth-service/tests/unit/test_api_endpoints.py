@@ -352,5 +352,20 @@ def test_both_login_credentials_success(client, registerUser, validRegistrationD
     assert responseJson["message"]  # JWT token
 
 
-"""If an invalid email address format is provided,
-among no other valid credential, an appropriate error should be raised"""
+@pytest.mark.parametrize("invalidEmail", ["asdf", "@.", "$$$$$", "asdf@asdf"])
+def test_invalid_email_format(
+    client, registerUser, validRegistrationData, invalidEmail
+):
+    """If an invalid email address format is provided,
+    among no other valid credential, an appropriate error should be raised"""
+
+    validRegistrationData["email"] = invalidEmail
+
+    response = client.post("/login", json=validRegistrationData)
+    responseJson = response.get_json()
+
+    assert response.status_code == 200, "Incorrect response status"
+
+    assert responseJson["code"] == 200
+    assert responseJson["status"] == "Success"
+    assert responseJson["message"]  # JWT token

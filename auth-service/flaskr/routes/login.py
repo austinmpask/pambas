@@ -1,7 +1,7 @@
 from flask import request, Blueprint
 from flaskr.config import bcrypt
 from flaskr.models import db, User
-from flaskr.util import sendJsonResponse
+from flaskr.util import sendJsonResponse, queryForUser
 import validators
 
 
@@ -10,8 +10,8 @@ login_bp = Blueprint("login", __name__)
 
 @login_bp.route("/login", methods=["POST"])
 def login():
-    invalidJSONResponse = sendJsonResponse(400, "Must be JSON request")
 
+    # Must be application/JSON
     if request.is_json:
 
         # Parse request body
@@ -21,55 +21,28 @@ def login():
         email = data.get("email")
         password = data.get("password")
 
+        # Exit operation if neither username nor email is provided
+        if not (email or username):
+            return sendJsonResponse(400, "Login credential missing")
+
         # Exit operation if a password is not provided
-        if password:
-            # Atleast one credential must be provided. Email is the default identifier
-            if email and validators.email(email):
-                # Email was provided in request and is valid format
-                try:
-                    user = db.session.query(User).filter_by(email=email).first()
-                except Exception as e:
-                    # Catch if there is an error querying the DB
-                    return sendJsonResponse(500, "Error from auth DB: ", e)
-
-                # User exists in the DB, check passwords
-                if user:
-                    if bcrypt.check_password_hash(user.password_hash, password):
-                        # Successful authentication with email
-                        return sendJsonResponse(200, "JWT TOKEN HERE")
-                    else:
-                        # Password mismatch
-                        return sendJsonResponse(401, "Unauthorized: Incorrect login")
-
-                else:
-                    return sendJsonResponse(401, "Unauthorized: Incorrect login")
-
-            elif username:
-                # Query with username instead of email
-                try:
-                    user = db.session.query(User).filter_by(user_name=username).first()
-                except Exception as e:
-                    # Catch if there is an error querying the DB
-                    return sendJsonResponse(500, "Error from auth DB: ", e)
-
-                # User exists in the DB, check passwords
-                if user:
-                    if bcrypt.check_password_hash(user.password_hash, password):
-                        # Successful authentication with email
-                        return sendJsonResponse(200, "JWT TOKEN HERE")
-                    else:
-                        # Password mismatch
-                        return sendJsonResponse(401, "Unauthorized: Incorrect login")
-
-                else:
-                    return sendJsonResponse(401, "Unauthorized: Incorrect login")
-
-            else:
-                return sendJsonResponse(400, "Login credential missing")
-
-        else:
-            # Password not included in request or is ""
+        if not password:
             return sendJsonResponse(400, "Password missing")
 
-    else:
-        return invalidJSONResponse
+        # Query DB for a matching user, will use email by default, or username if no email
+        try:
+            user = queryForUser(email=email, username=username)
+        except Exception as e:
+            # Catch if there is an error querying the DB
+            return sendJsonResponse(400, "Auth DB query error: ", e)
+
+        # User exists in the DB, check passwords
+        if user:
+            if bcrypt.check_password_hash(user.password_hash, password):
+                # Successful authentication with email
+                return sendJsonResponse(200, "JWT TOKEN HERE")
+
+        return sendJsonResponse(401, "Unauthorized: Incorrect login")
+
+    # Non JSON request
+    return sendJsonResponse(400, "Must be JSON request")

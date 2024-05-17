@@ -2,7 +2,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from .config import Configuration
 from .models import db
-from .routes import configureRoutes
+from .config_routes import configureRoutes
 
 
 # App factory

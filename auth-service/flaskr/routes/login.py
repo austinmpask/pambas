@@ -1,8 +1,9 @@
-from flask import request, Blueprint
+from flask import request, Blueprint, current_app
 from flaskr.config import bcrypt
 from flaskr.models import db, User
 from flaskr.util import sendJsonResponse, queryForUser
 import validators
+import jwt
 
 
 login_bp = Blueprint("login", __name__)
@@ -34,13 +35,20 @@ def login():
             user = queryForUser(email=email, username=username)
         except Exception as e:
             # Catch if there is an error querying the DB
-            return sendJsonResponse(400, "Auth DB query error: ", e)
+            return sendJsonResponse(400, "Auth DB query error", e)
 
         # User exists in the DB, check passwords
         if user:
             if bcrypt.check_password_hash(user.password_hash, password):
-                # Successful authentication with email
-                return sendJsonResponse(200, "JWT TOKEN HERE")
+
+                # User matched, generate JWT
+                sessionJWT = jwt.encode(
+                    {"uuid": str(user.uuid)},
+                    current_app.config["SECRET_KEY"],
+                    algorithm="HS256",
+                )
+
+                return sendJsonResponse(200, sessionJWT)
 
         return sendJsonResponse(401, "Unauthorized: Incorrect login")
 

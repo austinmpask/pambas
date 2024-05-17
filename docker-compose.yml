@@ -39,6 +39,7 @@ services:
       - backend
     environment:
       - DATABASE_URL=postgresql://auth_service_user:${AUTH_DB_PASSWORD}@auth-db/authdb
+      - SECRET_KEY=5RG1uLnB++zZBlSEmP0nSKYc92eiJm9sMcvPFZ4fHGw=
     depends_on:
       - auth-db
 

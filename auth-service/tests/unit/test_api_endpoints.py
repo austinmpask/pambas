@@ -1,7 +1,9 @@
 import pytest
 import uuid
+import jwt
 from flaskr.models import db, User
 from flaskr import createApp
+from flask import current_app
 
 
 @pytest.fixture(scope="function")
@@ -284,25 +286,6 @@ def test_single_login_credential_undefined(
     assert responseJson["message"]  # JWT token
 
 
-@pytest.mark.parametrize("credential", ["email", "username"])
-def test_single_login_credential_blank(
-    client, registerUser, validRegistrationData, credential
-):
-    """If the one credential (username/email) is "",
-    but the other is valid, the valid credential is used to authenticate"""
-
-    validRegistrationData[credential] = ""
-
-    response = client.post("/login", json=validRegistrationData)
-    responseJson = response.get_json()
-
-    assert response.status_code == 200, "Incorrect response status"
-
-    assert responseJson["code"] == 200
-    assert responseJson["status"] == "Success"
-    assert responseJson["message"]  # JWT token
-
-
 def test_login_credential_not_found(client, registerUser, validRegistrationData):
     """If the username/email is incorrect/not found,
     the response should be 401 Unauthorized"""
@@ -338,9 +321,14 @@ def test_login_incorrect_password(client, registerUser, validRegistrationData):
     assert responseJson["message"] == "Unauthorized: Incorrect login"
 
 
-def test_both_login_credentials_success(client, registerUser, validRegistrationData):
-    """If correct username + email (both credentials) and password is submitted,
-    a JWT token is generated and returned. Email is the default credential used"""
+@pytest.mark.parametrize("credential", ["email", "username"])
+def test_single_login_credential_blank(
+    client, registerUser, validRegistrationData, credential
+):
+    """If the one credential (username/email) is "",
+    but the other is valid, the valid credential is used to authenticate"""
+
+    validRegistrationData[credential] = ""
 
     response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
@@ -350,6 +338,26 @@ def test_both_login_credentials_success(client, registerUser, validRegistrationD
     assert responseJson["code"] == 200
     assert responseJson["status"] == "Success"
     assert responseJson["message"]  # JWT token
+
+
+def test_both_login_credentials_success(client, registerUser, validRegistrationData):
+    """If correct username + email (both credentials) and password is submitted,
+    a JWT token is generated and returned. Email is the default credential used"""
+
+    response = client.post("/login", json=validRegistrationData)
+    responseJson = response.get_json()
+
+    # Collect UUID from JWT
+    responseUUID = jwt.decode(
+        responseJson["message"], current_app.config["SECRET_KEY"], algorithms="HS256"
+    )
+
+    assert response.status_code == 200, "Incorrect response status"
+
+    assert responseJson["code"] == 200
+    assert responseJson["status"] == "Success"
+    # Match JWT UUID with user UUID from registration
+    assert responseUUID["uuid"] == registerUser
 
 
 @pytest.mark.parametrize("invalidEmail", ["asdf", "@.", "$$$$$", "asdf@asdf"])
@@ -360,12 +368,13 @@ def test_invalid_email_format(
     among no other valid credential, an appropriate error should be raised"""
 
     validRegistrationData["email"] = invalidEmail
+    del validRegistrationData["username"]
 
     response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
 
-    assert response.status_code == 200, "Incorrect response status"
+    assert response.status_code == 400, "Incorrect response status"
 
-    assert responseJson["code"] == 200
-    assert responseJson["status"] == "Success"
-    assert responseJson["message"]  # JWT token
+    assert responseJson["code"] == 400
+    assert responseJson["status"] == "Error"
+    assert responseJson["message"] == "Auth DB query error"

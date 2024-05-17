@@ -19,10 +19,16 @@ def sendJsonResponse(code, message, error=None):
 # Helper to query db for login
 def queryForUser(email=None, username=None):
     # Query for a user using email as default
-    user = (
-        db.session.query(User).filter_by(email=email).first()
-        if email and validators.email(email)
-        else db.session.query(User).filter_by(user_name=username).first()
-    )
+
+    user = None
+
+    if email and validators.email(email):
+        user = db.session.query(User).filter_by(email=email).first()
+
+    elif username:
+        user = db.session.query(User).filter_by(user_name=username).first()
+
+    else:
+        raise Exception("Invalid email format/username")
 
     return user

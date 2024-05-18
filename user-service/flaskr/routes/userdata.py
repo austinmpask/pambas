@@ -10,15 +10,10 @@ userdata_bp = Blueprint("userdata", __name__)
 @userdata_bp.route("/userdata", methods=["GET", "PUT"])
 def userData():
 
-    # Request must have JSON body
-    if request.is_json:
-
-        # Parse request
-        data = request.get_json()
-
+    if request.method == "GET":
         # Check if UUID is valid
         try:
-            user_uuid = data["uuid"]
+            user_uuid = request.headers.get("UUID")
             user_uuid = uuid.UUID(user_uuid)
         except Exception as e:
             return sendJsonResponse(400, "Missing UUID", e)
@@ -29,12 +24,30 @@ def userData():
         if not user:
             return sendJsonResponse(404, "User not found")
 
-        # Update user data
-        if request.method == "PUT":
+    # Update user data
+    elif request.method == "PUT":
+
+        # Request must have JSON body
+        if request.is_json:
+            # Parse request
+            data = request.get_json()
+
+            # Check if UUID is valid, UUID comes from body for PUT
+            try:
+                user_uuid = data["uuid"]
+                uuid.UUID(user_uuid)
+            except Exception as e:
+                return sendJsonResponse(400, "Missing UUID", e)
 
             # Exit if no data is provided with UUID
             if len(data.keys()) < 2:
                 return sendJsonResponse(400, "Missing attributes")
+
+            # Find the user in user DB
+            user = db.session.query(User).filter_by(uuid=user_uuid).first()
+
+            if not user:
+                return sendJsonResponse(404, "User not found")
 
             # Gather data from request, use existing data as default to dynamically handle multiple replacements
             firstName = data.get("first_name", user.firstName)
@@ -49,7 +62,8 @@ def userData():
                 db.session.rollback()
                 return sendJsonResponse(400, "User DB error")
 
-        # Respond with the user info
-        return sendJsonResponse(200, user.toDict())
+        else:
+            return sendJsonResponse(400, "Must be JSON request")
 
-    return sendJsonResponse(400, "Must be JSON request")
+    # Respond with the user info
+    return sendJsonResponse(200, user.toDict())

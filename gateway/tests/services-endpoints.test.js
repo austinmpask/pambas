@@ -33,6 +33,24 @@ describe("API Gateway tests", () => {
       }
     );
   });
+
+  describe("POST /register", () => {
+    test("Should send a response confirming success after registering a user. Registration and DB accuracy are tested by relevant microservices.", async () => {
+      const response = await request(app)
+        .post("/register/")
+        .send({
+          username: "joe101",
+          email: "joe101@gmail.com",
+          first_name: "joe",
+          last_name: "john",
+          password: "password",
+        })
+        .set("Content-Type", "application/json");
+
+      // expect(response.status).toBe(201);
+      expect(response.body.trace).toBe("Successful registration");
+    });
+  });
 });
 
 // describe("POST /register", () => {

@@ -13,7 +13,8 @@ services:
     environment:
       - DATABASE_URL=postgresql://test_user_service_user:${USER_DB_PASSWORD}@test-user-db/testuserdb
     depends_on:
-      - test-user-db
+      test-user-db:
+        condition: service_healthy
     command: ["./wait-for", "test-user-db:5432", "--", "./start-script-test"]
 
   # Test database for user service
@@ -27,13 +28,20 @@ services:
       - POSTGRES_DB=testuserdb
       - POSTGRES_USER=test_user_service_user
       - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user_service_user -d testuserdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   auth-service:
     # Use separate test database
     environment:
       - DATABASE_URL=postgresql://test_auth_service_user:${AUTH_DB_PASSWORD}@test-auth-db/testauthdb
     depends_on:
-      - test-auth-db
+      test-auth-db:
+        condition: service_healthy
+
     command: ["./wait-for", "test-auth-db:5432", "--", "./start-script-test"]
 
   # Test database for auth service
@@ -47,6 +55,11 @@ services:
       - POSTGRES_DB=testauthdb
       - POSTGRES_USER=test_auth_service_user
       - POSTGRES_PASSWORD=${AUTH_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_auth_service_user -d testauthdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   test-user-db-data:

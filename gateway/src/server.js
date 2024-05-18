@@ -26,7 +26,7 @@ const blockDirectAccess = (req, res, next) => {
 
   //Send forbidden response if path is matched
   if (paths.includes(req.path)) {
-    sendJsonResponse(res, 403, "Forbidden");
+    return sendJsonResponse(res, 403, "Forbidden");
   }
   next();
 };
@@ -54,6 +54,45 @@ services.forEach(({ route, target }) => {
 
 //Parse request body
 app.use(express.json());
+
+//Get user data, requires JWT
+app.get("/userdata", async (_req, res) => {
+  //Construct the endpoint for user service
+  const userHost = services.find((item) => item.route === "/users").target;
+  const endpoint = "/userdata";
+
+  const apiEndpoint = userHost + endpoint;
+
+  //Make request to the user service
+  let userServiceResponse;
+  let responseBody;
+  try {
+    userServiceResponse = await fetch(apiEndpoint, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    responseBody = await userServiceResponse.json();
+  } catch (e) {
+    return sendJsonResponse(res, 500, "Internal user server error", String(e));
+  }
+
+  //Forward the response
+  if (userServiceResponse && userServiceResponse.status === 200) {
+    return sendJsonResponse(
+      res,
+      userServiceResponse.status,
+      JSON.stringify(responseBody.message)
+    );
+  } else {
+    //Bad response/no response from the user service
+    return sendJsonResponse(
+      res,
+      500,
+      "No response/invalid response from user server",
+      JSON.stringify(responseBody)
+    );
+  }
+});
 
 //Handle user registration, creates user in auth and user services
 app.post("/register", async (req, res) => {
@@ -87,7 +126,12 @@ app.post("/register", async (req, res) => {
         headers: { "Content-Type": "application/json" },
       });
     } catch (e) {
-      sendJsonResponse(res, 500, "Internal auth server error: ", String(e));
+      return sendJsonResponse(
+        res,
+        500,
+        "Internal auth server error",
+        String(e)
+      );
     }
 
     //If successful, tell user service to handle registration
@@ -117,12 +161,17 @@ app.post("/register", async (req, res) => {
         });
 
         //Send error response
-        sendJsonResponse(res, 500, "Internal user server error", String(e));
+        return sendJsonResponse(
+          res,
+          500,
+          "Internal user server error",
+          String(e)
+        );
       }
 
       //Successful registration
       if (userResponse && userResponse.status === 201) {
-        sendJsonResponse(res, 201, "Successful registration");
+        return sendJsonResponse(res, 201, "Successful registration");
       } else {
         //If no user response or non OK status
 
@@ -141,7 +190,7 @@ app.post("/register", async (req, res) => {
           userResponseBody = await userResponse.json();
         }
 
-        sendJsonResponse(
+        return sendJsonResponse(
           res,
           500,
           "No response/invalid response from user server",
@@ -156,7 +205,7 @@ app.post("/register", async (req, res) => {
       if (authResponse) {
         authResponseBody = await authResponse.json();
       }
-      sendJsonResponse(
+      return sendJsonResponse(
         res,
         500,
         "No response/invalid response from auth server:",
@@ -164,13 +213,13 @@ app.post("/register", async (req, res) => {
       );
     }
   } else {
-    sendJsonResponse(res, 400, "Missing registration arguments");
+    return sendJsonResponse(res, 400, "Missing registration arguments");
   }
 });
 
 //404 not found error
 app.use((_req, res) => {
-  sendJsonResponse(res, 404, "Bad request");
+  return sendJsonResponse(res, 404, "Bad request");
 });
 
 app.listen(PORT, () => {

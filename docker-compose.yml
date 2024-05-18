@@ -8,8 +8,11 @@ services:
     environment:
       - PORT=3000
     depends_on:
-      - user-service
-      - auth-service
+      user-service:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+
     command: ["npm", "run", "start"]
 
   user-service:
@@ -19,7 +22,15 @@ services:
     environment:
       - DATABASE_URL=postgresql://user_service_user:${USER_DB_PASSWORD}@user-db/userdb
     depends_on:
-      - user-db
+      user-db:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
     command: ["./wait-for", "user-db:5432", "--", "./start-script"]
 
   user-db:
@@ -33,6 +44,12 @@ services:
       - POSTGRES_USER=user_service_user
       - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user_service_user -d userdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   auth-service:
     build: ./auth-service
     networks:
@@ -41,7 +58,14 @@ services:
       - DATABASE_URL=postgresql://auth_service_user:${AUTH_DB_PASSWORD}@auth-db/authdb
       - SECRET_KEY=5RG1uLnB++zZBlSEmP0nSKYc92eiJm9sMcvPFZ4fHGw=
     depends_on:
-      - auth-db
+      auth-db:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
     command: ["./wait-for", "auth-db:5432", "--", "./start-script"]
 
@@ -55,6 +79,11 @@ services:
       - POSTGRES_DB=authdb
       - POSTGRES_USER=auth_service_user
       - POSTGRES_PASSWORD=${AUTH_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auth_service_user -d authdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   user-db-data:

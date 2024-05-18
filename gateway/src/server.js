@@ -137,7 +137,7 @@ app.post("/register", async (req, res) => {
     //If successful, tell user service to handle registration
     if (authResponse && authResponse.status === 201) {
       const responseBody = await authResponse.json();
-      const user_uuid = responseBody.uuid;
+      const user_uuid = responseBody.message;
 
       let userResponse;
       try {

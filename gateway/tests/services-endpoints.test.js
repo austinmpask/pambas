@@ -47,25 +47,8 @@ describe("API Gateway tests", () => {
         })
         .set("Content-Type", "application/json");
 
-      // expect(response.status).toBe(201);
-      expect(response.body.trace).toBe("Successful registration");
+      expect(response.status).toBe(201);
+      expect(response.body.message).toBe("Successful registration");
     });
   });
 });
-
-// describe("POST /register", () => {
-//   test("Should register a user successfully in user service and auth service, with matching UUID", async () => {
-//     const response = await request(app)
-//       .post("/register")
-//       .set("Content-Type", "application/json")
-//       .send({
-//         username: "joe100",
-//         email: "joe99@gmail.com",
-//         first_name: "joe",
-//         last_name: "john",
-//         password: "password",
-//       });
-//     // console.log(response);
-//     expect(response.status).toBe(200);
-//   });
-// });

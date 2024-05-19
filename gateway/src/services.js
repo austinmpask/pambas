@@ -8,6 +8,10 @@ const services = [
     route: "/auth",
     target: "http://auth-service:5000",
   },
+  {
+    route: "/notes",
+    target: "http://note-service:5000",
+  },
 ];
 
 //Forbidden microservice endpoints - not to be directly accessed. Only to be accessed by gateway logic

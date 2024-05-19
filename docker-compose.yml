@@ -13,6 +13,8 @@ services:
         condition: service_healthy
       auth-service:
         condition: service_healthy
+      note-service:
+        condition: service_healthy
 
     command: ["npm", "run", "start"]
 
@@ -86,9 +88,44 @@ services:
       timeout: 5s
       retries: 5
 
+  note-service:
+    build: ./note-service
+    networks:
+      - backend
+    environment:
+      - DATABASE_URL=postgresql://note_service_user:${NOTE_DB_PASSWORD}@note-db/notedb
+    depends_on:
+      note-db:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    command: ["./wait-for", "note-db:5432", "--", "./start-script"]
+
+  note-db:
+    image: postgres:alpine
+    networks:
+      - backend
+    volumes:
+      - note-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=notedb
+      - POSTGRES_USER=note_service_user
+      - POSTGRES_PASSWORD=${NOTE_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U note_service_user -d notedb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 volumes:
   user-db-data:
   auth-db-data:
+  note-db-data:
 
 networks:
   backend:

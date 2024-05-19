@@ -14,3 +14,7 @@ services:
   auth-service:
     # Run service as normal for gateway requests, but with the test DB
     command: ["./wait-for", "test-auth-db:5432", "--", "./start-script"]
+
+  note-service:
+    # Run service as normal for gateway requests, but with the test DB
+    command: ["./wait-for", "test-note-db:5432", "--", "./start-script"]

@@ -36,3 +36,15 @@ services:
     # Expose port for DB viewing on local machine
     ports:
       - 5432:5432
+
+  note-service:
+    # Live file updates
+    volumes:
+      - ./note-service:/app
+    environment:
+      - FLASK_DEBUG=1
+
+  note-db:
+    # Expose port for DB viewing on local machine
+    ports:
+      - 5434:5432

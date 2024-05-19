@@ -5,7 +5,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const { services, forbiddenEndpoints } = require("./services");
-const { sendJsonResponse, forbiddenObjToArray, verifyJWT } = require("./util");
+const { sendJsonResponse, forbiddenObjToArray, verifyJWT } = require("./utils");
 
 const app = express();
 

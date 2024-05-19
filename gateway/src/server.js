@@ -1,12 +1,11 @@
-const express = require("express");
 const cors = require("cors");
+const express = require("express");
+const fetch = require("node-fetch");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const { createProxyMiddleware } = require("http-proxy-middleware");
-const fetch = require("node-fetch");
-
 const { services, forbiddenEndpoints } = require("./services");
-const { sendJsonResponse, forbiddenObjToArray } = require("./util");
+const { sendJsonResponse, forbiddenObjToArray, verifyJWT } = require("./util");
 
 const app = express();
 
@@ -56,7 +55,7 @@ services.forEach(({ route, target }) => {
 app.use(express.json());
 
 //Get user data, requires JWT
-app.get("/userdata", async (_req, res) => {
+app.get("/userdata", verifyJWT, async (req, res) => {
   //Construct the endpoint for user service
   const userHost = services.find((item) => item.route === "/users").target;
   const endpoint = "/userdata";
@@ -69,15 +68,15 @@ app.get("/userdata", async (_req, res) => {
   try {
     userServiceResponse = await fetch(apiEndpoint, {
       method: "GET",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", UUID: req.sessionUUID },
     });
     responseBody = await userServiceResponse.json();
   } catch (e) {
     return sendJsonResponse(res, 500, "Internal user server error", String(e));
   }
 
-  //Forward the response
   if (userServiceResponse && userServiceResponse.status === 200) {
+    //Success, forward the response
     return sendJsonResponse(
       res,
       userServiceResponse.status,

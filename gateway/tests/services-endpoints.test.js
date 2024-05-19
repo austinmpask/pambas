@@ -60,17 +60,23 @@ describe("API Gateway GET tests", () => {
         //Successful login, retain JWT for testing
         if (loginResponse && loginResponse.status === 200) {
           sessionJWT = loginResponse.body.message;
-          console.log("JWT FROM AUTH: " + sessionJWT);
+        } else {
+          throw new Error("Couldnt get JWT!");
         }
       }
     });
 
     test("Should return data object for a user", async () => {
-      const response = await request(app).get("/userdata/");
+      const response = await request(app)
+        .get("/userdata/")
+        .set("authorization", `Bearer ${sessionJWT}`);
 
       expect(response.status).toBe(200);
-      expect(response.body.message.first_name).toBe("Jack");
-      expect(response.body.message.last_name).toBe("Johnson");
+
+      const message = JSON.parse(response.body.message);
+
+      expect(message.first_name).toBe("Jack");
+      expect(message.last_name).toBe("Johnson");
     });
 
     test("Should return 405 Forbidden if a valid JWT is not provided", async () => {

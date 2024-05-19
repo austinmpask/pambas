@@ -7,6 +7,7 @@ services:
       - backend
     environment:
       - PORT=3000
+      - SECRET_KEY=5RG1uLnB++zZBlSEmP0nSKYc92eiJm9sMcvPFZ4fHGw=
     depends_on:
       user-service:
         condition: service_healthy

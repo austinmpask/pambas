@@ -1,3 +1,7 @@
+const jwt = require("jsonwebtoken");
+
+const JWT_SECRET_KEY = process.env.SECRET_KEY || "secret";
+
 //Easier sending success/error messages from gateway
 function sendJsonResponse(res, code, message, trace = "None available") {
   const okCodes = [200, 201];
@@ -23,4 +27,27 @@ function forbiddenObjToArray(obj) {
   return paths;
 }
 
-module.exports = { sendJsonResponse, forbiddenObjToArray };
+//Middleware for protected routes requiring user auth
+function verifyJWT(req, res, next) {
+  //Take token from header
+  const token =
+    req.headers["authorization"] && req.headers["authorization"].split(" ")[1];
+
+  if (!token) {
+    return sendJsonResponse(res, 405, "Forbidden, token missing");
+  }
+
+  //Verify token
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET_KEY);
+    console.log("JWT TOKEN SUCCESS: " + decoded.uuid);
+
+    //No errors = valid token, pass UUID from payload to req for subsequent use
+    req.sessionUUID = decoded.uuid;
+    next();
+  } catch (e) {
+    return sendJsonResponse(res, 405, "Forbidden, invalid token");
+  }
+}
+
+module.exports = { sendJsonResponse, forbiddenObjToArray, verifyJWT };

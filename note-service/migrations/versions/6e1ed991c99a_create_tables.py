@@ -1,8 +1,8 @@
 """create tables
 
-Revision ID: db84d783236c
+Revision ID: 6e1ed991c99a
 Revises: 
-Create Date: 2024-05-19 04:42:27.447638
+Create Date: 2024-05-19 06:14:03.230533
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'db84d783236c'
+revision = '6e1ed991c99a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,26 +26,29 @@ def upgrade():
     sa.Column('billed', sa.Integer(), nullable=False),
     sa.Column('projectManager', sa.String(length=25), nullable=True),
     sa.Column('projectType', sa.Enum('SOC_1_TYPE_1', 'SOC_1_TYPE_2', 'SOC_2_TYPE_1', 'SOC_2_TYPE_2', 'OTHER', name='projecttype'), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('uuid')
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('sections',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('sectionNumber', sa.Numeric(precision=2, scale=0), nullable=False),
+    sa.Column('sectionNumber', sa.Integer(), nullable=False),
     sa.Column('sectionType', sa.String(length=30), nullable=True),
-    sa.Column('projectID', sa.Integer(), nullable=True),
+    sa.Column('projectID', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['projectID'], ['projects.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('line_items',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('flagMarker', sa.Boolean(), nullable=True),
+    sa.Column('flagMarker', sa.Boolean(), nullable=False),
     sa.Column('controlNumber', sa.Numeric(precision=4, scale=2), nullable=True),
     sa.Column('prepRating', sa.Integer(), nullable=False),
     sa.Column('inquiryRating', sa.Integer(), nullable=False),
     sa.Column('inspectionRating', sa.Integer(), nullable=False),
     sa.Column('notes', sa.Text(), nullable=True),
-    sa.Column('sectionID', sa.Integer(), nullable=True),
+    sa.Column('sectionID', sa.Integer(), nullable=False),
+    sa.CheckConstraint('"inquiryRating" IN (0, 1, 2, 3)', name='check_inquiry_rating'),
+    sa.CheckConstraint('"inspectionRating" IN (0, 1, 2, 3)', name='check_inspection_rating'),
+    sa.CheckConstraint('"prepRating" IN (0, 1, 2)', name='check_prep_rating'),
     sa.ForeignKeyConstraint(['sectionID'], ['sections.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -54,8 +57,9 @@ def upgrade():
     sa.Column('itemName', sa.String(length=20), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('controlOwner', sa.String(length=25), nullable=True),
-    sa.Column('lastContactDate', sa.Date(), nullable=True),
-    sa.Column('lineItemID', sa.Integer(), nullable=True),
+    sa.Column('lastContactDate', sa.DateTime(), nullable=True),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('lineItemID', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['lineItemID'], ['line_items.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

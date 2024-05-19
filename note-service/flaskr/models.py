@@ -32,12 +32,13 @@ class ProjectType(enum.Enum):
 class Project(db.Model):
     __tablename__ = "projects"
     id = Column(Integer, primary_key=True)
-    uuid = Column(UUID(as_uuid=True), unique=True, nullable=False)
+    uuid = Column(UUID(as_uuid=True), nullable=False)
     title = Column(String(20), nullable=False)
     budget = Column(Integer, nullable=False)
     billed = Column(Integer, nullable=False, default=0)
     projectManager = Column(String(25))
     projectType = Column(Enum(ProjectType), nullable=False)
+    created_at = Column(DateTime, nullable=False, default=datetime.now())
 
     # Back references
     sections = relationship("Section", backref="project")
@@ -46,14 +47,14 @@ class Project(db.Model):
 class Section(db.Model):
     __tablename__ = "sections"
     id = Column(Integer, primary_key=True)
-    sectionNumber = Column(Numeric(2, 0), nullable=False)
+    sectionNumber = Column(Integer, nullable=False)
     sectionType = Column(
         String(30),
         nullable=True,
     )
 
     # FK
-    projectID = Column(Integer, ForeignKey("projects.id"))
+    projectID = Column(Integer, ForeignKey("projects.id"), nullable=False)
 
     # Back references
     lineItems = relationship("LineItem", backref="section")
@@ -63,28 +64,30 @@ class LineItem(db.Model):
     __tablename__ = "line_items"
     id = Column(Integer, primary_key=True)
 
-    flagMarker = Column(Boolean)
-    controlNumber = Column(Numeric(4, 2))
+    flagMarker = Column(Boolean, nullable=False, default=False)
+    controlNumber = Column(Numeric(4, 2), default=0)
 
-    prepRating = Column(
-        Integer, CheckConstraint("column IN (0, 1, 2)"), nullable=False, default=0
-    )
+    prepRating = Column(Integer, nullable=False, default=0)
 
-    inquiryRating = Column(
-        Integer, CheckConstraint("column IN (0, 1, 2, 3)"), nullable=False, default=0
-    )
+    inquiryRating = Column(Integer, nullable=False, default=0)
 
-    inspectionRating = Column(
-        Integer, CheckConstraint("column IN (0, 1, 2, 3)"), nullable=False, default=0
-    )
+    inspectionRating = Column(Integer, nullable=False, default=0)
 
-    notes = Column(Text)
+    notes = Column(Text, nullable=True, default="")
 
     # FK
-    sectionID = Column(Integer, ForeignKey("sections.id"))
+    sectionID = Column(Integer, ForeignKey("sections.id"), nullable=False)
 
     # Back references
     pendingItems = relationship("PendingItem", backref="lineItem")
+
+    __table_args__ = (
+        CheckConstraint('"prepRating" IN (0, 1, 2)', name="check_prep_rating"),
+        CheckConstraint('"inquiryRating" IN (0, 1, 2, 3)', name="check_inquiry_rating"),
+        CheckConstraint(
+            '"inspectionRating" IN (0, 1, 2, 3)', name="check_inspection_rating"
+        ),
+    )
 
 
 class PendingItem(db.Model):
@@ -92,9 +95,10 @@ class PendingItem(db.Model):
     id = Column(Integer, primary_key=True)
 
     itemName = Column(String(20), nullable=False)
-    description = Column(Text, nullable=True)
-    controlOwner = Column(String(25), nullable=True)
-    lastContactDate = Column(Date, nullable=True)
+    description = Column(Text, nullable=True, default="")
+    controlOwner = Column(String(25), nullable=True, default="")
+    lastContactDate = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.now())
 
     # FK
-    lineItemID = Column(Integer, ForeignKey("line_items.id"))
+    lineItemID = Column(Integer, ForeignKey("line_items.id"), nullable=False)

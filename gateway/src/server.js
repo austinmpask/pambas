@@ -10,9 +10,16 @@ const { sendJsonResponse, forbiddenObjToArray, verifyJWT } = require("./utils");
 const app = express();
 
 const PORT = process.env.PORT || 3000;
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://frontend:3000/";
 
-//Security middleware
-app.use(cors());
+//Security middleware, allow frontend
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
+  })
+);
 app.use(helmet());
 
 //Logging middleware

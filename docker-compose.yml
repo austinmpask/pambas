@@ -15,6 +15,7 @@ services:
       - app-network
     environment:
       - PORT=3000
+      - FRONTEND_URL=http://frontend:3000
       - SECRET_KEY=5RG1uLnB++zZBlSEmP0nSKYc92eiJm9sMcvPFZ4fHGw=
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]

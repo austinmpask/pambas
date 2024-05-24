@@ -1,6 +1,9 @@
 version: "3"
 
 services:
+  frontend:
+    build: ./frontend
+
   api-gateway:
     build: ./gateway
     networks:

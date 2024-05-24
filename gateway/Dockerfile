@@ -1,6 +1,6 @@
 FROM node:alpine3.18
 WORKDIR usr/src/app
 COPY package*.json ./
-RUN npm install
+RUN apk update && apk add --no-cache curl && npm install
 COPY . .
 

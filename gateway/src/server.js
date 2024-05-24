@@ -54,6 +54,11 @@ services.forEach(({ route, target }) => {
 //Parse request body
 app.use(express.json());
 
+//Health check for compose
+app.get("/health", (_req, res) => {
+  return sendJsonResponse(res, 200, "ok");
+});
+
 //Get user data, requires JWT
 app.get("/userdata", verifyJWT, async (req, res) => {
   //Construct the endpoint for user service

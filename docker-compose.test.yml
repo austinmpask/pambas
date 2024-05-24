@@ -21,7 +21,7 @@ services:
   test-user-db:
     image: postgres:alpine
     networks:
-      - backend
+      - app-network
     volumes:
       - test-user-db-data:/var/lib/postgresql/data
     environment:
@@ -50,7 +50,7 @@ services:
   test-auth-db:
     image: postgres:alpine
     networks:
-      - backend
+      - app-network
     volumes:
       - test-auth-db-data:/var/lib/postgresql/data
     environment:
@@ -79,7 +79,7 @@ services:
   test-note-db:
     image: postgres:alpine
     networks:
-      - backend
+      - app-network
     volumes:
       - test-note-db-data:/var/lib/postgresql/data
     environment:

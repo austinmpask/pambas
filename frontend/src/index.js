@@ -1,11 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
-import "./assets/styles/styles.scss";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-//Global styling
-import "./assets/styles/global.css";
+//Global styling sass + Bulma
+import "./assets/styles/styles.scss";
 
 //Pages
 import Login from "./pages/Login";

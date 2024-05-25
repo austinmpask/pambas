@@ -1,1 +1,22 @@
 @import "~bulma/bulma";
+
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+
+//Show navbar burger on all devices
+.navbar-burger {
+  display: block !important;
+  z-index: 100;
+}
+
+.hamburger-card {
+  position: absolute;
+  min-width: 240px;
+  width: 15vw !important;
+}
+
+.hamburger-card-header {
+  top: 100%;
+}

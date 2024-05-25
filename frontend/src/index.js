@@ -9,6 +9,7 @@ import "./assets/styles/global.css";
 //Pages
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 import Landing from "./pages/Landing";
 import Error from "./pages/Error";
 
@@ -28,6 +29,14 @@ const endpoints = [
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
+  },
+  {
+    path: "/error",
+    element: <Error />,
   },
 ];
 

@@ -1,7 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     credential: "",
     password: "",
@@ -36,7 +39,7 @@ export default function LoginForm() {
       const response = await axios.post("/auth/login", payload);
 
       if (response.status === 200) {
-        const token = response.data.message;
+        navigate("/dashboard");
       }
     } catch (error) {
       //...

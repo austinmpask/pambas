@@ -1,7 +1,7 @@
 const request = require("supertest");
 const app = require("../src/server");
 const { forbiddenEndpoints } = require("../src/services");
-const { forbiddenObjToArray } = require("../src/util");
+const { forbiddenObjToArray } = require("../src/utils");
 
 describe("API Gateway GET tests", () => {
   describe("GET /users/", () => {
@@ -69,7 +69,7 @@ describe("API Gateway GET tests", () => {
     test("Should return data object for a user", async () => {
       const response = await request(app)
         .get("/userdata/")
-        .set("authorization", `Bearer ${sessionJWT}`);
+        .set("Cookie", [`token=${sessionJWT}`]);
 
       expect(response.status).toBe(200);
 

@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const { services, forbiddenEndpoints } = require("./services");
 const { sendJsonResponse, forbiddenObjToArray, verifyJWT } = require("./utils");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
@@ -24,6 +25,9 @@ app.use(helmet());
 
 //Logging middleware
 app.use(morgan("tiny"));
+
+//Parse cookies
+app.use(cookieParser());
 
 //Forbid direct access to certain microservice endpoints
 const blockDirectAccess = (req, res, next) => {

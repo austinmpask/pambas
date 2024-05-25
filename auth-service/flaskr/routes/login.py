@@ -1,4 +1,4 @@
-from flask import request, Blueprint, current_app
+from flask import request, make_response, Blueprint, current_app
 from flaskr.config import bcrypt
 from flaskr.models import db, User
 from flaskr.util import sendJsonResponse, queryForUser
@@ -48,7 +48,12 @@ def login():
                     algorithm="HS256",
                 )
 
-                return sendJsonResponse(200, sessionJWT)
+                response = make_response(sendJsonResponse(200, sessionJWT))
+
+                response.set_cookie(
+                    "token", sessionJWT, httponly=True, secure=True, samesite="None"
+                )
+                return response
 
         return sendJsonResponse(401, "Unauthorized: Incorrect login")
 

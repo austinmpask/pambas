@@ -29,9 +29,8 @@ function forbiddenObjToArray(obj) {
 
 //Middleware for protected routes requiring user auth
 function verifyJWT(req, res, next) {
-  //Take token from header
-  const token =
-    req.headers["authorization"] && req.headers["authorization"].split(" ")[1];
+  //Take token from parsed cookies
+  const token = req.cookies.token || undefined;
 
   if (!token) {
     return sendJsonResponse(res, 405, "Forbidden, token missing");

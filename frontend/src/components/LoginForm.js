@@ -62,7 +62,9 @@ export default function LoginForm() {
         value={formData.password}
         onChange={handleChange}
       ></input>
-      <button type="submit">Login</button>
+      <button type="submit" className="button">
+        Login
+      </button>
     </form>
   );
 }

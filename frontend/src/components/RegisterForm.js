@@ -20,10 +20,7 @@ export default function RegisterForm() {
   //Handle when form elements change
   function handleChange(event) {
     const { name, value } = event.target;
-    setFormData((previousState) => ({
-      ...previousState,
-      [name]: value,
-    }));
+    setFormData((oldState) => ({ ...oldState, [name]: value }));
   }
 
   async function handleSubmit(event) {

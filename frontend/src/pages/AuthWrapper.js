@@ -1,11 +1,9 @@
-import UserInfo from "../components/UserInfo";
-import NavBar from "../components/NavBar/NavBar";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 
-export default function Dashboard() {
+export default function AuthWrapper({ children }) {
   const navigate = useNavigate();
 
   const [authenticated, setAuthenticated] = useState(false);
@@ -36,15 +34,7 @@ export default function Dashboard() {
           });
         }
       } catch (error) {
-        if (error.response) {
-          //Not logged in/no JWT triggers 405 forbidden
-          if (error.response.status === 405) {
-            navigate("/login");
-          } else {
-            //Some other error
-            navigate("/error");
-          }
-        }
+        navigate("/login");
       }
     }
     makeRequest();
@@ -52,13 +42,7 @@ export default function Dashboard() {
 
   if (authenticated) {
     return (
-      <>
-        <UserContext.Provider value={userData}>
-          <NavBar />
-          <h1>Dashboard</h1>
-          <UserInfo />
-        </UserContext.Provider>
-      </>
+      <UserContext.Provider value={userData}>{children}</UserContext.Provider>
     );
   }
 

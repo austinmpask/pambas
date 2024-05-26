@@ -7,14 +7,17 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./assets/styles/styles.scss";
 
 //Pages
+import AuthWrapper from "./pages/AuthWrapper";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import App from "./pages/App";
 import Landing from "./pages/Landing";
+import Dashboard from "./pages/Dashboard";
 import Error from "./pages/Error";
 
 //Contexts
 import UserContext from "./context/UserContext";
+import NavBar from "./components/NavBar/NavBar";
+import PageContent from "./components/ApplicationPage/PageContent";
 
 //Assign root for vdom
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -34,8 +37,13 @@ const endpoints = [
     element: <Register />,
   },
   {
-    path: "/app",
-    element: <App />,
+    path: "/dashboard",
+    element: (
+      <AuthWrapper>
+        <NavBar />
+        <Dashboard />
+      </AuthWrapper>
+    ),
   },
   {
     path: "/error",

@@ -39,7 +39,7 @@ export default function LoginForm() {
       const response = await axios.post("/auth/login", payload);
 
       if (response.status === 200) {
-        navigate("/app");
+        navigate("/dashboard");
       }
     } catch (error) {
       //...

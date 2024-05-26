@@ -25,7 +25,6 @@ export default function RegisterForm() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    console.log(formData);
 
     // Attempt to register the user through gateway
     try {

@@ -39,7 +39,6 @@ function verifyJWT(req, res, next) {
   //Verify token
   try {
     const decoded = jwt.verify(token, JWT_SECRET_KEY);
-    console.log("JWT TOKEN SUCCESS: " + decoded.uuid);
 
     //No errors = valid token, pass UUID from payload to req for subsequent use
     req.sessionUUID = decoded.uuid;

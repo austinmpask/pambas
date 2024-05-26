@@ -1,27 +1,35 @@
+import { useContext } from "react";
+import UserContext from "../../context/UserContext";
+
 export default function HamburgerMenu() {
+  const userData = useContext(UserContext);
+
   return (
-    <div class="card hamburger-card">
-      <header class="card-header hamburger-card-header">
-        <p class="card-header-title">
-          <span class="icon-text">
-            <span class="icon">
-              <i class="fas fa-hand-sparkles"></i>
+    <div className="card hamburger-card">
+      <header className="card-header hamburger-card-header">
+        <p className="card-header-title">
+          <span className="icon-text">
+            <span className="icon">
+              <i className="fas fa-hand-sparkles"></i>
             </span>
-            <span>Hi, Firstname!</span>
+            <span>Hi, {userData.firstName}</span>
           </span>
         </p>
       </header>
-      <div class="card-content">
-        <div class="content">
-          <p>Firstname Lastname</p>
-          <p>user@gmail.com</p>
+      <div className="card-content">
+        <div className="content">
+          <p>
+            {userData.firstName} {userData.lastName}
+          </p>
+          <p>{userData.email}</p>
+          <p>{userData.username}</p>
         </div>
       </div>
-      <footer class="card-footer">
-        <a href="#" class="card-footer-item">
+      <footer className="card-footer">
+        <a href="#" className="card-footer-item">
           Settings
         </a>
-        <a href="#" class="card-footer-item">
+        <a href="#" className="card-footer-item">
           Log out
         </a>
       </footer>

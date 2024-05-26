@@ -1,4 +1,4 @@
-from flaskr.routes import register, shallowdelete, login
+from flaskr.routes import register, shallowdelete, login, getlogin
 import flaskr.routes
 
 
@@ -10,4 +10,5 @@ def configureRoutes(app):
         app.register_blueprint(flaskr.routes.index_bp)
         app.register_blueprint(register.register_bp)
         app.register_blueprint(login.login_bp)
+        app.register_blueprint(getlogin.getlogin_bp)
         app.register_blueprint(shallowdelete.shallowDelete_bp)

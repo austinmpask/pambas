@@ -3,6 +3,7 @@ import NavBar from "../components/NavBar/NavBar";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import UserContext from "../context/UserContext";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ export default function Dashboard() {
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
+    email: "",
+    username: "",
   });
 
   //Attempt to query for user data on first render (JWT required)
@@ -28,6 +31,8 @@ export default function Dashboard() {
           setUserData({
             firstName: dataObj.first_name,
             lastName: dataObj.last_name,
+            email: dataObj.email,
+            username: dataObj.username,
           });
         }
       } catch (error) {
@@ -48,9 +53,11 @@ export default function Dashboard() {
   if (authenticated) {
     return (
       <>
-        <NavBar />
-        <h1>Dashboard</h1>
-        <UserInfo data={userData} />
+        <UserContext.Provider value={userData}>
+          <NavBar />
+          <h1>Dashboard</h1>
+          <UserInfo />
+        </UserContext.Provider>
       </>
     );
   }

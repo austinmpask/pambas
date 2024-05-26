@@ -77,6 +77,8 @@ describe("API Gateway GET tests", () => {
 
       expect(message.first_name).toBe("Jack");
       expect(message.last_name).toBe("Johnson");
+      expect(message.email).toBe("jack102@gmail.com");
+      expect(message.username).toBe("jack102");
     });
 
     test("Should return 405 Forbidden if a valid JWT is not provided", async () => {

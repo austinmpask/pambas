@@ -9,9 +9,12 @@ import "./assets/styles/styles.scss";
 //Pages
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
+import App from "./pages/App";
 import Landing from "./pages/Landing";
 import Error from "./pages/Error";
+
+//Contexts
+import UserContext from "./context/UserContext";
 
 //Assign root for vdom
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -31,8 +34,8 @@ const endpoints = [
     element: <Register />,
   },
   {
-    path: "/dashboard",
-    element: <Dashboard />,
+    path: "/app",
+    element: <App />,
   },
   {
     path: "/error",

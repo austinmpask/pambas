@@ -378,3 +378,73 @@ def test_invalid_email_format(
     assert responseJson["code"] == 400
     assert responseJson["status"] == "Error"
     assert responseJson["message"] == "Auth DB query error"
+
+
+################################
+# /getlogin
+################################
+
+
+def test_no_UUID_userdata(client):
+    """If UUID key is not provided in header,
+    an appropriate error should be raised"""
+    response = client.get("/getlogin")
+    responseJson = response.get_json()
+
+    assert response.status_code == 400, "Incorrect response status"
+
+    # Standardized JSON response expected with detail
+    assert responseJson["code"] == 400
+    assert responseJson["status"] == "Error"
+    assert responseJson["message"] == "Missing UUID"
+
+
+@pytest.mark.parametrize("badUUID", ["", "asdfasdf", None])
+def test_bad_UUID_userdata(client, badUUID):
+    """If UUID is invalid format,
+    an appropriate error should be raised"""
+
+    response = client.get("/getlogin", headers={"UUID": badUUID})
+    responseJson = response.get_json()
+
+    assert response.status_code == 400, "Incorrect response status"
+
+    # Standardized JSON response expected with detail
+    assert responseJson["code"] == 400
+    assert responseJson["status"] == "Error"
+    assert responseJson["message"] == "Missing UUID"
+
+
+def test_no_match_UUID_userdata(client, registerUser):
+    """If UUID produces no database match,
+    an appropriate error should be raised"""
+
+    response = client.get("/getlogin", headers={"UUID": uuid.uuid4()})
+    responseJson = response.get_json()
+
+    assert response.status_code == 404, "Incorrect response status"
+
+    # Standardized JSON response expected with detail
+    assert responseJson["code"] == 404
+    assert responseJson["status"] == "Error"
+    assert responseJson["message"] == "User not found"
+
+
+def test_match_UUID_userdata(client, registerUser):
+    """If UUID matches a database record,
+    the record will be returned as JSON"""
+
+    response = client.get("/getlogin", headers={"UUID": str(registerUser)})
+    responseJson = response.get_json()
+
+    expectedResponse = {
+        "username": "joe101",
+        "email": "joejohn101@gmail.com",
+    }
+
+    assert response.status_code == 200, "Incorrect response status"
+
+    # Standardized JSON response expected with detail
+    assert responseJson["code"] == 200
+    assert responseJson["status"] == "Success"
+    assert responseJson["message"] == expectedResponse

@@ -76,7 +76,11 @@ app.get("/userdata", verifyJWT, async (req, res) => {
   const userHost = services.find((item) => item.route === "/users").target;
   const endpoint = "/userdata";
 
+  const authHost = services.find((item) => item.route === "/auth").target;
+  const authEndpoint = "/getlogin";
+
   const apiEndpoint = userHost + endpoint;
+  const authApiEndpoint = authHost + authEndpoint;
 
   //Make request to the user service
   let userServiceResponse;
@@ -92,12 +96,39 @@ app.get("/userdata", verifyJWT, async (req, res) => {
   }
 
   if (userServiceResponse && userServiceResponse.status === 200) {
-    //Success, forward the response
-    return sendJsonResponse(
-      res,
-      userServiceResponse.status,
-      JSON.stringify(responseBody.message)
-    );
+    //Success, make request to auth service for username and email
+    let authServiceResponse;
+    let authResponseBody;
+    try {
+      authServiceResponse = await fetch(authApiEndpoint, {
+        method: "GET",
+        headers: { "Content-Type": "application/json", UUID: req.sessionUUID },
+      });
+      authResponseBody = await authServiceResponse.json();
+    } catch (e) {
+      return sendJsonResponse(
+        res,
+        500,
+        "Internal auth server error",
+        String(e)
+      );
+    }
+
+    if (authServiceResponse && authServiceResponse.status === 200) {
+      return sendJsonResponse(
+        res,
+        200,
+        JSON.stringify({ ...responseBody.message, ...authResponseBody.message })
+      );
+    } else {
+      //Bad response/no response from the auth service
+      return sendJsonResponse(
+        res,
+        500,
+        "No response/invalid response from auth server",
+        JSON.stringify(responseBody)
+      );
+    }
   } else {
     //Bad response/no response from the user service
     return sendJsonResponse(

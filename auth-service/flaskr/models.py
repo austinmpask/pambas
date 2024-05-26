@@ -65,3 +65,9 @@ class User(db.Model):
 
         # Valid email
         return value
+
+    def toSafeDict(self):
+        return {
+            "username": self.user_name,
+            "email": self.email,
+        }

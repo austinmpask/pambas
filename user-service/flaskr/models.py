@@ -47,3 +47,10 @@ class User(db.Model):
             "first_name": self.firstName,
             "last_name": self.lastName,
         }
+
+    # Return user info as a dictionary
+    def toSafeDict(self):
+        return {
+            "first_name": self.firstName,
+            "last_name": self.lastName,
+        }

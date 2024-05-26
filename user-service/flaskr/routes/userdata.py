@@ -66,4 +66,4 @@ def userData():
             return sendJsonResponse(400, "Must be JSON request")
 
     # Respond with the user info
-    return sendJsonResponse(200, user.toDict())
+    return sendJsonResponse(200, user.toSafeDict())

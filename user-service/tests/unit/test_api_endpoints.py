@@ -218,7 +218,6 @@ def test_match_UUID_userdata(client, registerUser):
     user = registerUser[0]
 
     expectedResponse = {
-        "uuid": str(user.uuid),
         "first_name": user.firstName,
         "last_name": user.lastName,
     }
@@ -376,7 +375,6 @@ def test_valid_double_change_put_userdata(client, registerUser):
     user = registerUser[0]
 
     expectedResponse = {
-        "uuid": str(user.uuid),
         "first_name": "Newname",
         "last_name": "Lastname",
     }

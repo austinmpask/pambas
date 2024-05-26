@@ -14,13 +14,15 @@ export default function RegisterForm() {
     password: "",
   });
 
-  //Temporary error handling for storing errors
-  const [errors, setErrors] = useState();
-
   //Handle when form elements change
   function handleChange(event) {
     const { name, value } = event.target;
     setFormData((oldState) => ({ ...oldState, [name]: value }));
+  }
+
+  function handleLoginClick(event) {
+    event.preventDefault();
+    navigate("/login");
   }
 
   async function handleSubmit(event) {
@@ -41,42 +43,94 @@ export default function RegisterForm() {
         navigate("/login");
       }
     } catch (error) {
-      //Temporary just forwarding backend errors up
-      setErrors(error.response.data.message);
+      //...
     }
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <span>First Name</span>
-      <input
-        name="firstName"
-        value={formData.firstName}
-        onChange={handleChange}
-      />
-      <span>Last Name</span>
-      <input
-        name="lastName"
-        value={formData.lastName}
-        onChange={handleChange}
-      />
-      <span>Email</span>
-      <input name="email" value={formData.email} onChange={handleChange} />
-      <span>Username</span>
-      <input
-        name="username"
-        value={formData.username}
-        onChange={handleChange}
-      />
-      <span>Password</span>
-      <input
-        name="password"
-        value={formData.password}
-        onChange={handleChange}
-        type="password"
-      />
-      <button type="submit">Register</button>
-      {errors && <span>{errors}</span>}
+      <div className="field">
+        <label className="label">First Name</label>
+        <div className="control mb-3">
+          <input
+            className="input"
+            type="text"
+            placeholder="First Name"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+          ></input>
+        </div>
+      </div>
+
+      <div className="field">
+        <label className="label">Last Name</label>
+        <div className="control mb-3">
+          <input
+            className="input"
+            type="text"
+            placeholder="Last Name"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+          ></input>
+        </div>
+      </div>
+
+      <div className="field">
+        <label className="label">Email</label>
+        <div className="control mb-3">
+          <input
+            className="input"
+            type="text"
+            placeholder="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          ></input>
+        </div>
+      </div>
+
+      <div className="field">
+        <label className="label">Username</label>
+        <div className="control mb-3">
+          <input
+            className="input"
+            type="text"
+            placeholder="Username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+          ></input>
+        </div>
+      </div>
+
+      <div className="field">
+        <label className="label">Password</label>
+        <div className="control mb-3">
+          <input
+            className="input"
+            type="text"
+            placeholder="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          ></input>
+        </div>
+      </div>
+
+      <div className="field is-grouped">
+        <div className="control">
+          <button type="submit" className="button is-link">
+            Register
+          </button>
+        </div>
+        <div className="control">
+          <button onClick={handleLoginClick} className="button is-light">
+            Login
+          </button>
+        </div>
+      </div>
     </form>
   );
 }

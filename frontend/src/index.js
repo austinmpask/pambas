@@ -12,6 +12,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
+import Settings from "./pages/Settings";
 import Error from "./pages/Error";
 
 //Contexts
@@ -40,6 +41,15 @@ const endpoints = [
       <AuthWrapper>
         <NavBar />
         <Dashboard />
+      </AuthWrapper>
+    ),
+  },
+  {
+    path: "/settings",
+    element: (
+      <AuthWrapper>
+        <NavBar />
+        <Settings />
       </AuthWrapper>
     ),
   },

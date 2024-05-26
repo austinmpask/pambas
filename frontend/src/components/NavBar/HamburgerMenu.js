@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import UserContext from "../../context/UserContext";
 
 export default function HamburgerMenu() {
@@ -6,18 +6,39 @@ export default function HamburgerMenu() {
 
   const [active, setActive] = useState(false);
 
+  const hamburgerRef = useRef(null);
+
+  useEffect(() => {
+    //Close the menu if the user clicks anything outside of it
+    function handleOutsideClick(event) {
+      if (
+        hamburgerRef.current &&
+        !hamburgerRef.current.contains(event.target)
+      ) {
+        setActive(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleOutsideClick);
+
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [hamburgerRef]);
+
   function handleClick(event) {
     event.preventDefault();
     setActive((prev) => !prev);
   }
 
   return (
-    <>
+    <div ref={hamburgerRef} className="hamburger-div">
       <a
         className={`navbar-burger ${active ? "is-active" : ""}`}
         role="button"
         aria-label="menu"
         onClick={handleClick}
+        name="hamburger"
       >
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
@@ -47,15 +68,15 @@ export default function HamburgerMenu() {
             </div>
           </div>
           <footer className="card-footer">
-            <a href="#" className="card-footer-item">
+            <a href="/settings" className="card-footer-item">
               Settings
             </a>
-            <a href="#" className="card-footer-item">
+            <a href="/logout" className="card-footer-item">
               Log out
             </a>
           </footer>
         </div>
       )}
-    </>
+    </div>
   );
 }

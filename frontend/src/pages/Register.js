@@ -1,9 +1,9 @@
+import PageContent from "../components/ApplicationPage/PageContent";
 import RegisterForm from "../components/RegisterForm";
 export default function Register() {
   return (
-    <>
-      <h1>Register</h1>
+    <PageContent title="Register">
       <RegisterForm />
-    </>
+    </PageContent>
   );
 }

@@ -14,9 +14,14 @@
 .hamburger-card {
   position: absolute;
   min-width: 240px;
+  right: 0px;
   width: 15vw !important;
 }
 
 .hamburger-card-header {
   top: 100%;
+}
+
+.hamburger-div {
+  display: grid !important;
 }

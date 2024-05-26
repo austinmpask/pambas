@@ -16,6 +16,11 @@ export default function LoginForm() {
     setFormData((oldState) => ({ ...oldState, [name]: value }));
   }
 
+  function handleRegisterClick(event) {
+    event.preventDefault();
+    navigate("/register");
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -48,22 +53,46 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <p>Username/email</p>
-      <input
-        name="credential"
-        value={formData.credential}
-        onChange={handleChange}
-      ></input>
-      <p>Password</p>
-      <input
-        type="password"
-        name="password"
-        value={formData.password}
-        onChange={handleChange}
-      ></input>
-      <button type="submit" className="button">
-        Login
-      </button>
+      <div className="field">
+        <label className="label">Login</label>
+        <div className="control mb-3">
+          <input
+            className="input"
+            type="text"
+            placeholder="Username/Email"
+            name="credential"
+            value={formData.credential}
+            onChange={handleChange}
+          ></input>
+        </div>
+      </div>
+
+      <div className="field">
+        <label className="label">Password</label>
+        <div className="control mb-3">
+          <input
+            className="input"
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+          ></input>
+        </div>
+      </div>
+
+      <div className="field is-grouped">
+        <div className="control">
+          <button type="submit" className="button is-link">
+            Login
+          </button>
+        </div>
+        <div className="control">
+          <button onClick={handleRegisterClick} className="button is-light">
+            Register
+          </button>
+        </div>
+      </div>
     </form>
   );
 }

@@ -24,7 +24,9 @@ app.use(
 app.use(helmet());
 
 //Logging middleware
-app.use(morgan("tiny"));
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms")
+);
 
 //Parse cookies
 app.use(cookieParser());
@@ -68,6 +70,34 @@ app.use(express.json());
 //Health check for compose
 app.get("/health", (_req, res) => {
   return sendJsonResponse(res, 200, "ok");
+});
+
+//Update first or last name
+app.put("/userdata", verifyJWT, async (req, res) => {
+  const userHost = services.find((item) => item.route === "/users").target;
+  const endpoint = "/userdata";
+  const apiEndpoint = userHost + endpoint;
+
+  let apiResponse;
+  let responseBody;
+
+  try {
+    // console.log(JSON.stringify({ ...req.body, uuid: req.sessionUUID }));
+    apiResponse = await fetch(apiEndpoint, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...req.body, uuid: String(req.sessionUUID) }),
+    });
+
+    responseBody = await apiResponse.json();
+  } catch (e) {
+    return sendJsonResponse(res, 500, "Internal user server error", String(e));
+  }
+
+  if (apiResponse && apiResponse.status === 200) {
+    //Success
+    sendJsonResponse(res, 200, JSON.stringify(responseBody.message));
+  }
 });
 
 //Get user data, requires JWT

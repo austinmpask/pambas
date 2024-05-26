@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import UserContext from "../context/UserContext";
+import { UserProvider } from "../context/UserContext";
 
 export default function AuthWrapper({ children }) {
   const navigate = useNavigate();
@@ -41,9 +41,7 @@ export default function AuthWrapper({ children }) {
   }, [navigate]);
 
   if (authenticated) {
-    return (
-      <UserContext.Provider value={userData}>{children}</UserContext.Provider>
-    );
+    return <UserProvider initialData={userData} children={children} />;
   }
 
   return null;

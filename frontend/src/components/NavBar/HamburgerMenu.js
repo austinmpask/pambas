@@ -1,8 +1,8 @@
 import { useContext, useState, useEffect, useRef } from "react";
-import UserContext from "../../context/UserContext";
+import { UserContext } from "../../context/UserContext";
 
 export default function HamburgerMenu() {
-  const userData = useContext(UserContext);
+  const { userData } = useContext(UserContext);
 
   const [active, setActive] = useState(false);
 

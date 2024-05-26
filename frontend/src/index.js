@@ -15,9 +15,7 @@ import Dashboard from "./pages/Dashboard";
 import Error from "./pages/Error";
 
 //Contexts
-import UserContext from "./context/UserContext";
 import NavBar from "./components/NavBar/NavBar";
-import PageContent from "./components/ApplicationPage/PageContent";
 
 //Assign root for vdom
 const root = ReactDOM.createRoot(document.getElementById("root"));

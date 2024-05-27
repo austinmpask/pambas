@@ -16,9 +16,6 @@ export default function RegisterForm() {
     password: "",
   });
 
-  //Track errors for registration
-  const [errors, setErrors] = useState([]);
-
   //Visuals for loading
   const [loading, setLoading] = useState(false);
 
@@ -45,15 +42,12 @@ export default function RegisterForm() {
     event.preventDefault();
     setLoading(true);
 
-    const errorList = [];
+    const errors = [];
     for (let field in formData) {
       if (!formData[field]) {
         errors.push(prettyNames[field] + " is required!");
       }
     }
-
-    //Update State
-    setErrors(errorList);
 
     if (errors.length === 0) {
       // Attempt to register the user through gateway

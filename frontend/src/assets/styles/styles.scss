@@ -30,3 +30,12 @@
   min-width: 400px !important;
   width: 15vw;
 }
+
+.notification {
+  position: fixed;
+  min-width: 250px;
+  min-height: 80px;
+  left: 50%;
+  top: 2%;
+  transform: translate(-50%);
+}

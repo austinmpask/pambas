@@ -50,8 +50,8 @@ def userData():
                 return sendJsonResponse(404, "User not found")
 
             # Gather data from request, use existing data as default to dynamically handle multiple replacements
-            firstName = data.get("first_name", user.firstName)
-            lastName = data.get("last_name", user.lastName)
+            firstName = data.get("first_name") or user.firstName
+            lastName = data.get("last_name") or user.lastName
 
             # Update the record
             try:
@@ -60,7 +60,7 @@ def userData():
                 db.session.commit()
             except Exception as e:
                 db.session.rollback()
-                return sendJsonResponse(400, "User DB error")
+                return sendJsonResponse(400, "User DB error", e)
 
         else:
             return sendJsonResponse(400, "Must be JSON request")

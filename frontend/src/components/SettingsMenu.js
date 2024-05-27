@@ -1,5 +1,8 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../context/UserContext";
+import { ToastContainer } from "react-toastify";
+import { toastSuccess } from "../assets/styles/toasts";
+
 import axios from "axios";
 
 export default function SettingsMenu() {
@@ -21,32 +24,43 @@ export default function SettingsMenu() {
     }));
   }
 
+  function handleDiscard(event) {
+    event.preventDefault();
+    setFormData({ firstName: "", lastName: "" });
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
     try {
-      const response = await axios.put("/userdata", {
+      const payload = {
         first_name: formData.firstName,
         last_name: formData.lastName,
-      });
+      };
+
+      const response = await axios.put("/userdata", payload);
 
       if (response && response.status === 200) {
-        console.log("good");
-
+        const responseData = JSON.parse(response.data.message);
         //Update context
         setUserData((previousContext) => ({
           ...previousContext,
-          firstName: response.data.first_name,
-          lastName: response.data.last_name,
+          firstName: responseData.first_name || previousContext.firstName,
+          lastName: responseData.last_name || previousContext.lastName,
         }));
+        toastSuccess("Profile Updated!");
+
+        //Reset form
+        setFormData({ firstName: "", lastName: "" });
       }
-    } catch {
-      console.log("broke");
+    } catch (error) {
+      console.log(error);
     }
   }
 
   return (
     <>
+      <ToastContainer />
       <h2 className="subtitle">Account Options</h2>
 
       <section className="section settings-form">
@@ -68,7 +82,7 @@ export default function SettingsMenu() {
             </span>
           </div>
 
-          <div className="field">
+          <div className="field mb-3">
             <label className="label">First Name</label>
             <div className="control">
               <input
@@ -95,10 +109,21 @@ export default function SettingsMenu() {
               ></input>
             </div>
           </div>
-          <button className="button is-dark" type="submit">
-            Save Changes
-          </button>
-          <button className="button">Discard</button>
+          <div className="block mt-3">
+            <button
+              className={`mr-3 button ${
+                formData.firstName === "" && formData.lastName === ""
+                  ? "is-dark"
+                  : "is-link"
+              }`}
+              type="submit"
+            >
+              Save Changes
+            </button>
+            <button className="button" onClick={handleDiscard}>
+              Discard
+            </button>
+          </div>
         </form>
       </section>
     </>

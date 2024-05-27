@@ -15,7 +15,6 @@ import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
 import Error from "./pages/Error";
 
-//Contexts
 import NavBar from "./components/NavBar/NavBar";
 
 //Assign root for vdom

@@ -1,8 +1,8 @@
 """create tables
 
-Revision ID: 6e1ed991c99a
+Revision ID: 5ac99eb5502a
 Revises: 
-Create Date: 2024-05-19 06:14:03.230533
+Create Date: 2024-05-27 21:41:56.547878
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '6e1ed991c99a'
+revision = '5ac99eb5502a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,6 +26,7 @@ def upgrade():
     sa.Column('billed', sa.Integer(), nullable=False),
     sa.Column('projectManager', sa.String(length=25), nullable=True),
     sa.Column('projectType', sa.Enum('SOC_1_TYPE_1', 'SOC_1_TYPE_2', 'SOC_2_TYPE_1', 'SOC_2_TYPE_2', 'OTHER', name='projecttype'), nullable=False),
+    sa.Column('checkboxHeaders', sa.ARRAY(sa.String(length=20)), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
@@ -41,14 +42,9 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('flagMarker', sa.Boolean(), nullable=False),
     sa.Column('controlNumber', sa.Numeric(precision=4, scale=2), nullable=True),
-    sa.Column('prepRating', sa.Integer(), nullable=False),
-    sa.Column('inquiryRating', sa.Integer(), nullable=False),
-    sa.Column('inspectionRating', sa.Integer(), nullable=False),
+    sa.Column('checkBoxes', sa.ARRAY(sa.Integer()), nullable=False),
     sa.Column('notes', sa.Text(), nullable=True),
     sa.Column('sectionID', sa.Integer(), nullable=False),
-    sa.CheckConstraint('"inquiryRating" IN (0, 1, 2, 3)', name='check_inquiry_rating'),
-    sa.CheckConstraint('"inspectionRating" IN (0, 1, 2, 3)', name='check_inspection_rating'),
-    sa.CheckConstraint('"prepRating" IN (0, 1, 2)', name='check_prep_rating'),
     sa.ForeignKeyConstraint(['sectionID'], ['sections.id'], ),
     sa.PrimaryKeyConstraint('id')
     )

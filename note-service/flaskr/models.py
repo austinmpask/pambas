@@ -9,6 +9,7 @@ from sqlalchemy.types import (
     Boolean,
     UUID,
     Enum,
+    ARRAY,
 )
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship, validates
@@ -38,6 +39,10 @@ class Project(db.Model):
     billed = Column(Integer, nullable=False, default=0)
     projectManager = Column(String(25))
     projectType = Column(Enum(ProjectType), nullable=False)
+    checkboxHeaders = Column(
+        ARRAY(String(20)), nullable=False, default=["Prep", "Inquiry", "Inspection"]
+    )
+
     created_at = Column(DateTime, nullable=False, default=datetime.now())
 
     # Back references
@@ -67,11 +72,7 @@ class LineItem(db.Model):
     flagMarker = Column(Boolean, nullable=False, default=False)
     controlNumber = Column(Numeric(4, 2), default=0)
 
-    prepRating = Column(Integer, nullable=False, default=0)
-
-    inquiryRating = Column(Integer, nullable=False, default=0)
-
-    inspectionRating = Column(Integer, nullable=False, default=0)
+    checkBoxes = Column(ARRAY(Integer), nullable=False, default=[0, 0, 0])
 
     notes = Column(Text, nullable=True, default="")
 
@@ -80,14 +81,6 @@ class LineItem(db.Model):
 
     # Back references
     pendingItems = relationship("PendingItem", backref="lineItem")
-
-    __table_args__ = (
-        CheckConstraint('"prepRating" IN (0, 1, 2)', name="check_prep_rating"),
-        CheckConstraint('"inquiryRating" IN (0, 1, 2, 3)', name="check_inquiry_rating"),
-        CheckConstraint(
-            '"inspectionRating" IN (0, 1, 2, 3)', name="check_inspection_rating"
-        ),
-    )
 
 
 class PendingItem(db.Model):

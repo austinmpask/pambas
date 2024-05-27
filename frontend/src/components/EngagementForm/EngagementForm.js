@@ -7,7 +7,7 @@ export default function EngagementForm() {
   //Lefthand form state
   const [formData, setFormData] = useState({
     name: "",
-    type: "",
+    type: "a",
     budget: "",
     manager: "",
   });

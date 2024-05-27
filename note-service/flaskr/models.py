@@ -53,10 +53,10 @@ class Section(db.Model):
     __tablename__ = "sections"
     id = Column(Integer, primary_key=True)
     sectionNumber = Column(Integer, nullable=False)
-    sectionType = Column(
-        String(30),
-        nullable=True,
-    )
+    # sectionType = Column(
+    #     String(30),
+    #     nullable=True,
+    # )
 
     # FK
     projectID = Column(Integer, ForeignKey("projects.id"), nullable=False)
@@ -70,7 +70,7 @@ class LineItem(db.Model):
     id = Column(Integer, primary_key=True)
 
     flagMarker = Column(Boolean, nullable=False, default=False)
-    controlNumber = Column(Numeric(4, 2), default=0)
+    controlNumber = Column(String(5), default="")
 
     checkBoxes = Column(ARRAY(Integer), nullable=False, default=[0, 0, 0])
 

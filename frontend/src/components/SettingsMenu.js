@@ -63,7 +63,7 @@ export default function SettingsMenu() {
       <ToastContainer />
       <h2 className="subtitle">Account Options</h2>
 
-      <section className="section settings-form">
+      <section className="section application-form">
         <form onSubmit={handleSubmit}>
           <div className="block mb-2">
             <span className="icon-text">

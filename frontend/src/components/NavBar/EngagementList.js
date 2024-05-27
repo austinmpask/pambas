@@ -8,7 +8,9 @@ export default function EngagementList() {
         <a className="navbar-item is-selected">Radicle Health</a>
         <a className="navbar-item">Upwork</a>
         <hr className="navbar-divider" />
-        <button className="button is-small">New Engagement</button>
+        <a href="/new">
+          <button className="button is-small">New Engagement</button>
+        </a>
       </div>
     </div>
   );

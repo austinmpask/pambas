@@ -13,6 +13,7 @@ import Register from "./pages/Register";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
+import NewEngagement from "./pages/NewEngagement";
 import Error from "./pages/Error";
 
 import NavBar from "./components/NavBar/NavBar";
@@ -49,6 +50,15 @@ const endpoints = [
       <AuthWrapper>
         <NavBar />
         <Settings />
+      </AuthWrapper>
+    ),
+  },
+  {
+    path: "/new",
+    element: (
+      <AuthWrapper>
+        <NavBar />
+        <NewEngagement />
       </AuthWrapper>
     ),
   },

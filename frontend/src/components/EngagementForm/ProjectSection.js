@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function ProjectSection({ index }) {
+export default function ProjectSection({ index, forwardData }) {
   const [formData, setFormData] = useState({
     section: "",
     controls: "",
   });
+
+  //Forward the form data to the parent upon change
+  useEffect(() => {
+    forwardData([index, formData]);
+  }, [formData, index, forwardData]);
 
   function handleChange(event) {
     event.preventDefault();

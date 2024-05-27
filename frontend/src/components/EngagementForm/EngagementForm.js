@@ -4,10 +4,7 @@ import { toastError } from "../../assets/styles/toasts";
 import { ToastContainer } from "react-toastify";
 
 export default function EngagementForm() {
-  const [sections, setSections] = useState([
-    <ProjectSection key={0} index={0} />,
-  ]);
-
+  //Lefthand form state
   const [formData, setFormData] = useState({
     name: "",
     type: "",
@@ -15,24 +12,90 @@ export default function EngagementForm() {
     manager: "",
   });
 
+  //Formatted field names for error messages
+  const prettyNames = {
+    name: "Engagement Name",
+    type: "Type",
+    budget: "Budgeted Hours",
+    manager: "Project Manager",
+  };
+
+  //Child components for dynamic "sections"/righthand form
+  const [sections, setSections] = useState([
+    <ProjectSection key={0} index={0} forwardData={getData} />,
+  ]);
+
+  //State of child section components
+  const [childrenState, setChildrenState] = useState([
+    {
+      section: "",
+      controls: "",
+    },
+  ]);
+
+  //Update state with child form component data
+  function getData(data) {
+    setChildrenState((prevState) => {
+      const newState = [...prevState];
+      newState[data[0]] = data[1];
+      return newState;
+    });
+  }
+
+  //Create a new project via note api for user
   function handleSubmit(event) {
     event.preventDefault();
 
-    const sectionList = {};
+    const errors = [];
 
-    const payload = {
-      name: formData.name,
-      type: "",
-      budget: formData.budget,
-      manager: formData.manager,
-      sections: sectionList,
-    };
+    //Check for empty fields
+    for (let item in formData) {
+      if (!formData[item]) {
+        errors.push(prettyNames[item] + " must not be empty!");
+      }
+    }
 
-    console.log(payload);
+    //Check sections form for missing fields
+    if (
+      childrenState.some((item) => {
+        return !item.section || !item.controls;
+      })
+    ) {
+      errors.push("Missing section/control number!");
+    }
+
+    //Check that section wasnt repeated
+    const seen = new Set();
+    for (let i = 0; i < childrenState.length; i++) {
+      const item = childrenState[i].section;
+      if (item) {
+        if (seen.has(item)) {
+          errors.push("Duplicate section submitted!");
+          break;
+        } else {
+          seen.add(item);
+        }
+      }
+    }
+
+    if (errors.length === 0) {
+      const payload = {
+        name: formData.name,
+        type: "",
+        budget: formData.budget,
+        manager: formData.manager,
+        sections: childrenState,
+      };
+
+      console.log(payload);
+    } else {
+      errors.forEach((error) => {
+        toastError(error);
+      });
+    }
   }
 
   function handleChange(event) {
-    event.preventDefault();
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
@@ -43,7 +106,11 @@ export default function EngagementForm() {
       const lastKey = Number(sections[sections.length - 1].key);
       setSections([
         ...sections,
-        <ProjectSection key={lastKey + 1} index={lastKey + 1} />,
+        <ProjectSection
+          key={lastKey + 1}
+          index={lastKey + 1}
+          forwardData={getData}
+        />,
       ]);
     } else {
       toastError("Can't add more sections!");
@@ -53,6 +120,11 @@ export default function EngagementForm() {
   function removeSection(event) {
     event.preventDefault();
     if (sections.length > 1) {
+      setChildrenState((prevState) => {
+        const newState = [...prevState];
+        newState.pop();
+        return newState;
+      });
       setSections(sections.slice(0, sections.length - 1));
     } else {
       toastError("Must have atleast one section!");
@@ -67,7 +139,7 @@ export default function EngagementForm() {
           <div className="column">
             <h3 className="title is-3 mb-6">Details</h3>
             <div className="field mb-3">
-              <label className="label">Engagement Name</label>
+              <label className="label">Engagement Name *</label>
               <div className="control">
                 <input
                   className="input"
@@ -81,7 +153,7 @@ export default function EngagementForm() {
             </div>
 
             <div className="field mb-3">
-              <label className="label">Type</label>
+              <label className="label">Type *</label>
               <div className="control">
                 <div className="select" name="type">
                   <select>
@@ -93,7 +165,7 @@ export default function EngagementForm() {
             </div>
 
             <div className="field mb-3">
-              <label className="label">Budgeted Hours</label>
+              <label className="label">Budgeted Hours *</label>
               <div className="control">
                 <input
                   className="input"
@@ -107,7 +179,7 @@ export default function EngagementForm() {
             </div>
 
             <div className="field mb-3">
-              <label className="label">Project Manager</label>
+              <label className="label">Project Manager *</label>
               <div className="control">
                 <input
                   className="input"

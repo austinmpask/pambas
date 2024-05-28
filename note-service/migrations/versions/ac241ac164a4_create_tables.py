@@ -1,8 +1,8 @@
 """create tables
 
-Revision ID: 5ac99eb5502a
+Revision ID: ac241ac164a4
 Revises: 
-Create Date: 2024-05-27 21:41:56.547878
+Create Date: 2024-05-28 00:00:12.892623
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5ac99eb5502a'
+revision = 'ac241ac164a4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,7 +24,7 @@ def upgrade():
     sa.Column('title', sa.String(length=20), nullable=False),
     sa.Column('budget', sa.Integer(), nullable=False),
     sa.Column('billed', sa.Integer(), nullable=False),
-    sa.Column('projectManager', sa.String(length=25), nullable=True),
+    sa.Column('projectManager', sa.String(length=25), nullable=False),
     sa.Column('projectType', sa.Enum('SOC_1_TYPE_1', 'SOC_1_TYPE_2', 'SOC_2_TYPE_1', 'SOC_2_TYPE_2', 'OTHER', name='projecttype'), nullable=False),
     sa.Column('checkboxHeaders', sa.ARRAY(sa.String(length=20)), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
@@ -33,7 +33,6 @@ def upgrade():
     op.create_table('sections',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('sectionNumber', sa.Integer(), nullable=False),
-    sa.Column('sectionType', sa.String(length=30), nullable=True),
     sa.Column('projectID', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['projectID'], ['projects.id'], ),
     sa.PrimaryKeyConstraint('id')
@@ -41,7 +40,7 @@ def upgrade():
     op.create_table('line_items',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('flagMarker', sa.Boolean(), nullable=False),
-    sa.Column('controlNumber', sa.Numeric(precision=4, scale=2), nullable=True),
+    sa.Column('controlNumber', sa.String(length=5), nullable=True),
     sa.Column('checkBoxes', sa.ARRAY(sa.Integer()), nullable=False),
     sa.Column('notes', sa.Text(), nullable=True),
     sa.Column('sectionID', sa.Integer(), nullable=False),

@@ -42,7 +42,7 @@ def sampleSection(app, sampleProject):
     db.session.add(project)
     db.session.commit()
 
-    yield {"sectionNumber": 10, "sectionType": "communication", "projectID": project.id}
+    yield {"sectionNumber": 10, "projectID": project.id}
 
 
 @pytest.fixture(scope="function")
@@ -165,16 +165,6 @@ def test_non_nullable_section_num(app, sampleSection):
         db.session.commit()
 
 
-def test_section_type_30_char_limit(app, sampleSection):
-    """Section type is limited to 30 characters"""
-    sampleSection["sectionType"] = "a" * 31
-    section = Section(**sampleSection)
-    db.session.add(section)
-
-    with pytest.raises(DataError):
-        db.session.commit()
-
-
 def test_non_nullable_project_id(app, sampleSection):
     """Project ID foreign key is non nullable"""
     del sampleSection["projectID"]
@@ -198,10 +188,8 @@ def test_line_item_defaults(app, sampleLineItem):
     db.session.commit()
 
     assert item.flagMarker == False
-    assert item.controlNumber == 0
-    assert item.prepRating == 0
-    assert item.inquiryRating == 0
-    assert item.inspectionRating == 0
+    assert item.controlNumber == ""
+    assert item.checkBoxes == [0, 0, 0]
     assert item.notes == ""
 
 

@@ -37,7 +37,7 @@ class Project(db.Model):
     title = Column(String(20), nullable=False)
     budget = Column(Integer, nullable=False)
     billed = Column(Integer, nullable=False, default=0)
-    projectManager = Column(String(25))
+    projectManager = Column(String(25), nullable=False)
     projectType = Column(Enum(ProjectType), nullable=False)
     checkboxHeaders = Column(
         ARRAY(String(20)), nullable=False, default=["Prep", "Inquiry", "Inspection"]
@@ -53,10 +53,6 @@ class Section(db.Model):
     __tablename__ = "sections"
     id = Column(Integer, primary_key=True)
     sectionNumber = Column(Integer, nullable=False)
-    # sectionType = Column(
-    #     String(30),
-    #     nullable=True,
-    # )
 
     # FK
     projectID = Column(Integer, ForeignKey("projects.id"), nullable=False)

@@ -1,7 +1,13 @@
 const fetch = require("node-fetch");
 const { sendJsonResponse } = require("./sendJsonResponse");
 
-async function apiFetch(res, method, endpoint, uuid, body = undefined) {
+async function apiFetch(
+  res,
+  method,
+  endpoint,
+  uuid = undefined,
+  body = undefined
+) {
   //Determine appropriate options for fetch & UUID placement
   //UUID will go in header for GET, and in body for otherwise
   let options;
@@ -20,6 +26,13 @@ async function apiFetch(res, method, endpoint, uuid, body = undefined) {
         body: JSON.stringify({ ...body, uuid: String(uuid) }),
       };
       break;
+
+    case "POST":
+      options = {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: { "Content-Type": "application/json" },
+      };
   }
 
   //Attempt to fetch from endpoint, if successful, return response body

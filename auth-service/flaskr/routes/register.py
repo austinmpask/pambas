@@ -20,6 +20,8 @@ def register():
         email = data.get("email")
         password = data.get("password")
 
+        """TODO: Add min length password requirement"""
+
         # Validate that all three items are present and are not empty strings
         if username and email and password:
 

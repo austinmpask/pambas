@@ -66,6 +66,8 @@ class User(db.Model):
         # Valid email
         return value
 
+    """TODO: Add username validation(no special chars)"""
+
     def toSafeDict(self):
         return {
             "username": self.user_name,

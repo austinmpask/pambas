@@ -3,6 +3,7 @@ const { sendJsonResponse } = require("./sendJsonResponse");
 
 async function apiFetch(res, method, endpoint, uuid, body = undefined) {
   //Determine appropriate options for fetch & UUID placement
+  //UUID will go in header for GET, and in body for otherwise
   let options;
   switch (method) {
     case "GET":
@@ -21,14 +22,14 @@ async function apiFetch(res, method, endpoint, uuid, body = undefined) {
       break;
   }
 
-  //Attempt to send response to endpoint, if successful, return response body
+  //Attempt to fetch from endpoint, if successful, return response body
   let response;
   let responseBody;
   try {
     response = await fetch(endpoint, options);
     responseBody = await response.json();
   } catch (e) {
-    //Error while making request, exit
+    //Send error response directly if failed
     sendJsonResponse(
       res,
       500,
@@ -41,9 +42,11 @@ async function apiFetch(res, method, endpoint, uuid, body = undefined) {
     //Successful request and response, return response body
     return responseBody;
   } else {
-    //Bad server response
+    //Send error response directly if failed
     sendJsonResponse(res, 500, `Bad response from ${endpoint}`);
   }
+
+  //If nothing returned, api request failed, and an error response has been sent
 }
 
 module.exports = { apiFetch };

@@ -6,7 +6,8 @@ const { verifyJWT } = require("../middlewares/verifyJWT");
 
 const userDataRouter = express.Router();
 
-//Get user data, requires JWT
+//Get user data by UUID from user service and auth service
+//Services expect UUID in request header
 userDataRouter.get("/userdata", verifyJWT, async (req, res) => {
   //Get full API endpoints which will be used later
   const userApiEndpoint = getApiEndpoint("/users", "/userdata");
@@ -14,11 +15,12 @@ userDataRouter.get("/userdata", verifyJWT, async (req, res) => {
 
   //Make request to microservices, errors handled by helper
 
-  //User service request
+  //Make req. to user service
   const userRes = await apiFetch(res, "GET", userApiEndpoint, req.sessionUUID);
+  //If no respnse from helper, request failed and appropriate response has been sent
   if (!userRes) return;
 
-  //Auth service request
+  //Make req. to auth service
   const authRes = await apiFetch(res, "GET", authApiEndpoint, req.sessionUUID);
   if (!authRes) return;
 
@@ -33,7 +35,9 @@ userDataRouter.get("/userdata", verifyJWT, async (req, res) => {
   );
 });
 
-//Update first or last name
+//Update first or last name in user service
+//Gateway expected request body: first_name, last_name
+//User service expected request body: first_name, last_name, uuid*
 userDataRouter.put("/userdata", verifyJWT, async (req, res) => {
   //Get endpoint, send api req.
   const apiEndpoint = getApiEndpoint("/users", "/userdata");

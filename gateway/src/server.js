@@ -72,6 +72,31 @@ app.get("/health", (_req, res) => {
   return sendJsonResponse(res, 200, "ok");
 });
 
+//Create new project for a user
+app.post("/project", verifyJWT, async (req, res) => {
+  const notesHost = services.find((item) => item.route === "/notes").target;
+  const endpoint = "/project";
+  const apiEndpoint = notesHost + endpoint;
+
+  let apiResponse;
+  let responseBody;
+
+  try {
+    apiResponse = await fetch(apiEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...req.body, uuid: String(req.sessionUUID) }),
+    });
+    responseBody = await apiResponse.json();
+  } catch (e) {
+    return sendJsonResponse(500, "Internal note server error", String(e));
+  }
+
+  if (apiResponse && apiResponse.status === 201) {
+    sendJsonResponse(res, 201, JSON.stringify(responseBody));
+  }
+});
+
 //Update first or last name
 app.put("/userdata", verifyJWT, async (req, res) => {
   const userHost = services.find((item) => item.route === "/users").target;
@@ -82,7 +107,6 @@ app.put("/userdata", verifyJWT, async (req, res) => {
   let responseBody;
 
   try {
-    // console.log(JSON.stringify({ ...req.body, uuid: req.sessionUUID }));
     apiResponse = await fetch(apiEndpoint, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },

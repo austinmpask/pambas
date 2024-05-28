@@ -1,13 +1,14 @@
 import ProjectSection from "./ProjectSection";
 import { useState } from "react";
-import { toastError } from "../../assets/styles/toasts";
+import { toastError, toastSuccess } from "../../assets/styles/toasts";
 import { ToastContainer } from "react-toastify";
+import axios from "axios";
 
 export default function EngagementForm() {
   //Lefthand form state
   const [formData, setFormData] = useState({
     name: "",
-    type: "a",
+    type: 1,
     budget: "",
     manager: "",
   });
@@ -43,7 +44,7 @@ export default function EngagementForm() {
   }
 
   //Create a new project via note api for user
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const errors = [];
@@ -79,15 +80,24 @@ export default function EngagementForm() {
     }
 
     if (errors.length === 0) {
+      //Send to note api
       const payload = {
         name: formData.name,
-        type: "",
+        type: formData.type,
         budget: formData.budget,
         manager: formData.manager,
         sections: childrenState,
       };
 
       console.log(payload);
+
+      const response = await axios.post("/project", payload);
+
+      if (response && response.status === 201) {
+        toastSuccess("Success!");
+      } else {
+        toastError("Internal error occured while adding project!");
+      }
     } else {
       errors.forEach((error) => {
         toastError(error);

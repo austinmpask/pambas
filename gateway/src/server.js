@@ -5,8 +5,13 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 const { services, forbiddenEndpoints } = require("./services");
-const { sendJsonResponse, forbiddenObjToArray, verifyJWT } = require("./utils");
+const { forbiddenObjToArray } = require("./utils");
+const { sendJsonResponse } = require("./utils/sendJsonResponse");
+const { verifyJWT } = require("./middlewares/verifyJWT");
 const cookieParser = require("cookie-parser");
+
+const { healthRouter } = require("./routes/health");
+const { userDataRouter } = require("./routes/userdata");
 
 const app = express();
 
@@ -67,10 +72,9 @@ services.forEach(({ route, target }) => {
 //Parse request body
 app.use(express.json());
 
-//Health check for compose
-app.get("/health", (_req, res) => {
-  return sendJsonResponse(res, 200, "ok");
-});
+//Routers
+app.use(healthRouter);
+app.use(userDataRouter);
 
 //Create new project for a user
 app.post("/project", verifyJWT, async (req, res) => {
@@ -94,103 +98,6 @@ app.post("/project", verifyJWT, async (req, res) => {
 
   if (apiResponse && apiResponse.status === 201) {
     sendJsonResponse(res, 201, JSON.stringify(responseBody));
-  }
-});
-
-//Update first or last name
-app.put("/userdata", verifyJWT, async (req, res) => {
-  const userHost = services.find((item) => item.route === "/users").target;
-  const endpoint = "/userdata";
-  const apiEndpoint = userHost + endpoint;
-
-  let apiResponse;
-  let responseBody;
-
-  try {
-    apiResponse = await fetch(apiEndpoint, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...req.body, uuid: String(req.sessionUUID) }),
-    });
-
-    responseBody = await apiResponse.json();
-  } catch (e) {
-    return sendJsonResponse(res, 500, "Internal user server error", String(e));
-  }
-
-  if (apiResponse && apiResponse.status === 200) {
-    //Success
-    sendJsonResponse(res, 200, JSON.stringify(responseBody.message));
-  }
-});
-
-//Get user data, requires JWT
-app.get("/userdata", verifyJWT, async (req, res) => {
-  //Construct the endpoint for user service
-  const userHost = services.find((item) => item.route === "/users").target;
-  const endpoint = "/userdata";
-
-  const authHost = services.find((item) => item.route === "/auth").target;
-  const authEndpoint = "/getlogin";
-
-  const apiEndpoint = userHost + endpoint;
-  const authApiEndpoint = authHost + authEndpoint;
-
-  //Make request to the user service
-  let userServiceResponse;
-  let responseBody;
-  try {
-    userServiceResponse = await fetch(apiEndpoint, {
-      method: "GET",
-      headers: { "Content-Type": "application/json", UUID: req.sessionUUID },
-    });
-    responseBody = await userServiceResponse.json();
-  } catch (e) {
-    return sendJsonResponse(res, 500, "Internal user server error", String(e));
-  }
-
-  if (userServiceResponse && userServiceResponse.status === 200) {
-    //Success, make request to auth service for username and email
-    let authServiceResponse;
-    let authResponseBody;
-    try {
-      authServiceResponse = await fetch(authApiEndpoint, {
-        method: "GET",
-        headers: { "Content-Type": "application/json", UUID: req.sessionUUID },
-      });
-      authResponseBody = await authServiceResponse.json();
-    } catch (e) {
-      return sendJsonResponse(
-        res,
-        500,
-        "Internal auth server error",
-        String(e)
-      );
-    }
-
-    if (authServiceResponse && authServiceResponse.status === 200) {
-      return sendJsonResponse(
-        res,
-        200,
-        JSON.stringify({ ...responseBody.message, ...authResponseBody.message })
-      );
-    } else {
-      //Bad response/no response from the auth service
-      return sendJsonResponse(
-        res,
-        500,
-        "No response/invalid response from auth server",
-        JSON.stringify(responseBody)
-      );
-    }
-  } else {
-    //Bad response/no response from the user service
-    return sendJsonResponse(
-      res,
-      500,
-      "No response/invalid response from user server",
-      JSON.stringify(responseBody)
-    );
   }
 });
 

@@ -58,10 +58,10 @@ async function apiFetch(method, endpoint, uuid = undefined, body = undefined) {
       message: responseBody.message,
     };
   } else {
-    //Send error response directly if failed
+    //Return error response if failed
     return {
       ok: false,
-      message: `Bad response from ${endpoint}`,
+      message: `Bad response from ${endpoint}: ${responseBody.message}`,
     };
   }
 }

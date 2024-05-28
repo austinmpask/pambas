@@ -68,7 +68,10 @@ export default function RegisterForm() {
           }, 2000);
         }
       } catch (error) {
-        toastError("Generic error from api... bad");
+        console.log(error);
+        error.response.data.message.includes("Bad response from")
+          ? toastError("Username or email already registered!")
+          : toastError(error.response.data.message);
         setLoading(false);
       }
     }

@@ -17,17 +17,17 @@ from sqlalchemy import CheckConstraint
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import re
-import enum
 
 db = SQLAlchemy()
 
 
-class ProjectType(enum.Enum):
-    SOC_1_TYPE_1 = "SOC 1 Type 1"
-    SOC_1_TYPE_2 = "SOC 1 Type 2"
-    SOC_2_TYPE_1 = "SOC 2 Type 1"
-    SOC_2_TYPE_2 = "SOC 2 Type 2"
-    OTHER = "Other"
+projectTypes = {
+    1: "SOC 1 Type 1",
+    2: "SOC 1 Type 2",
+    3: "SOC 2 Type 1",
+    4: "SOC 2 Type 2",
+    5: "Other",
+}
 
 
 class Project(db.Model):
@@ -38,7 +38,7 @@ class Project(db.Model):
     budget = Column(Integer, nullable=False)
     billed = Column(Integer, nullable=False, default=0)
     projectManager = Column(String(25), nullable=False)
-    projectType = Column(Enum(ProjectType), nullable=False)
+    projectType = Column(String(15), nullable=False)
     checkboxHeaders = Column(
         ARRAY(String(20)), nullable=False, default=["Prep", "Inquiry", "Inspection"]
     )

@@ -1,6 +1,6 @@
 import pytest
 import uuid
-from flaskr.models import db, ProjectType, Project, Section, LineItem, PendingItem
+from flaskr.models import db, Project, Section, LineItem, PendingItem
 from flaskr import createApp
 from sqlalchemy.exc import IntegrityError, DataError
 from datetime import datetime
@@ -29,7 +29,7 @@ def sampleProject():
         "title": "sample project",
         "budget": 60,
         "projectManager": "boss man",
-        "projectType": ProjectType.SOC_2_TYPE_2,
+        "projectType": "SOC 1 Type 1",
     }
 
 
@@ -69,7 +69,7 @@ def samplePendingItem(app, sampleLineItem):
 
 
 ################################
-# ProjectType Model
+# Project Model
 ################################
 
 

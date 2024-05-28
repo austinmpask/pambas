@@ -1,6 +1,6 @@
-from flask import Blueprint
+from flask import Blueprint, request
 from flaskr.util import sendJsonResponse
-from flaskr.models import db, Project, Section, LineItem
+from flaskr.models import db, Project, Section, LineItem, projectTypes
 import uuid
 
 project_bp = Blueprint("project", __name__)
@@ -37,13 +37,13 @@ def project():
             sections = data.get("sections")
 
             # Check section integrity
-            for section, controls in sections.items():
+            for section in sections:
                 # Abort if empty section or control #
-                if not section or not controls:
+                if not section["section"] or not section["controls"]:
                     return sendJsonResponse(400, "Missing section/control number")
 
             # Abort if duplicate section numbers present
-            keys = sections.keys()
+            keys = [item["section"] for item in sections]
             uniques = set(keys)
             if len(uniques) != len(keys):
                 return sendJsonResponse(400, "Duplicate section numbers not allowed!")
@@ -53,13 +53,19 @@ def project():
                 # Create the project
                 try:
                     userProject = Project(
-                        uuid=user_uuid, title=name, budget=int(budget)
+                        uuid=user_uuid,
+                        title=title,
+                        projectManager=manager,
+                        budget=int(budget),
+                        projectType=projectTypes[projectType],
                     )
                     db.session.add(userProject)
                     db.session.commit()
                 except Exception as e:
                     db.session.rollback()
-                    return sendJsonResponse(400, "Note DB error while creating project")
+                    return sendJsonResponse(
+                        400, "Note DB error while creating project", e
+                    )
 
                 # Create the sections/line items
                 sectionError = False
@@ -67,26 +73,29 @@ def project():
 
                 sectionCache = []
                 lineItemCache = []
-                for section, controls in sections.items():
+
+                for section in sections:
                     # Create a section
+                    secNum = section["section"]
+                    controlsNum = section["controls"]
                     try:
-                        section = Section(
-                            sectionNumber=int(section), projectID=userProject.id
+                        newSection = Section(
+                            sectionNumber=int(secNum), projectID=userProject.id
                         )
-                        db.session.add(section)
+                        db.session.add(newSection)
                         db.session.commit()
-                        sectionCache.append(section)
+                        sectionCache.append(newSection)
                     except Exception as e:
                         db.session.rollback()
                         sectionError = True
                         break
 
                     # Create the associated line items
-                    for i in range(int(controls)):
-                        controlNumber = str(float(section) + float(i + 1) / 10)
+                    for i in range(int(controlsNum)):
+                        controlNumber = str(float(secNum) + float(i + 1) / 10)
                         try:
                             lineItem = LineItem(
-                                controlNumber=controlNumber, sectionID=section.id
+                                controlNumber=controlNumber, sectionID=newSection.id
                             )
                             db.session.add(lineItem)
                         except Exception as e:
@@ -115,6 +124,9 @@ def project():
 
                     db.session.commit()
                     return sendJsonResponse(500, "Note DB error while adding control")
+
+                # No errors, return success
+                return sendJsonResponse(201, "Project added")
 
             else:
                 return sendJsonResponse(400, "Incomplete request body")

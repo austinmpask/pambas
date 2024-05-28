@@ -1,8 +1,8 @@
 """create tables
 
-Revision ID: ac241ac164a4
+Revision ID: 3f6022db49d0
 Revises: 
-Create Date: 2024-05-28 00:00:12.892623
+Create Date: 2024-05-28 00:55:59.810823
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'ac241ac164a4'
+revision = '3f6022db49d0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,7 +25,7 @@ def upgrade():
     sa.Column('budget', sa.Integer(), nullable=False),
     sa.Column('billed', sa.Integer(), nullable=False),
     sa.Column('projectManager', sa.String(length=25), nullable=False),
-    sa.Column('projectType', sa.Enum('SOC_1_TYPE_1', 'SOC_1_TYPE_2', 'SOC_2_TYPE_1', 'SOC_2_TYPE_2', 'OTHER', name='projecttype'), nullable=False),
+    sa.Column('projectType', sa.String(length=15), nullable=False),
     sa.Column('checkboxHeaders', sa.ARRAY(sa.String(length=20)), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.PrimaryKeyConstraint('id')

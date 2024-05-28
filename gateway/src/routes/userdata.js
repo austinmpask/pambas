@@ -16,13 +16,13 @@ userDataRouter.get("/userdata", verifyJWT, async (req, res) => {
   //Make request to microservices, errors handled by helper
 
   //Make req. to user service
-  const userRes = await apiFetch(res, "GET", userApiEndpoint, req.sessionUUID);
+  const userRes = await apiFetch("GET", userApiEndpoint, req.sessionUUID);
   //If no respnse from helper, request failed and appropriate response has been sent
-  if (!userRes) return;
+  if (!userRes.ok) return sendJsonResponse(res, 500, userRes.message);
 
   //Make req. to auth service
-  const authRes = await apiFetch(res, "GET", authApiEndpoint, req.sessionUUID);
-  if (!authRes) return;
+  const authRes = await apiFetch("GET", authApiEndpoint, req.sessionUUID);
+  if (!authRes.ok) return sendJsonResponse(res, 500, authRes.message);
 
   //Successful api responses, send gateway response
   return sendJsonResponse(
@@ -42,14 +42,8 @@ userDataRouter.put("/userdata", verifyJWT, async (req, res) => {
   //Get endpoint, send api req.
   const apiEndpoint = getApiEndpoint("/users", "/userdata");
 
-  const apiRes = await apiFetch(
-    res,
-    "PUT",
-    apiEndpoint,
-    req.sessionUUID,
-    req.body
-  );
-  if (!apiRes) return;
+  const apiRes = await apiFetch("PUT", apiEndpoint, req.sessionUUID, req.body);
+  if (!apiRes.ok) return sendJsonResponse(res, 500, apiRes.message);
 
   //Successful api response, send gateway response
   return sendJsonResponse(res, 200, JSON.stringify(apiRes.message));

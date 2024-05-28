@@ -1,5 +1,6 @@
 const { forbiddenEndpoints } = require("../services");
 const { forbiddenObjToArray } = require("../utils/forbiddenObjToArray");
+const { sendJsonResponse } = require("../utils/sendJsonResponse");
 
 //Forbid direct access to certain microservice endpoints outside the gateway
 function blockDirectAccess(req, res, next) {

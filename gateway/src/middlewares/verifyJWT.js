@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { sendJsonResponse } = require("../utils/sendJsonResponse");
 
 const JWT_SECRET_KEY = process.env.SECRET_KEY || "secret";
 

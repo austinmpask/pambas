@@ -1,28 +1,25 @@
 const cors = require("cors");
-const express = require("express");
-const fetch = require("node-fetch");
-const helmet = require("helmet");
-const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
+const express = require("express");
+const helmet = require("helmet");
 const { createProxyMiddleware } = require("http-proxy-middleware");
+const morgan = require("morgan");
 
 //Custom middlewares
-const { verifyJWT } = require("./middlewares/verifyJWT");
 const { blockDirectAccess } = require("./middlewares/blockDirectAccess");
 
 //Helpers & constants
 const { sendJsonResponse } = require("./utils/sendJsonResponse");
 const { services } = require("./services");
+const PORT = process.env.PORT || 3000;
+const FRONTEND_URL = process.env.FRONTEND_URL || "http://frontend:3000/";
+const app = express();
 
 //Routers
 const { healthRouter } = require("./routes/health");
 const { userDataRouter } = require("./routes/userdata");
 const { registerRouter } = require("./routes/register");
-
-const PORT = process.env.PORT || 3000;
-const FRONTEND_URL = process.env.FRONTEND_URL || "http://frontend:3000/";
-
-const app = express();
+const { projectRouter } = require("./routes/project");
 
 //Security middleware, allow frontend
 app.use(
@@ -43,7 +40,7 @@ app.use(cookieParser());
 //Custom middleware to prevent direct access to certain microservice endpoints outside of the gateway
 app.use(blockDirectAccess);
 
-//Forward requests to services
+//Forward requests to services for unblocked endpoints
 services.forEach(({ route, target }) => {
   app.use(
     route,
@@ -65,41 +62,18 @@ services.forEach(({ route, target }) => {
 //Parse request bodies
 app.use(express.json());
 
-//Routers
+//Add routers for gateway endpoints
 app.use(healthRouter);
 app.use(userDataRouter);
 app.use(registerRouter);
-
-//Create new project for a user
-app.post("/project", verifyJWT, async (req, res) => {
-  const notesHost = services.find((item) => item.route === "/notes").target;
-  const endpoint = "/project";
-  const apiEndpoint = notesHost + endpoint;
-
-  let apiResponse;
-  let responseBody;
-
-  try {
-    apiResponse = await fetch(apiEndpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...req.body, uuid: String(req.sessionUUID) }),
-    });
-    responseBody = await apiResponse.json();
-  } catch (e) {
-    return sendJsonResponse(500, "Internal note server error", String(e));
-  }
-
-  if (apiResponse && apiResponse.status === 201) {
-    sendJsonResponse(res, 201, JSON.stringify(responseBody));
-  }
-});
+app.use(projectRouter);
 
 //404 not found error
 app.use((_req, res) => {
   return sendJsonResponse(res, 404, "Bad request");
 });
 
+//Start app
 app.listen(PORT, () => {
   console.log(`Gateway is listening on port ${PORT}`);
 });

@@ -3,7 +3,7 @@ const { sendJsonResponse } = require("../utils/sendJsonResponse");
 
 const JWT_SECRET_KEY = process.env.SECRET_KEY || "secret";
 
-//Middleware for protected routes requiring user auth
+//Middleware to verify JWT for protected routes
 function verifyJWT(req, res, next) {
   //Take token from parsed cookies
   const token = req.cookies.token || undefined;

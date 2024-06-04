@@ -1,8 +1,8 @@
 const fetch = require("node-fetch");
 
+//This module is largely to reduce boilerplate, and is tailored specifically for the specific requirements of existing gateway endpoints
 async function apiFetch(method, endpoint, uuid = undefined, body = undefined) {
-  //Determine appropriate options for fetch & UUID placement
-  //UUID will go in header for GET, and in body for otherwise
+  //Determine appropriate fetch options for fetch & UUID placement
   let options;
   switch (method) {
     case "GET":

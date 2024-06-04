@@ -30,11 +30,13 @@ registerRouter.post("/register", async (req, res) => {
   const userUUID = authRes.message;
 
   //Register the user in the user db with the same UUID returned by auth db
-  const userRes = await apiFetch("POST", userApiEndpoint, undefined, {
+  const body = {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     uuid: userUUID,
-  });
+  };
+
+  const userRes = await apiFetch("POST", userApiEndpoint, undefined, body);
 
   if (!userRes.ok) {
     //If there was an error with the user registration, roll back the auth registration

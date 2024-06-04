@@ -1,6 +1,7 @@
 const validator = require("email-validator");
-
+//Validate integrity of user registration data before mutating any db
 function validateRegData({ username, email, first_name, last_name, password }) {
+  //Check each input against requirements
   if (username && email && first_name && last_name && password) {
     const validations = [
       validateUsername(username),
@@ -10,16 +11,21 @@ function validateRegData({ username, email, first_name, last_name, password }) {
       validatePassword(password),
     ];
 
+    //Return the first error encountered
     for (let validation of validations) {
       if (!validation.ok) {
         return validation;
       }
     }
   } else {
+    //Incase of missing registration data
     return { ok: false, message: "Missing registration data" };
   }
+  //No errors while validating
   return { ok: true, message: "Valid" };
 }
+
+//Individual validators
 
 function validateUsername(username) {
   //Auth service expects:

@@ -1,4 +1,4 @@
-//Easier sending success/error messages from gateway
+//Standardized response formatting
 function sendJsonResponse(res, code, message, trace = "None available") {
   const okCodes = [200, 201];
   res.status(code).json({

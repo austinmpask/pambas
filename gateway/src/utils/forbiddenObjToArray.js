@@ -1,4 +1,4 @@
-//Convert the human readable forbidden endpoints object to an array of endpoint literals
+//Convert the human readable forbidden endpoints object to an array of endpoint literals for use in custom middleware
 function forbiddenObjToArray(obj) {
   const paths = [];
 

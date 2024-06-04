@@ -3,7 +3,7 @@ from .models import db, User
 import validators
 
 
-# Simplify sending responses
+# Standardized response format
 def sendJsonResponse(code, message, error=None):
     okCodes = {200, 201}
 
@@ -19,12 +19,12 @@ def sendJsonResponse(code, message, error=None):
 # Helper to query db for login
 def queryForUser(email=None, username=None):
     # Query for a user using email as default
-
     user = None
 
     if email and validators.email(email):
         user = db.session.query(User).filter_by(email=email).first()
 
+    # TODO add username validator
     elif username:
         user = db.session.query(User).filter_by(user_name=username).first()
 

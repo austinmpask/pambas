@@ -10,10 +10,13 @@ def createApp():
     app = Flask(__name__)
     app.config.from_object(Configuration)
 
+    # Add endpoints to flask app
     configureRoutes(app)
+
+    # Init bcrypt for pw hash
     bcrypt.init_app(app)
 
-    # Init DB
+    # Init db
     db.init_app(app)
     Migrate(app, db)
     return app

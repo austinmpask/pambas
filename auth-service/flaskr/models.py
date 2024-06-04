@@ -6,10 +6,12 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import re
 import uuid
+import validators
 
-
+# Init sqlalchemy
 db = SQLAlchemy()
 
+# Field lengths
 hashLen = 60
 emailLen = 100
 usernameLen = 20
@@ -26,48 +28,18 @@ class User(db.Model):
     password_hash = Column(String(hashLen), nullable=False)
     created_at = Column(DateTime, default=datetime.now())
 
-    # Resuire a valid email address
+    # Require a valid email address
     @validates("email")
-    def validate_email(self, key, value):
+    def validate_email(self, _key, value):
 
-        # Specify an error message
-        e = "Invalid email!"
+        if validators.email(value):
+            return value
+        else:
+            raise ValueError("Invalid email!")
+        
+    # TODO add username validator
 
-        # Basic elimination
-        if "@" not in value or "." not in value:
-            raise ValueError(e)
-
-        # Regex to define valid characters for email substrings
-        localValids = r"[!#$%&\'*+\-./=?^_`{|}~a-zA-Z0-9.]+"
-        domainValids = r"^[a-zA-Z0-9-]+$"
-        tldValids = r"^[a-zA-Z0-9]{2,}$"
-
-        # Incorrect formatted email check
-        atIndex = value.rfind("@")
-        dotIndex = value.rfind(".")
-
-        if atIndex > dotIndex:
-            raise ValueError(e)
-
-        # Make substrings
-        local = value[:atIndex]
-        domain = value[atIndex + 1 : dotIndex]
-        tld = value[dotIndex + 1 :]
-
-        # Test substrings against respective patterns
-        lmatch = re.fullmatch(localValids, local)
-        dmatch = re.fullmatch(domainValids, domain)
-        tmatch = re.fullmatch(tldValids, tld)
-
-        # If any failed, raise error
-        if not (lmatch and dmatch and tmatch):
-            raise ValueError(e)
-
-        # Valid email
-        return value
-
-    """TODO: Add username validation(no special chars)"""
-
+    # Instance method to return user information, not including password hash 
     def toSafeDict(self):
         return {
             "username": self.user_name,

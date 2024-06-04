@@ -6,8 +6,9 @@ services:
     networks:
       - app-network
     depends_on:
-      api-gateway:
-        condition: service_healthy
+      - api-gateway
+      # api-gateway:
+      #   condition: service_healthy
 
   api-gateway:
     build: ./gateway

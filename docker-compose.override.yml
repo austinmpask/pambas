@@ -6,18 +6,20 @@ services:
       - 3000:3000
     volumes:
       - ./frontend:/app
+      - /usr/src/app/node_modules
     command: ["npm", "start"]
 
   api-gateway:
     # Change node env.
-    environment:
-      - NODE_ENV=development
+    # environment:
+    #   - NODE_ENV=development
     # Expose port for sending requests on local machine
     ports:
       - 8080:3000
     # Live file updates
     volumes:
       - ./gateway:/usr/src/app
+      - /usr/src/app/node_modules
     command: ["npm", "run", "dev"]
 
   user-service:

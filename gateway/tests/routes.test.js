@@ -120,8 +120,6 @@ describe("Gateway endpoints", () => {
 
           expect(response.status).toBe(201);
 
-          // const message = JSON.parse(response.body.message);
-
           expect(response.body.message).toBe("Project added");
         });
       });

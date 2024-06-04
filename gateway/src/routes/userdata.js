@@ -17,6 +17,7 @@ userDataRouter.get("/userdata", verifyJWT, async (req, res) => {
 
   //Make req. to user service
   const userRes = await apiFetch("GET", userApiEndpoint, req.sessionUUID);
+
   //If no respnse from helper, request failed and appropriate response has been sent
   if (!userRes.ok) return sendJsonResponse(res, 500, userRes.message);
 
@@ -25,6 +26,7 @@ userDataRouter.get("/userdata", verifyJWT, async (req, res) => {
   if (!authRes.ok) return sendJsonResponse(res, 500, authRes.message);
 
   //Successful api responses, send gateway response
+  //Response includes first/last name, email, username
   return sendJsonResponse(
     res,
     200,

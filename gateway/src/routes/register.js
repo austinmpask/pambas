@@ -7,6 +7,8 @@ const { apiFetch } = require("../utils/apiFetch");
 const registerRouter = express.Router();
 
 //Handle user registration, creates user in auth and user services
+//Auth service expected request body: username, email, password
+//User service expected request body: uuid, first_name, last_name
 registerRouter.post("/register", async (req, res) => {
   //Ensure the request body is complete and clean
   const { ok, message } = validateRegData(req.body);
@@ -14,15 +16,20 @@ registerRouter.post("/register", async (req, res) => {
   //If invalid, respond with the error
   if (!ok) return sendJsonResponse(res, 400, message);
 
+  //Assign microservice endpoints for use
   const authApiEndpoint = getApiEndpoint("/auth", "/register");
   const userApiEndpoint = getApiEndpoint("/users", "/register");
 
   //Make registration request to auth service
   const authRes = await apiFetch("POST", authApiEndpoint, undefined, req.body);
+
+  //Send error response if bad api response
   if (!authRes.ok) return sendJsonResponse(res, 500, authRes.message);
 
+  //With successful resposne, api will pass the UUID in the response body. Extract
   const userUUID = authRes.message;
 
+  //Register the user in the user db with the same UUID returned by auth db
   const userRes = await apiFetch("POST", userApiEndpoint, undefined, {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
@@ -35,8 +42,10 @@ registerRouter.post("/register", async (req, res) => {
     const delRes = await apiFetch("DELETE", authRemEndpoint, userUUID);
 
     if (delRes.ok) {
+      //If the rollback was successful, respond with the error from the user service only
       return sendJsonResponse(res, 500, userRes.message);
     } else {
+      //If the rollback was unsuccessful, respond with errors from user service & deletion attempt
       return sendJsonResponse(res, 500, {
         userError: userRes.message,
         authError: delRes.message,
@@ -44,120 +53,8 @@ registerRouter.post("/register", async (req, res) => {
     }
   }
 
+  //Success if the user response is ok
   return sendJsonResponse(res, 201, "Successful registration");
-
-  //Ensure not undefined or empty
-  // if (username && email && password && firstName && lastName) {
-  //   //Get hosts for microservices
-  //   // const authHost = services.find((item) => item.route === "/auth").target;
-  //   // const userHost = services.find((item) => item.route === "/users").target;
-
-  //   // const endpoint = "/register";
-  //   // const removeEndpoint = "/shallowdelete";
-
-  //   // //Construct the microservice endpoints
-  //   // const authRegUrl = authHost + endpoint;
-  //   // const authRemUrl = authHost + removeEndpoint;
-  //   // const userRegUrl = userHost + endpoint;
-
-  //   //Tell auth service to handle registration
-  //   // let authResponse;
-  //   // try {
-  //   //   authResponse = await fetch(authRegUrl, {
-  //   //     method: "POST",
-  //   //     body: JSON.stringify(req.body),
-  //   //     headers: { "Content-Type": "application/json" },
-  //   //   });
-  //   // } catch (e) {
-  //   //   return sendJsonResponse(
-  //   //     res,
-  //   //     500,
-  //   //     "Internal auth server error",
-  //   //     String(e)
-  //   //   );
-  //   // }
-
-  //   //If successful, tell user service to handle registration
-  //   if (authResponse && authResponse.status === 201) {
-  //     const responseBody = await authResponse.json();
-  //     const user_uuid = responseBody.message;
-
-  //     let userResponse;
-  //     try {
-  //       userResponse = await fetch(userRegUrl, {
-  //         method: "POST",
-  //         body: JSON.stringify({
-  //           first_name: firstName,
-  //           last_name: lastName,
-  //           uuid: user_uuid,
-  //         }),
-  //         headers: { "Content-Type": "application/json" },
-  //       });
-  //     } catch (e) {
-  //       //Remove user from auth DB since user was not added to the user DB
-  //       await fetch(authRemUrl, {
-  //         method: "DELETE",
-  //         body: JSON.stringify({
-  //           uuid: user_uuid,
-  //         }),
-  //         headers: { "Content-Type": "application/json" },
-  //       });
-
-  //       //Send error response
-  //       return sendJsonResponse(
-  //         res,
-  //         500,
-  //         "Internal user server error",
-  //         String(e)
-  //       );
-  //     }
-
-  //     //Successful registration
-  //     if (userResponse && userResponse.status === 201) {
-  //       return sendJsonResponse(res, 201, "Successful registration");
-  //     } else {
-  //       //If no user response or non OK status
-
-  //       //Remove user from auth DB since user was not added to the user DB
-  //       await fetch(authRemUrl, {
-  //         method: "DELETE",
-  //         body: JSON.stringify({
-  //           uuid: user_uuid,
-  //         }),
-  //         headers: { "Content-Type": "application/json" },
-  //       });
-
-  //       //Forward the error stack
-  //       let userResponseBody;
-  //       if (userResponse) {
-  //         userResponseBody = await userResponse.json();
-  //       }
-
-  //       return sendJsonResponse(
-  //         res,
-  //         500,
-  //         "No response/invalid response from user server",
-  //         JSON.stringify(userResponseBody)
-  //       );
-  //     }
-  //   } else {
-  //     //If no auth response or non OK status
-
-  //     //Forward the error stack
-  //     let authResponseBody;
-  //     if (authResponse) {
-  //       authResponseBody = await authResponse.json();
-  //     }
-  //     return sendJsonResponse(
-  //       res,
-  //       500,
-  //       "No response/invalid response from auth server:",
-  //       JSON.stringify(authResponseBody)
-  //     );
-  //   }
-  // } else {
-  //   return sendJsonResponse(res, 400, "Missing registration arguments");
-  // }
 });
 
 module.exports = { registerRouter };

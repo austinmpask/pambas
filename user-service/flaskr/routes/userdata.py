@@ -1,69 +1,69 @@
-from flask import jsonify, request, Blueprint
+from flask import request, Blueprint
 from flaskr.models import db, User
-from flaskr.util import sendJsonResponse
+from flaskr.utils import sendJsonResponse, jsonRequired, queryForUserByUUID
 import uuid
 
 userdata_bp = Blueprint("userdata", __name__)
 
 
 # Get and update user data by UUID in JSON request body
-@userdata_bp.route("/userdata", methods=["GET", "PUT"])
-def userData():
+@userdata_bp.route("/userdata", methods=["GET"])
+def getUserData():
 
-    if request.method == "GET":
-        # Check if UUID is valid
-        try:
-            user_uuid = request.headers.get("UUID")
-            user_uuid = uuid.UUID(user_uuid)
-        except Exception as e:
-            return sendJsonResponse(400, "Missing UUID", e)
+    # Check if UUID is valid
+    try:
+        user_uuid = uuid.UUID(request.headers.get("UUID"))
+    except Exception as e:
+        return sendJsonResponse(400, "Invalid UUID", e)
 
-        # Find the user in user DB
-        user = db.session.query(User).filter_by(uuid=user_uuid).first()
+    # Find the user in user DB, errors handled by helper function
+    user = queryForUserByUUID(user_uuid)
 
-        if not user:
-            return sendJsonResponse(404, "User not found")
+    # Send error response if unsuccessful
+    if not isinstance(user, User):
+        return sendJsonResponse(*user)
 
-    # Update user data
-    elif request.method == "PUT":
+    # Respond with the user info if user found
+    return sendJsonResponse(200, user.toSafeDict())
 
-        # Request must have JSON body
-        if request.is_json:
-            # Parse request
-            data = request.get_json()
 
-            # Check if UUID is valid, UUID comes from body for PUT
-            try:
-                user_uuid = data["uuid"]
-                uuid.UUID(user_uuid)
-            except Exception as e:
-                return sendJsonResponse(400, "Missing UUID", e)
+# Modify user infromation in the user database (first/last name etc.)
+@userdata_bp.route("/userdata", methods=["PUT"])
+@jsonRequired
+def putUserData():
 
-            # Exit if no data is provided with UUID
-            if len(data.keys()) < 2:
-                return sendJsonResponse(400, "Missing attributes")
+    # Parse request
+    data = request.get_json()
 
-            # Find the user in user DB
-            user = db.session.query(User).filter_by(uuid=user_uuid).first()
+    # Check if UUID is valid
+    try:
+        user_uuid = uuid.UUID(data.get("uuid"))
+    except Exception as e:
+        return sendJsonResponse(400, "Invalid UUID", e)
 
-            if not user:
-                return sendJsonResponse(404, "User not found")
+    # Exit if no data is provided with UUID
+    if len(data.keys()) < 2:
+        return sendJsonResponse(400, "Missing attributes")
 
-            # Gather data from request, use existing data as default to dynamically handle multiple replacements
-            firstName = data.get("first_name") or user.firstName
-            lastName = data.get("last_name") or user.lastName
+    # Find the user in user DB
+    user = queryForUserByUUID(user_uuid)
 
-            # Update the record
-            try:
-                user.firstName = firstName
-                user.lastName = lastName
-                db.session.commit()
-            except Exception as e:
-                db.session.rollback()
-                return sendJsonResponse(400, "User DB error", e)
+    # Send error response if unsuccessful
+    if not isinstance(user, User):
+        return sendJsonResponse(*user)
 
-        else:
-            return sendJsonResponse(400, "Must be JSON request")
+    # Gather data from request, use existing data as default to dynamically handle multiple replacements
+    firstName = data.get("first_name") or user.firstName
+    lastName = data.get("last_name") or user.lastName
+
+    # Update the record
+    try:
+        user.firstName = firstName
+        user.lastName = lastName
+        db.session.commit()
+    except Exception as e:
+        db.session.rollback()
+        return sendJsonResponse(400, "User DB error", e)
 
     # Respond with the user info
     return sendJsonResponse(200, user.toSafeDict())

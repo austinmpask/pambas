@@ -121,7 +121,9 @@ def test_invalid_user_shallow_delete(client, sampleUser, invalidUUID):
 
     # Check response not OK, check that the DB is unchanged
 
-    assert response.status_code == 400, "API response was OK"
+    assert (
+        response.status_code == 400 or response.status_code == 404
+    ), "API response was OK"
 
     # Compare query results to confirm same contents
     secondQuery = db.session.query(User).all()

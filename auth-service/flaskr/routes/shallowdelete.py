@@ -1,6 +1,6 @@
 from flask import request, Blueprint
 from flaskr.models import db, User
-from flaskr.utils import sendJsonResponse, jsonRequired
+from flaskr.utils import sendJsonResponse, jsonRequired, queryForUserByUUID
 import uuid
 
 shallowDelete_bp = Blueprint("shallowDelete", __name__)
@@ -20,20 +20,19 @@ def shallowDelete():
         return sendJsonResponse(400, "Invalid UUID")
 
     # Lookup user by UUID
-    user = db.session.query(User).filter_by(uuid=user_uuid).first()
+    user = queryForUserByUUID(user_uuid)
 
+    # Handle errors from helper function
+    if not isinstance(user, User):
+        return sendJsonResponse(*user)
     # If there is a match, delete the db entry
-    if user:
-        try:
-            db.session.delete(user)
-            db.session.commit()
-            # Successful deletion of user, send OK response
-            return sendJsonResponse(200, user.uuid)
+    try:
+        db.session.delete(user)
+        db.session.commit()
+        # Successful deletion of user, send OK response
+        return sendJsonResponse(200, user.uuid)
 
-        except Exception as e:
-            # If there is a DB error, rollback and forward the error in response
-            db.session.rollback()
-            return sendJsonResponse(500, "Error from auth DB", e)
-
-    # DB query returned no results for valid UUID
-    return sendJsonResponse(400, "UUID not found")
+    except Exception as e:
+        # If there is a DB error, rollback and forward the error in response
+        db.session.rollback()
+        return sendJsonResponse(500, "Error from auth DB", e)

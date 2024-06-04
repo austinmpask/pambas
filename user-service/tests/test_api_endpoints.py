@@ -110,7 +110,7 @@ def test_required_req_data_none(client, validRegistrationData, attribute):
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
     assert responseJson["status"] == "Error"
-    assert responseJson["message"] == "Missing UUID/firstname/lastname"
+    assert responseJson["message"] == "Missing firstname/lastname"
 
 
 @pytest.mark.parametrize("attribute", ["first_name", "last_name"])
@@ -128,7 +128,7 @@ def test_required_req_data_blank(client, validRegistrationData, attribute):
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
     assert responseJson["status"] == "Error"
-    assert responseJson["message"] == "Missing UUID/firstname/lastname"
+    assert responseJson["message"] == "Missing firstname/lastname"
 
 
 def test_valid_addition(client, validRegistrationData):
@@ -174,7 +174,7 @@ def test_no_UUID_userdata(client):
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
     assert responseJson["status"] == "Error"
-    assert responseJson["message"] == "Missing UUID"
+    assert responseJson["message"] == "Invalid UUID"
 
 
 @pytest.mark.parametrize("badUUID", ["", "asdfasdf", None])
@@ -190,7 +190,7 @@ def test_bad_UUID_userdata(client, badUUID):
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
     assert responseJson["status"] == "Error"
-    assert responseJson["message"] == "Missing UUID"
+    assert responseJson["message"] == "Invalid UUID"
 
 
 def test_no_match_UUID_userdata(client, registerUser):
@@ -246,7 +246,7 @@ def test_no_UUID_put_userdata(client):
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
     assert responseJson["status"] == "Error"
-    assert responseJson["message"] == "Missing UUID"
+    assert responseJson["message"] == "Invalid UUID"
 
 
 @pytest.mark.parametrize("badUUID", ["", "asdfasdf", None])
@@ -264,7 +264,7 @@ def test_bad_UUID_put_userdata(client, badUUID):
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
     assert responseJson["status"] == "Error"
-    assert responseJson["message"] == "Missing UUID"
+    assert responseJson["message"] == "Invalid UUID"
 
 
 def test_no_match_UUID_put_userdata(client, registerUser):

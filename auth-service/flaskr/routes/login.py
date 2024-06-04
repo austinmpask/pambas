@@ -2,6 +2,7 @@ from flask import request, make_response, Blueprint, current_app
 from flaskr.config import bcrypt
 from flaskr.utils import sendJsonResponse, queryForUser, jsonRequired
 import jwt
+from flaskr.models import User
 
 login_bp = Blueprint("login", __name__)
 
@@ -25,30 +26,29 @@ def login():
         return sendJsonResponse(400, "Password missing")
 
     # Query DB for a matching user, will use email by default, or username if no email
-    try:
-        user = queryForUser(email=email, username=username)
-    except Exception as e:
-        # Catch if there is an error querying the DB
-        return sendJsonResponse(500, "Auth DB query error", e)
+
+    user = queryForUser(email=email, username=username)
+
+    # Handle errors from helper function
+    if not isinstance(user, User):
+        return sendJsonResponse(*user)
 
     # User exists in the DB, check passwords
-    if user:
-        if bcrypt.check_password_hash(user.password_hash, password):
+    if bcrypt.check_password_hash(user.password_hash, password):
 
-            # User matched, generate JWT with UUID payload
-            sessionJWT = jwt.encode(
-                {"uuid": str(user.uuid)},
-                current_app.config["SECRET_KEY"],
-                algorithm="HS256",
-            )
+        # User matched, generate JWT with UUID payload
+        sessionJWT = jwt.encode(
+            {"uuid": str(user.uuid)},
+            current_app.config["SECRET_KEY"],
+            algorithm="HS256",
+        )
 
-            # Send response with JWT added as http only cookie
-            response = make_response(sendJsonResponse(200, "Successful login"))
+        # Send response with JWT added as http only cookie
+        response = make_response(sendJsonResponse(200, "Successful login"))
 
-            response.set_cookie(
-                "token", sessionJWT, httponly=True, secure=True, samesite="None"
-            )
-            return response
+        response.set_cookie(
+            "token", sessionJWT, httponly=True, secure=True, samesite="None"
+        )
+        return response
 
-    # Catch no matching user by credential/incorrect password
     return sendJsonResponse(401, "Unauthorized: Incorrect login")

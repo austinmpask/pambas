@@ -10,6 +10,7 @@ def createApp():
     app = Flask(__name__)
     app.config.from_object(Configuration)
 
+    # Add endpoints to flask app
     configureRoutes(app)
 
     # Init DB

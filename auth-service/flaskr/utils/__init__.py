@@ -3,3 +3,4 @@
 from .jsonRequired import jsonRequired
 from .queryForUser import queryForUser
 from .sendJsonResponse import sendJsonResponse
+from .queryForUserByUUID import queryForUserByUUID

@@ -1,61 +1,54 @@
 from flask import request, make_response, Blueprint, current_app
 from flaskr.config import bcrypt
-from flaskr.models import db, User
-from flaskr.util import sendJsonResponse, queryForUser
-import validators
+from flaskr.utils import sendJsonResponse, queryForUser, jsonRequired
 import jwt
-
 
 login_bp = Blueprint("login", __name__)
 
 
 @login_bp.route("/login", methods=["POST"])
+@jsonRequired
 def login():
+    # Parse request body
+    data = request.get_json()
 
-    # Must be application/JSON
-    if request.is_json:
+    username = data.get("username")
+    email = data.get("email")
+    password = data.get("password")
 
-        # Parse request body
-        data = request.get_json()
+    # Exit operation if neither username nor email is provided
+    if not (email or username):
+        return sendJsonResponse(400, "Login credential missing")
 
-        username = data.get("username")
-        email = data.get("email")
-        password = data.get("password")
+    # Exit operation if a password is not provided
+    if not password:
+        return sendJsonResponse(400, "Password missing")
 
-        # Exit operation if neither username nor email is provided
-        if not (email or username):
-            return sendJsonResponse(400, "Login credential missing")
+    # Query DB for a matching user, will use email by default, or username if no email
+    try:
+        user = queryForUser(email=email, username=username)
+    except Exception as e:
+        # Catch if there is an error querying the DB
+        return sendJsonResponse(500, "Auth DB query error", e)
 
-        # Exit operation if a password is not provided
-        if not password:
-            return sendJsonResponse(400, "Password missing")
+    # User exists in the DB, check passwords
+    if user:
+        if bcrypt.check_password_hash(user.password_hash, password):
 
-        # Query DB for a matching user, will use email by default, or username if no email
-        try:
-            user = queryForUser(email=email, username=username)
-        except Exception as e:
-            # Catch if there is an error querying the DB
-            return sendJsonResponse(400, "Auth DB query error", e)
+            # User matched, generate JWT with UUID payload
+            sessionJWT = jwt.encode(
+                {"uuid": str(user.uuid)},
+                current_app.config["SECRET_KEY"],
+                algorithm="HS256",
+            )
 
-        # User exists in the DB, check passwords
-        if user:
-            if bcrypt.check_password_hash(user.password_hash, password):
+            # Send response with JWT added as http only cookie
+            response = make_response(sendJsonResponse(200, "Successful login"))
 
-                # User matched, generate JWT
-                sessionJWT = jwt.encode(
-                    {"uuid": str(user.uuid)},
-                    current_app.config["SECRET_KEY"],
-                    algorithm="HS256",
-                )
+            response.set_cookie(
+                "token", sessionJWT, httponly=True, secure=True, samesite="None"
+            )
+            return response
 
-                response = make_response(sendJsonResponse(200, sessionJWT))
-
-                response.set_cookie(
-                    "token", sessionJWT, httponly=True, secure=True, samesite="None"
-                )
-                return response
-
-        return sendJsonResponse(401, "Unauthorized: Incorrect login")
-
-    # Non JSON request
-    return sendJsonResponse(400, "Must be JSON request")
+    # Catch no matching user by credential/incorrect password
+    return sendJsonResponse(401, "Unauthorized: Incorrect login")

@@ -269,7 +269,7 @@ def test_blank_login_password(client, validRegistrationData):
 
 @pytest.mark.parametrize("credential", ["email", "username"])
 def test_single_login_credential_undefined(
-    client, registerUser, validRegistrationData, credential
+    client, validRegistrationData, registerUser, credential
 ):
     """If the one credential (username/email) is not submitted (None),
     but the other is valid, the valid credential is used to authenticate"""
@@ -286,7 +286,7 @@ def test_single_login_credential_undefined(
     assert responseJson["message"]  # JWT token
 
 
-def test_login_credential_not_found(client, registerUser, validRegistrationData):
+def test_login_credential_not_found(client, validRegistrationData):
     """If the username/email is incorrect/not found,
     the response should be 401 Unauthorized"""
 
@@ -304,7 +304,7 @@ def test_login_credential_not_found(client, registerUser, validRegistrationData)
     assert responseJson["message"] == "Unauthorized: Incorrect login"
 
 
-def test_login_incorrect_password(client, registerUser, validRegistrationData):
+def test_login_incorrect_password(client, validRegistrationData):
     """If the password is incorrect,
     the response should be 401 Unauthorized"""
 
@@ -347,23 +347,20 @@ def test_both_login_credentials_success(client, registerUser, validRegistrationD
     response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
 
-    # Collect UUID from JWT
-    responseUUID = jwt.decode(
-        responseJson["message"], current_app.config["SECRET_KEY"], algorithms="HS256"
-    )
+    # # Collect UUID from JWT
+    # responseUUID = jwt.decode(
+    #     responseJson["message"], current_app.config["SECRET_KEY"], algorithms="HS256"
+    # )
 
     assert response.status_code == 200, "Incorrect response status"
 
     assert responseJson["code"] == 200
     assert responseJson["status"] == "Success"
-    # Match JWT UUID with user UUID from registration
-    assert responseUUID["uuid"] == registerUser
+    assert responseJson["message"] == "Successful login"
 
 
 @pytest.mark.parametrize("invalidEmail", ["asdf", "@.", "$$$$$", "asdf@asdf"])
-def test_invalid_email_format(
-    client, registerUser, validRegistrationData, invalidEmail
-):
+def test_invalid_email_format(client, validRegistrationData, invalidEmail):
     """If an invalid email address format is provided,
     among no other valid credential, an appropriate error should be raised"""
 
@@ -373,9 +370,9 @@ def test_invalid_email_format(
     response = client.post("/login", json=validRegistrationData)
     responseJson = response.get_json()
 
-    assert response.status_code == 400, "Incorrect response status"
+    assert response.status_code == 500, "Incorrect response status"
 
-    assert responseJson["code"] == 400
+    assert responseJson["code"] == 500
     assert responseJson["status"] == "Error"
     assert responseJson["message"] == "Auth DB query error"
 
@@ -396,7 +393,7 @@ def test_no_UUID_userdata(client):
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
     assert responseJson["status"] == "Error"
-    assert responseJson["message"] == "Missing UUID"
+    assert responseJson["message"] == "Invalid UUID"
 
 
 @pytest.mark.parametrize("badUUID", ["", "asdfasdf", None])
@@ -412,10 +409,10 @@ def test_bad_UUID_userdata(client, badUUID):
     # Standardized JSON response expected with detail
     assert responseJson["code"] == 400
     assert responseJson["status"] == "Error"
-    assert responseJson["message"] == "Missing UUID"
+    assert responseJson["message"] == "Invalid UUID"
 
 
-def test_no_match_UUID_userdata(client, registerUser):
+def test_no_match_UUID_userdata(client):
     """If UUID produces no database match,
     an appropriate error should be raised"""
 

@@ -1,19 +1,5 @@
-from flask import jsonify
-from .models import db, User
+from flaskr.models import db, User
 import validators
-
-
-# Standardized response format
-def sendJsonResponse(code, message, error=None):
-    okCodes = {200, 201}
-
-    status = "Success" if code in okCodes else "Error"
-    trace = str(error) if error else "None"
-
-    return (
-        jsonify({"code": code, "status": status, "message": message, "trace": trace}),
-        code,
-    )
 
 
 # Helper to query db for login

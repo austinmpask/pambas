@@ -39,6 +39,7 @@ platformdirs = "==4.2.1"
 virtualenv = "==20.26.1"
 validators = "*"
 pyjwt = "*"
+black = "*"
 
 [dev-packages]
 

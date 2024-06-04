@@ -1,45 +1,39 @@
 from flask import request, Blueprint
-from flask_bcrypt import Bcrypt
 from flaskr.models import db, User
-from flaskr.util import sendJsonResponse
+from flaskr.utils import sendJsonResponse, jsonRequired
 import uuid
 
 shallowDelete_bp = Blueprint("shallowDelete", __name__)
 
 
+# Delete user data ONLY from the auth db. This is not an application wide user deletion
 @shallowDelete_bp.route("/shallowdelete", methods=["DELETE"])
+@jsonRequired
 def shallowDelete():
-    invalidJSONResponse = sendJsonResponse(400, "Must be JSON request")
 
-    # Only accept application/json requests
-    if request.is_json:
-        data = request.get_json()
+    data = request.get_json()
 
-        # Convert to UUID object, but catch error if request uuid is invalid format
+    # Convert to UUID object, but catch error if request uuid is invalid format
+    try:
+        user_uuid = uuid.UUID(data.get("uuid"))
+    except Exception:
+        return sendJsonResponse(400, "Invalid UUID")
+
+    # Lookup user by UUID
+    user = db.session.query(User).filter_by(uuid=user_uuid).first()
+
+    # If there is a match, delete the db entry
+    if user:
         try:
-            user_uuid = uuid.UUID(data.get("uuid"))
-        except Exception:
-            return sendJsonResponse(400, "Invalid UUID")
+            db.session.delete(user)
+            db.session.commit()
+            # Successful deletion of user, send OK response
+            return sendJsonResponse(200, user.uuid)
 
-        # Lookup user by UUID and delete
-        user = db.session.query(User).filter_by(uuid=user_uuid).first()
+        except Exception as e:
+            # If there is a DB error, rollback and forward the error in response
+            db.session.rollback()
+            return sendJsonResponse(500, "Error from auth DB", e)
 
-        if user:
-            try:
-                # Successful deletion of user, send OK response
-                db.session.delete(user)
-                db.session.commit()
-                return sendJsonResponse(200, user.uuid)
-
-            except Exception as e:
-                # If there is a DB error, rollback and forward the error in response
-                db.session.rollback()
-                return sendJsonResponse(400, "Error from auth DB", e)
-
-        else:
-            # DB query returned no results for valid UUID
-            return sendJsonResponse(400, "UUID not found")
-
-    else:
-        # Non JSON body request rec.
-        return invalidJSONResponse
+    # DB query returned no results for valid UUID
+    return sendJsonResponse(400, "UUID not found")

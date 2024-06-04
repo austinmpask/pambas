@@ -1,10 +1,8 @@
-from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy.types import String, Integer, DateTime, Date, Boolean, UUID
-from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship, validates
+from sqlalchemy.schema import Column
+from sqlalchemy.types import String, Integer, DateTime, UUID
+from sqlalchemy.orm import validates
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import re
 import uuid
 import validators
 
@@ -36,10 +34,10 @@ class User(db.Model):
             return value
         else:
             raise ValueError("Invalid email!")
-        
+
     # TODO add username validator
 
-    # Instance method to return user information, not including password hash 
+    # Instance method to return user information, not including password hash
     def toSafeDict(self):
         return {
             "username": self.user_name,

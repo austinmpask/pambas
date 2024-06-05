@@ -29,6 +29,7 @@ tomli = "==2.0.1"
 typing-extensions = "==4.11.0"
 werkzeug = "==3.0.2"
 zipp = "==3.18.1"
+black = "*"
 
 [dev-packages]
 

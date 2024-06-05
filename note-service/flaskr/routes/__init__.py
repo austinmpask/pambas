@@ -1,10 +1,10 @@
 from flask import Blueprint
-from flaskr.util import sendJsonResponse
+from flaskr.utils import sendJsonResponse
 
 index_bp = Blueprint("index", __name__)
 
 
-# Test route for gateway
+# Health check route for gateway docker compose
 @index_bp.route("/", methods=["GET"])
 def index():
     return sendJsonResponse(200, "ok from note service")

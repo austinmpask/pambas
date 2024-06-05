@@ -1,5 +1,5 @@
 import pytest
-import uuid
+
 from flaskr.models import db
 from flaskr import createApp
 

@@ -2,25 +2,20 @@ from sqlalchemy.schema import Column, ForeignKey
 from sqlalchemy.types import (
     String,
     Integer,
-    Numeric,
     Text,
     DateTime,
-    Date,
     Boolean,
     UUID,
-    Enum,
     ARRAY,
 )
-from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship, validates
-from sqlalchemy import CheckConstraint
+from sqlalchemy.orm import relationship
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-import re
 
+# Init sqlalchemy
 db = SQLAlchemy()
 
-
+# Predefined project types for user selection. Does not change functionality, naming purposes only
 projectTypes = {
     1: "SOC 1 Type 1",
     2: "SOC 1 Type 2",
@@ -29,18 +24,30 @@ projectTypes = {
     5: "Other",
 }
 
+# Field lengths
+titleLength = 20
+nameLength = 25
+typeLength = 15
+controlNumLength = 5
+
+
+# Projects are associated with a user by UUID.
+# Projects have multiple sections, which have multiple line items, which have multiple pending items
+
 
 class Project(db.Model):
     __tablename__ = "projects"
     id = Column(Integer, primary_key=True)
     uuid = Column(UUID(as_uuid=True), nullable=False)
-    title = Column(String(20), nullable=False)
+    title = Column(String(titleLength), nullable=False)
     budget = Column(Integer, nullable=False)
     billed = Column(Integer, nullable=False, default=0)
-    projectManager = Column(String(25), nullable=False)
-    projectType = Column(String(15), nullable=False)
+    projectManager = Column(String(nameLength), nullable=False)
+    projectType = Column(String(typeLength), nullable=False)
     checkboxHeaders = Column(
-        ARRAY(String(20)), nullable=False, default=["Prep", "Inquiry", "Inspection"]
+        ARRAY(String(titleLength)),
+        nullable=False,
+        default=["Prep", "Inquiry", "Inspection"],
     )
 
     created_at = Column(DateTime, nullable=False, default=datetime.now())
@@ -66,7 +73,7 @@ class LineItem(db.Model):
     id = Column(Integer, primary_key=True)
 
     flagMarker = Column(Boolean, nullable=False, default=False)
-    controlNumber = Column(String(5), default="")
+    controlNumber = Column(String(controlNumLength), default="")
 
     checkBoxes = Column(ARRAY(Integer), nullable=False, default=[0, 0, 0])
 
@@ -83,9 +90,9 @@ class PendingItem(db.Model):
     __tablename__ = "pending_items"
     id = Column(Integer, primary_key=True)
 
-    itemName = Column(String(20), nullable=False)
+    itemName = Column(String(titleLength), nullable=False)
     description = Column(Text, nullable=True, default="")
-    controlOwner = Column(String(25), nullable=True, default="")
+    controlOwner = Column(String(nameLength), nullable=True, default="")
     lastContactDate = Column(DateTime, nullable=True)
     created_at = Column(DateTime, nullable=False, default=datetime.now())
 

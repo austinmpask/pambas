@@ -3,7 +3,6 @@ import uuid
 from flaskr.models import db, Project, Section, LineItem, PendingItem
 from flaskr import createApp
 from sqlalchemy.exc import IntegrityError, DataError
-from datetime import datetime
 
 
 @pytest.fixture(scope="function")
@@ -226,4 +225,4 @@ def test_pending_item_defaults(app, samplePendingItem):
 
     assert item.description == ""
     assert item.controlOwner == ""
-    assert item.lastContactDate == None
+    assert item.lastContactDate is None

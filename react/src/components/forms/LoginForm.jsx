@@ -1,10 +1,9 @@
 import { useState } from "react";
 import handleFormChange from "src/utils/handleFormChange";
 import loginUser from "src/utils/loginUser";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { toastError, toastSuccess } from "src/styles/toasts";
 import { useNavigate } from "react-router-dom";
-// import { buildErrorMessage } from "vite";
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -52,7 +51,7 @@ export default function LoginForm() {
 
       <form onSubmit={handleSubmit}>
         <div className="field">
-          <label className="label">Login</label>
+          <label className="label">Login Credential</label>
           <div className="control mb-3">
             <input
               className="input"

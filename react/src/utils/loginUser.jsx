@@ -19,7 +19,7 @@ export default async function loginUser(formData) {
   if (!credValid) {
     return {
       ok: false,
-      errors: ["Invalid username/email"],
+      errors: ["Invalid username/email!"],
     };
   }
 
@@ -42,7 +42,7 @@ export default async function loginUser(formData) {
     //Error while making request
     return {
       ok: false,
-      errors: ["Invalid login"],
+      errors: ["Invalid login!"],
     };
   }
 

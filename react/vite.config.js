@@ -7,4 +7,10 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  // Absolute imports
+  resolve: {
+    alias: {
+      src: "/src",
+    },
+  },
 });

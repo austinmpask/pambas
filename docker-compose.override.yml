@@ -5,9 +5,9 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./frontend:/app
+      - ./react:/app
       - /usr/src/app/node_modules
-    command: ["npm", "start"]
+    command: ["npm", "run", "dev"]
 
   api-gateway:
     # Change node env.

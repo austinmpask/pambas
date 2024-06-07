@@ -24,7 +24,7 @@ export default async function registerUser(formData, prettyNames) {
   //Make request to api
 
   try {
-    const apiResponse = await axios.post("/register", {
+    const apiResponse = await axios.post("/api/register", {
       username: formData.username,
       email: formData.email,
       first_name: formData.firstName,

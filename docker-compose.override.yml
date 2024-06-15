@@ -5,7 +5,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./react:/app
+      - ./react:/usr/src/app
       - /usr/src/app/node_modules
     command: ["npm", "run", "dev"]
 

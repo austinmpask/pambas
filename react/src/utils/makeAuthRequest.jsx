@@ -1,5 +1,6 @@
 import axios from "axios";
 
+//Helper to set context
 export default async function makeAuthRequest() {
   try {
     //If logged in the JWT should be included automatically

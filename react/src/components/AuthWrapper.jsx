@@ -1,6 +1,11 @@
+//React
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+//Contexts
 import { UserProvider } from "src/context/UserContext";
+
+//Utils
 import makeAuthRequest from "src/utils/makeAuthRequest";
 
 //Determine if user is authenticated, update user state if so, if not, redirect to login

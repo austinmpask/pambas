@@ -1,6 +1,8 @@
+import axios from "axios";
+
+//Utils
 import missingRequiredFields from "src/utils/validators/missingRequiredFields";
 import validLoginCredential from "src/utils/validators/validLoginCredential";
-import axios from "axios";
 
 //Attempt to login the user upon form submission
 export default async function loginUser(formData) {

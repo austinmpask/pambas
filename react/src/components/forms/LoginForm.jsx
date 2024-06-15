@@ -1,10 +1,16 @@
+//React
 import { useState } from "react";
-import handleFormChange from "src/utils/handleFormChange";
-import loginUser from "src/utils/loginUser";
-import { ToastContainer } from "react-toastify";
-import { toastError, toastSuccess } from "src/styles/toasts";
 import { useNavigate } from "react-router-dom";
 
+//Toasts
+import { ToastContainer } from "react-toastify";
+import { toastError, toastSuccess } from "src/styles/toasts";
+
+//Utils
+import loginUser from "src/utils/loginUser";
+import handleFormChange from "src/utils/handleFormChange";
+
+//Login form
 export default function LoginForm() {
   const navigate = useNavigate();
 

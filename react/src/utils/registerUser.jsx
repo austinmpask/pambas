@@ -1,7 +1,10 @@
 import axios from "axios";
+
+//Utils
 import missingRequiredFields from "src/utils/validators/missingRequiredFields";
 import validateUserFields from "src/utils/validators/validateUserFields";
 
+//Helper to handle registration of new user
 export default async function registerUser(formData, prettyNames) {
   //Validate that all fields have data
   let errors = missingRequiredFields(formData, prettyNames);

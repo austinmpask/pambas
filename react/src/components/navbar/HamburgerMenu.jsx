@@ -1,8 +1,14 @@
+//React
 import { useContext, useState, useEffect, useRef } from "react";
-import { UserContext } from "src/context/UserContext";
+
+//Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHandSparkles } from "@fortawesome/free-solid-svg-icons";
 
+//Contexts
+import { UserContext } from "src/context/UserContext";
+
+//Persistent hamburger menu for navbar
 export default function HamburgerMenu() {
   const { userData } = useContext(UserContext);
 

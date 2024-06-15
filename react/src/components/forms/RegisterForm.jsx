@@ -1,9 +1,16 @@
+//React
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import handleFormChange from "src/utils/handleFormChange";
+
+//Toasts
 import { ToastContainer } from "react-toastify";
 import { toastError, toastSuccess } from "src/styles/toasts";
+
+//Utils
+import handleFormChange from "src/utils/handleFormChange";
 import registerUser from "src/utils/registerUser";
+
+//User registration form
 export default function RegisterForm() {
   const navigate = useNavigate();
 
@@ -33,6 +40,7 @@ export default function RegisterForm() {
     return handleFormChange(event, setFormData);
   }
 
+  //Submit form and register user
   async function handleSubmit(event) {
     event.preventDefault();
     setLoading(true);

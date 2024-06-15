@@ -1,7 +1,10 @@
+//React
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { routes } from "src/routes";
+
+//Router
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { routes } from "src/routes";
 
 //Global styling sass + bulma
 import "./styles/global.scss";

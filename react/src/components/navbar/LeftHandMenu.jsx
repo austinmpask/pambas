@@ -1,6 +1,9 @@
-import ProjectList from "src/components/navbar/ProjectList";
+//Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTachometerAlt } from "@fortawesome/free-solid-svg-icons";
+
+//Children
+import ProjectList from "src/components/navbar/ProjectList";
 
 //Left side of the navbar
 export default function LeftHandMenu() {

@@ -1,7 +1,8 @@
-import EngagementList from "src/components/navbar/EngagementList";
+import ProjectList from "src/components/navbar/ProjectList";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTachometerAlt } from "@fortawesome/free-solid-svg-icons";
 
+//Left side of the navbar
 export default function LeftHandMenu() {
   return (
     <div className="navbar-start">
@@ -13,8 +14,8 @@ export default function LeftHandMenu() {
           <span>Dashboard</span>
         </span>
       </a>
-
-      <EngagementList />
+      {/* Dropdown for current projects */}
+      <ProjectList />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import LeftHandMenu from "src/components/navbar/LeftHandMenu";
 import RightHandMenu from "src/components/navbar/RightHandMenu";
 
+// Parent persistent navbar component
 export default function NavBar() {
   return (
     <>

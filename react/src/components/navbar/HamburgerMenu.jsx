@@ -6,28 +6,35 @@ import { faHandSparkles } from "@fortawesome/free-solid-svg-icons";
 export default function HamburgerMenu() {
   const { userData } = useContext(UserContext);
 
+  //State for controlling hamburger menu visibility
   const [active, setActive] = useState(false);
 
+  //Use ref to identify the hamburger menu to allow outside clicks to close it
   const hamburgerRef = useRef(null);
 
   useEffect(() => {
     //Close the menu if the user clicks anything outside of it
     function handleOutsideClick(event) {
+      //Make sure hamburger menu has been rendered, and check that the click event is not coming from the hamburger menu
       if (
         hamburgerRef.current &&
         !hamburgerRef.current.contains(event.target)
       ) {
+        //Trigger rerender with menu gone
         setActive(false);
       }
     }
 
+    //Listen for clicks on whole document
     document.addEventListener("mousedown", handleOutsideClick);
 
+    //Cleanup on unmount
     return () => {
       document.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, [hamburgerRef]);
+  }, []);
 
+  //Toggle the hamburger menu by changing active state
   function handleClick(event) {
     event.preventDefault();
     setActive((prev) => !prev);
@@ -42,6 +49,7 @@ export default function HamburgerMenu() {
         onClick={handleClick}
         name="hamburger"
       >
+        {/* For bulma visuals */}
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>

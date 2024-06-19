@@ -25,7 +25,6 @@ export default async function registerUser(formData, prettyNames) {
   }
 
   //Make request to api
-
   try {
     const apiResponse = await axios.post("/api/register", {
       username: formData.username,
@@ -52,6 +51,6 @@ export default async function registerUser(formData, prettyNames) {
   //Bad api response
   return {
     ok: false,
-    errors,
+    errors: ["Bad API reponse while registering user, try again later"],
   };
 }

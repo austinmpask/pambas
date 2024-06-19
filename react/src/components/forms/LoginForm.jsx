@@ -30,7 +30,6 @@ export default function LoginForm() {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    console.log(formData);
     setLoading(true);
 
     //Attempt to login the user

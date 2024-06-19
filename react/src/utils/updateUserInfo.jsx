@@ -39,6 +39,6 @@ export default async function updateUserInfo(formData, prettyNames) {
   //Bad api response, bubble up errors for presentation
   return {
     ok: false,
-    errors,
+    errors: ["Bad API reponse while updating user info, try again later"],
   };
 }

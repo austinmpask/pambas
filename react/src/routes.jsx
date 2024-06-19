@@ -6,7 +6,8 @@ import LandingPage from "src/pages/LandingPage";
 import LoginPage from "src/pages/LoginPage";
 import RegisterPage from "src/pages/RegisterPage";
 import DashboardPage from "src/pages/DashboardPage";
-import SettingsPage from "./pages/SettingsPage";
+import SettingsPage from "src/pages/SettingsPage";
+import NewProjectPage from "src/pages/NewProjectPage";
 
 //Define frontend routes
 export const routes = [
@@ -17,4 +18,5 @@ export const routes = [
   //Protected routes
   routeFactoryAuth("/dashboard", <DashboardPage />),
   routeFactoryAuth("/settings", <SettingsPage />),
+  routeFactoryAuth("/new", <NewProjectPage />),
 ];

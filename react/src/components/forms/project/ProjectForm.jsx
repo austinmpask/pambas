@@ -110,9 +110,6 @@ export default function ProjectForm() {
   //Create a new project via note api for user
   async function handleSubmit(event) {
     event.preventDefault();
-    const joe = await axios.get("/api/allprojects");
-
-    console.log(joe);
 
     //Helper to make api request to add project
     const response = await addProject(formData, prettyNames, childrenState);

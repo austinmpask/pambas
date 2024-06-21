@@ -16,6 +16,7 @@ import addProject from "src/utils/addProject";
 
 //Children
 import FormProjectSection from "src/components/forms/project/FormProjectSection";
+import axios from "axios";
 
 //Form for setting up a new project
 export default function ProjectForm() {
@@ -109,6 +110,9 @@ export default function ProjectForm() {
   //Create a new project via note api for user
   async function handleSubmit(event) {
     event.preventDefault();
+    const joe = await axios.get("/api/allprojects");
+
+    console.log(joe);
 
     //Helper to make api request to add project
     const response = await addProject(formData, prettyNames, childrenState);
@@ -121,6 +125,7 @@ export default function ProjectForm() {
     } else {
       //Successful, redirect
       toastSuccess("Project successfully created!");
+
       setTimeout(() => {
         navigate("/dashboard");
       }, 2000);

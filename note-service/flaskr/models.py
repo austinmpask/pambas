@@ -55,6 +55,16 @@ class Project(db.Model):
     # Back references
     sections = relationship("Section", backref="project")
 
+    # Return dictionary of project summary details
+    def toDict(self):
+        return {
+            "title": self.title,
+            "budget": self.budget,
+            "billed": self.billed,
+            "projectManager": self.projectManager,
+            "projectType": self.projectType,
+        }
+
 
 class Section(db.Model):
     __tablename__ = "sections"

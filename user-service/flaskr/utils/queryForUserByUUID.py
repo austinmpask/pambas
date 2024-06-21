@@ -5,7 +5,7 @@ from flaskr.models import db, User
 def queryForUserByUUID(uuid):
     try:
         user = db.session.query(User).filter_by(uuid=uuid).first()
-    except:
+    except Exception:
         return (500, "User DB query error")
 
     if not user:

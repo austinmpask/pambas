@@ -24,12 +24,12 @@ export default async function addProject(formData, prettyNames, childrenState) {
   }
 
   //Validate right hand fields
-  if (sectionNumberNumeric(childrenState)) {
-    return {
-      ok: false,
-      errors: ["Section/Control must be numeric!"],
-    };
-  }
+  // if (sectionNumberNumeric(childrenState)) {
+  //   return {
+  //     ok: false,
+  //     errors: ["Section/Control must be numeric!"],
+  //   };
+  // }
 
   //Check that section # wasnt repeated
   errors = repeatedSections(childrenState);

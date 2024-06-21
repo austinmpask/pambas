@@ -20,6 +20,7 @@ const { healthRouter } = require("./routes/health");
 const { userDataRouter } = require("./routes/userdata");
 const { registerRouter } = require("./routes/register");
 const { projectRouter } = require("./routes/project");
+const { allProjectsRouter } = require("./routes/allProjects");
 
 //Security middleware, allow frontend
 app.use(
@@ -67,6 +68,7 @@ app.use(healthRouter);
 app.use(userDataRouter);
 app.use(registerRouter);
 app.use(projectRouter);
+app.use(allProjectsRouter);
 
 //404 not found error
 app.use((_req, res) => {

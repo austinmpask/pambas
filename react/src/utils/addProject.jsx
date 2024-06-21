@@ -3,6 +3,8 @@ import axios from "axios";
 //Utils
 import addProjectMissingFields from "src/utils/validators/projectForm/addProjectMissingFields";
 import repeatedSections from "src/utils/validators/projectForm/repeatedSections";
+import leftHandValidate from "src/utils/validators/projectForm/leftHandValidate";
+import sectionNumberNumeric from "src/utils/validators/projectForm/sectionNumberNumeric";
 
 //Helper to add a new project after the new project form is completed. Errors separated to not overwhelm end user
 export default async function addProject(formData, prettyNames, childrenState) {
@@ -14,6 +16,21 @@ export default async function addProject(formData, prettyNames, childrenState) {
     return { ok: false, errors };
   }
 
+  //Validate left hand fields
+  errors = leftHandValidate(formData, prettyNames);
+  //Abort if there were validation errors
+  if (errors) {
+    return { ok: false, errors };
+  }
+
+  //Validate right hand fields
+  if (sectionNumberNumeric(childrenState)) {
+    return {
+      ok: false,
+      errors: ["Section/Control must be numeric!"],
+    };
+  }
+
   //Check that section # wasnt repeated
   errors = repeatedSections(childrenState);
 
@@ -21,11 +38,6 @@ export default async function addProject(formData, prettyNames, childrenState) {
   if (errors) {
     return { ok: false, errors };
   }
-
-  //TODO validation
-  //Validate left hand fields
-
-  //Validate right hand fields
 
   //Make request to api
   try {

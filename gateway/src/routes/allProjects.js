@@ -14,7 +14,6 @@ allProjectsRouter.get("/allprojects", verifyJWT, async (req, res) => {
 
   //Make request to note service, inject UUID in request header
   const response = await apiFetch("GET", apiEndpoint, req.sessionUUID);
-  console.log(response);
 
   let status = 200;
   if (!response.ok) {

@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
 
-import ProjectListItem from "src/components/ProjectListItem";
+import ProjectListItem from "src/components/navbar/ProjectListItem";
 
 //Dropdown menu for user's projects
 export default function ProjectList() {

@@ -42,13 +42,17 @@ def getProject(id):
     # Query for all projects owned by the user
     projects = queryProjectsByUUID(user_uuid)
 
+    if projects[0] != 200:
+        return sendJsonResponse(*projects)
+
     # Of the user's projects, find the one with matching id
-    target = next((project for project in projects if project.id == projID), None)
+    target = next((project for project in projects[1] if project["id"] == projID), None)
 
     if not target:
         return sendJsonResponse(404, "Project not found")
 
-    print(target)
+    # Temporarily just return the project to dict
+    return sendJsonResponse(200, target)
 
 
 # Create a new project for a particular user

@@ -6,6 +6,20 @@ const { getApiEndpoint } = require("../utils/getApiEndpoint");
 
 const projectRouter = express.Router();
 
+//Get a specific project owned by a user
+projectRouter.get("/project/:id", verifyJWT, async (req, res) => {
+  const apiEndpoint = getApiEndpoint("/notes", `/project/${req.params.id}`);
+
+  const response = await apiFetch("GET", apiEndpoint, req.sessionUUID);
+
+  let status = 200;
+  if (!response.ok) {
+    status = 500;
+  }
+
+  return sendJsonResponse(res, status, JSON.stringify(response.message));
+});
+
 //Create new project for a user
 projectRouter.post("/project", verifyJWT, async (req, res) => {
   //Assign microservice endpoint for use

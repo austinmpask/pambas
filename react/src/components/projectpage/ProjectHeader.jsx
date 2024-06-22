@@ -1,7 +1,7 @@
 export default function ProjectHeader({ projectData }) {
   console.log(projectData);
   return (
-    <>
+    <div className="block mb-4">
       <div className="block">
         <span>{projectData.projectType}</span>
       </div>
@@ -13,6 +13,6 @@ export default function ProjectHeader({ projectData }) {
       <div className="block">
         <span>{`PM: ${projectData.projectManager}`}</span>
       </div>
-    </>
+    </div>
   );
 }

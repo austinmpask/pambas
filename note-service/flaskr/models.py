@@ -64,6 +64,7 @@ class Project(db.Model):
             "billed": self.billed,
             "projectManager": self.projectManager,
             "projectType": self.projectType,
+            "checkBoxHeaders": self.checkboxHeaders,
             "sections": [section.toDict() for section in self.sections],
         }
 

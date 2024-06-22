@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import PageWrapper from "src/components/PageWrapper";
 import NavBar from "src/components/navbar/Navbar";
 import ProjectHeader from "src/components/projectpage/ProjectHeader";
+import ProjectGrid from "src/components/projectpage/ProjectGrid";
 
 //Utils
 import getProject from "src/utils/getProject";
@@ -37,7 +38,10 @@ export default function ProjectPage() {
     <>
       <NavBar />
       <PageWrapper title={projectData.title}>
-        <ProjectHeader projectData={projectData} />
+        <div className="has-background-dark">
+          <ProjectHeader projectData={projectData} />
+          <ProjectGrid projectData={projectData} />
+        </div>
       </PageWrapper>
     </>
   );

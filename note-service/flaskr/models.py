@@ -64,6 +64,7 @@ class Project(db.Model):
             "billed": self.billed,
             "projectManager": self.projectManager,
             "projectType": self.projectType,
+            "sections": [section.toDict() for section in self.sections],
         }
 
     # Titlecase the manager and project name
@@ -83,6 +84,15 @@ class Section(db.Model):
     # Back references
     lineItems = relationship("LineItem", backref="section")
 
+    # Return dict of section details
+    def toDict(self):
+        return {
+            "id": self.id,
+            "projectID": self.projectID,
+            "sectionNumber": self.sectionNumber,
+            "lineItems": [lineItem.toDict() for lineItem in self.lineItems],
+        }
+
 
 class LineItem(db.Model):
     __tablename__ = "line_items"
@@ -101,6 +111,18 @@ class LineItem(db.Model):
     # Back references
     pendingItems = relationship("PendingItem", backref="lineItem")
 
+    # Return a dict of section details
+    def toDict(self):
+        return {
+            "id": self.id,
+            "flagMarker": self.flagMarker,
+            "controlNumber": self.controlNumber,
+            "checkBoxes": self.checkBoxes,
+            "notes": self.notes,
+            "sectionID": self.sectionID,
+            "pendingItems": [pendingItem.toDict() for pendingItem in self.pendingItems],
+        }
+
 
 class PendingItem(db.Model):
     __tablename__ = "pending_items"
@@ -114,3 +136,15 @@ class PendingItem(db.Model):
 
     # FK
     lineItemID = Column(Integer, ForeignKey("line_items.id"), nullable=False)
+
+    # Return a dict of item details
+    def toDict(self):
+        return {
+            "id": self.id,
+            "lineItemID": self.lineItemID,
+            "itemName": self.itemName,
+            "description": self.description,
+            "controlOwner": self.controlOwner,
+            "lastContactDate": self.lastContactDate,
+            "createdAt": self.created_at,
+        }

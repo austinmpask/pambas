@@ -1,15 +1,16 @@
 export default function ProjectHeader({ projectData }) {
+  console.log(projectData);
   return (
     <>
-      <div class="block">
+      <div className="block">
         <span>{projectData.projectType}</span>
       </div>
-      <div class="block">
+      <div className="block">
         <span>{`${
           projectData.budget - projectData.billed
         } hours remaining`}</span>
       </div>
-      <div class="block">
+      <div className="block">
         <span>{`PM: ${projectData.projectManager}`}</span>
       </div>
     </>

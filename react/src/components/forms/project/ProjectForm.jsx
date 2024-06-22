@@ -16,7 +16,6 @@ import addProject from "src/utils/addProject";
 
 //Children
 import FormProjectSection from "src/components/forms/project/FormProjectSection";
-import axios from "axios";
 
 //Form for setting up a new project
 export default function ProjectForm() {

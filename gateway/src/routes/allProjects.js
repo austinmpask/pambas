@@ -8,9 +8,9 @@ const allProjectsRouter = express.Router();
 
 //Get all projects by UUID from note service
 //Services expect UUID in request header
-allProjectsRouter.get("/allprojects", verifyJWT, async (req, res) => {
+allProjectsRouter.get("/project", verifyJWT, async (req, res) => {
   //Get full API endpoint for request to note service
-  const apiEndpoint = getApiEndpoint("/notes", "/allprojects");
+  const apiEndpoint = getApiEndpoint("/notes", "/project");
 
   //Make request to note service, inject UUID in request header
   const response = await apiFetch("GET", apiEndpoint, req.sessionUUID);

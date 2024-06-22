@@ -15,7 +15,13 @@ export default function ProjectList() {
 
       <div className="navbar-dropdown">
         {projectData.map((project, index) => {
-          return <ProjectListItem key={index} projectName={project.title} />;
+          return (
+            <ProjectListItem
+              key={index}
+              id={project.id}
+              projectName={project.title}
+            />
+          );
         })}
 
         <hr className="navbar-divider" />

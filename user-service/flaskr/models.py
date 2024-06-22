@@ -22,7 +22,7 @@ class User(db.Model):
 
     # Ensure names are not "" or not alpha only
     @validates("firstName", "lastName")
-    def validate_name_not_empty_and_alpha(self, key, name):
+    def validateNotEmptyAndAlpha(self, key, name):
         errors = []
 
         # Blank name

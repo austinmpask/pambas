@@ -9,8 +9,8 @@ export default function leftHandValidate(formData, prettyNames) {
   }
 
   //Check if project name is alphanumeric
-  if (!validator.isAlphanumeric(formData.name)) {
-    errors.push(`${prettyNames.name} must be a-Z 0-9 only!`);
+  if (!validator.isAlphanumeric(formData.name, undefined, { ignore: " " })) {
+    errors.push(`${prettyNames.name} must not contain special characters!`);
   }
 
   //Check if budget hours is numeric
@@ -23,7 +23,7 @@ export default function leftHandValidate(formData, prettyNames) {
     errors.push(`${prettyNames.manager} must be 25 characters or less!`);
   }
   //Check if manager name is alpha
-  if (!validator.isAlpha(formData.manager)) {
+  if (!validator.isAlpha(formData.manager, undefined, { ignore: " " })) {
     errors.push(`${prettyNames.manager} must be a-Z!`);
   }
 

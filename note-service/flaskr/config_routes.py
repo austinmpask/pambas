@@ -1,5 +1,5 @@
 import flaskr.routes
-from flaskr.routes import project, allProjects
+from flaskr.routes import project
 
 
 def configureRoutes(app):
@@ -8,4 +8,3 @@ def configureRoutes(app):
         # Register blueprints for API endpoints
         app.register_blueprint(flaskr.routes.index_bp)
         app.register_blueprint(project.project_bp)
-        app.register_blueprint(allProjects.allProjects_bp)

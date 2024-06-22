@@ -8,7 +8,7 @@ from sqlalchemy.types import (
     UUID,
     ARRAY,
 )
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, validates
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
@@ -58,12 +58,18 @@ class Project(db.Model):
     # Return dictionary of project summary details
     def toDict(self):
         return {
+            "id": self.id,
             "title": self.title,
             "budget": self.budget,
             "billed": self.billed,
             "projectManager": self.projectManager,
             "projectType": self.projectType,
         }
+
+    # Titlecase the manager and project name
+    @validates("title", "projectManager")
+    def titleCase(self, _key, word):
+        return word.title()
 
 
 class Section(db.Model):

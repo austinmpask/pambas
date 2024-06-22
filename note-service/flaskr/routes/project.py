@@ -4,16 +4,51 @@ from flaskr.utils import (
     jsonRequired,
     validateSections,
     addProjectWithChildren,
+    queryProjectsByUUID,
 )
 import uuid
 
 project_bp = Blueprint("project", __name__)
 
 
+# Return all projects owned by a user with high level information about each
 @project_bp.route("/project", methods=["GET"])
-def getProject():
-    # TODO
-    pass
+def getAllProjects():
+
+    try:
+        user_uuid = uuid.UUID(request.headers.get("UUID"))
+    except Exception as e:
+        return sendJsonResponse(400, "Invalid UUID", e)
+
+    # Get all the projects for the user. Helper uses Project.toDict()
+    projects = queryProjectsByUUID(user_uuid)
+
+    # Send the response to gateway. Includes status code and project dict, or errors
+    return sendJsonResponse(*projects)
+
+
+# Return a specific project for a user by ID
+@project_bp.route("/project/<id>", methods=["GET"])
+def getProject(id):
+
+    # Get the project ID and UUID
+    projID = int(id)
+
+    try:
+        user_uuid = uuid.UUID(request.headers.get("UUID"))
+    except Exception as e:
+        return sendJsonResponse(400, "Invalid UUID", e)
+
+    # Query for all projects owned by the user
+    projects = queryProjectsByUUID(user_uuid)
+
+    # Of the user's projects, find the one with matching id
+    target = next((project for project in projects if project.id == projID), None)
+
+    if not target:
+        return sendJsonResponse(404, "Project not found")
+
+    print(target)
 
 
 # Create a new project for a particular user

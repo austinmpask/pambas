@@ -51,12 +51,16 @@
   border-left: 1px solid hsla(222, 14%, 71%, 0.3);
 }
 
+.flag-cell {
+  cursor: pointer;
+}
+
 .header-cell-centered {
   align-items: center;
 }
 
 .line-item-cell {
-  height: 40px;
+  height: 56px;
 }
 
 .line-item-row {
@@ -78,10 +82,14 @@
 }
 
 .section-header {
-  font-size: 11pt;
+  font-size: 10pt;
 }
 
 .notes-input {
   height: 100% !important;
   border: none !important;
+}
+
+.section-box {
+  border-radius: 32px;
 }

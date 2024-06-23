@@ -17,7 +17,7 @@ projectRouter.get("/project/:id", verifyJWT, async (req, res) => {
     status = 500;
   }
 
-  return sendJsonResponse(res, status, JSON.stringify(response.message));
+  return sendJsonResponse(res, status, JSON.stringify(response.message || ""));
 });
 
 //Create new project for a user

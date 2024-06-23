@@ -21,6 +21,7 @@ const { userDataRouter } = require("./routes/userdata");
 const { registerRouter } = require("./routes/register");
 const { projectRouter } = require("./routes/project");
 const { allProjectsRouter } = require("./routes/allProjects");
+const { lineItemRouter } = require("./routes/lineitem");
 
 //Security middleware, allow frontend
 app.use(
@@ -69,6 +70,7 @@ app.use(userDataRouter);
 app.use(registerRouter);
 app.use(projectRouter);
 app.use(allProjectsRouter);
+app.use(lineItemRouter);
 
 //404 not found error
 app.use((_req, res) => {

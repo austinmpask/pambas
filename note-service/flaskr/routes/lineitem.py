@@ -3,8 +3,9 @@ from flaskr.utils import (
     sendJsonResponse,
     jsonRequired,
 )
-from flaskr.models import db, Project, Section, LineItem
+from flaskr.models import db, LineItem
 import uuid
+import json
 
 lineitem_bp = Blueprint("lineitem", __name__)
 
@@ -51,7 +52,13 @@ def updateLineItem(id):
         lineItem.notes = data.get("notes")
 
         db.session.commit()
-        return sendJsonResponse(200, data.get("flagMarker"))
+
+        updatedItem = {
+            "flagMarker": lineItem.flagMarker,
+            "checkBoxes": lineItem.checkBoxes,
+            "notes": lineItem.notes,
+        }
+        return sendJsonResponse(200, json.dumps(updatedItem))
     except Exception:
         db.session.rollback()
         return sendJsonResponse(500, "Error updating notes DB")

@@ -25,10 +25,16 @@ export default function LineItem({ lineItemData }) {
     async function putData() {
       const response = await updateLineItem(lineItemData.id, lineState);
 
-      if (!response.ok) {
+      if (response.ok) {
+        setLoading(false);
+        const newState = JSON.parse(response.data);
+        console.log(newState);
+
+        setLineState(newState);
+      } else {
         console.error(response.error);
+        setLoading(false);
       }
-      setLoading(false);
     }
 
     loading && putData();

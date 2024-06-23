@@ -53,7 +53,9 @@ class Project(db.Model):
     created_at = Column(DateTime, nullable=False, default=datetime.now())
 
     # Back references
-    sections = relationship("Section", backref="project")
+    sections = relationship(
+        "Section", backref="project", order_by="Section.sectionNumber"
+    )
 
     # Return dictionary of project summary details
     def toDict(self):
@@ -83,7 +85,7 @@ class Section(db.Model):
     projectID = Column(Integer, ForeignKey("projects.id"), nullable=False)
 
     # Back references
-    lineItems = relationship("LineItem", backref="section")
+    lineItems = relationship("LineItem", backref="section", order_by="LineItem.id")
 
     # Return dict of section details
     def toDict(self):
@@ -110,7 +112,9 @@ class LineItem(db.Model):
     sectionID = Column(Integer, ForeignKey("sections.id"), nullable=False)
 
     # Back references
-    pendingItems = relationship("PendingItem", backref="lineItem")
+    pendingItems = relationship(
+        "PendingItem", backref="lineItem", order_by="PendingItem.id"
+    )
 
     # Return a dict of section details
     def toDict(self):

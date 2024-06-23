@@ -6,7 +6,8 @@ export default async function updateLineItem(id, lineState) {
     const apiResponse = await axios.put(`/api/lineitem/${id}`, lineState);
 
     if (apiResponse && apiResponse.status === 200) {
-      return { ok: true };
+      const message = JSON.parse(apiResponse.data.message);
+      return { ok: true, data: message };
     }
   } catch (error) {
     return {

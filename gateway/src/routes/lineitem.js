@@ -21,7 +21,7 @@ lineItemRouter.put("/lineitem/:id", verifyJWT, async (req, res) => {
   if (!response.ok) {
     status = 500;
   }
-  console.log(response);
+
   return sendJsonResponse(res, status, JSON.stringify(response.message || ""));
 });
 

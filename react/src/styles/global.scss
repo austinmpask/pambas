@@ -51,7 +51,7 @@
   border-left: 1px solid hsla(222, 14%, 71%, 0.3);
 }
 
-.flag-cell {
+.click-cell {
   cursor: pointer;
 }
 
@@ -60,7 +60,10 @@
 }
 
 .line-item-cell {
-  height: 56px;
+  min-height: 56px;
+  transition: min-height;
+  transition-duration: 200ms;
+  position: relative !important;
 }
 
 .line-item-row {
@@ -88,8 +91,41 @@
 .notes-input {
   height: 100% !important;
   border: none !important;
+  transition: height;
+  transition-duration: 200ms;
+  z-index: 0;
 }
 
 .section-box {
   border-radius: 32px;
+}
+
+.expanded {
+  min-height: 100px !important;
+}
+
+.top {
+  z-index: 1000 !important;
+}
+
+.note-helper {
+  position: absolute !important;
+  z-index: 500;
+  top: 0px;
+  transition: top;
+  transition-duration: 300ms;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+.note-scoot {
+  top: 100% !important;
+}
+
+.note-tag-r {
+  right: 0;
+}
+
+.note-tag-l {
+  left: 0;
 }

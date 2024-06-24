@@ -6,6 +6,7 @@ from flaskr.utils import (
     addProjectWithChildren,
     queryProjectsByUUID,
 )
+
 import uuid
 
 project_bp = Blueprint("project", __name__)
@@ -20,11 +21,18 @@ def getAllProjects():
     except Exception as e:
         return sendJsonResponse(400, "Invalid UUID", e)
 
-    # Get all the projects for the user. Helper uses Project.toDict()
+    # Get all the projects for the user
     projects = queryProjectsByUUID(user_uuid)
 
-    # Send the response to gateway. Includes status code and project dict, or errors
-    return sendJsonResponse(*projects)
+    if projects[0] == 200:
+        # Get the details as a dict for each project
+        projectDicts = [project.toSummaryDict() for project in projects[1]]
+
+        # Send the response to gateway. Includes status code and project dict, or errors
+        return sendJsonResponse(200, projectDicts)
+
+    else:
+        return sendJsonResponse(*projects)
 
 
 # Return a specific project for a user by ID
@@ -46,13 +54,13 @@ def getProject(id):
         return sendJsonResponse(*projects)
 
     # Of the user's projects, find the one with matching id
-    target = next((project for project in projects[1] if project["id"] == projID), None)
+    target = next((project for project in projects[1] if project.id == projID), None)
 
     if not target:
         return sendJsonResponse(404, "Project not found")
 
     # Temporarily just return the project to dict
-    return sendJsonResponse(200, target)
+    return sendJsonResponse(200, target.toSectionsDict())
 
 
 # Create a new project for a particular user

@@ -11,7 +11,4 @@ def queryProjectsByUUID(uuid):
     if not projects:
         return (404, "No projects found")
 
-    # Get the details as a dict for each project
-    projectDicts = [project.toDict() for project in projects]
-
-    return (200, projectDicts)
+    return (200, projects)

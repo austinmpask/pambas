@@ -92,6 +92,17 @@ def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectio
             return (500, dbError)
 
         # No errors, return success
-        return (201, "Project added")
+        return (
+            201,
+            {
+                "id": userProject.id,
+                "billed": userProject.billed,
+                "budget": userProject.budget,
+                "checkBoxHeaders": userProject.checkboxHeaders,
+                "projectManager": userProject.projectManager,
+                "projectType": userProject.projectType,
+                "title": userProject.title,
+            },
+        )
 
     return (400, "Incomplete request body")

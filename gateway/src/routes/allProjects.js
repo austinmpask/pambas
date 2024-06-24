@@ -15,13 +15,12 @@ allProjectsRouter.get("/project", verifyJWT, async (req, res) => {
   //Make request to note service, inject UUID in request header
   const response = await apiFetch("GET", apiEndpoint, req.sessionUUID);
 
-  let status = 200;
-  if (!response.ok) {
-    status = 500;
-  }
-
   //Forward the response to gateway
-  return sendJsonResponse(res, status, JSON.stringify(response.message));
+  return sendJsonResponse(
+    res,
+    response.status,
+    JSON.stringify(response.message)
+  );
 });
 
 module.exports = { allProjectsRouter };

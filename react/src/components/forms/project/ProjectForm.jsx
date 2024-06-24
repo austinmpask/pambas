@@ -1,5 +1,5 @@
 //React
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 //Toasts
@@ -14,11 +14,18 @@ import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import handleFormChange from "src/utils/handleFormChange";
 import addProject from "src/utils/addProject";
 
+//Contexts
+import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
+
 //Children
 import FormProjectSection from "src/components/forms/project/FormProjectSection";
 
 //Form for setting up a new project
 export default function ProjectForm() {
+  const { projectSummaryData, setProjectSummaryData } = useContext(
+    ProjectSummaryContext
+  );
+
   const navigate = useNavigate();
   //Lefthand form state
   const [formData, setFormData] = useState({
@@ -119,8 +126,12 @@ export default function ProjectForm() {
         toastError(error);
       });
     } else {
-      //Successful, redirect
+      //Successful, update context and redirect
       toastSuccess("Project successfully created!");
+      const newContext = [...projectSummaryData];
+      newContext.push(response.data);
+
+      setProjectSummaryData(newContext);
 
       setTimeout(() => {
         navigate("/dashboard");

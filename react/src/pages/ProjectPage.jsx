@@ -1,48 +1,20 @@
-//React
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 //Children
-import PageWrapper from "src/components/PageWrapper";
+// import ProjectPageWrapper from "src/components/projectpage/ProjectPageWrapper";
 import NavBar from "src/components/navbar/Navbar";
 import ProjectHeader from "src/components/projectpage/ProjectHeader";
-import ProjectGrid from "src/components/projectpage/ProjectGrid";
 
-//Utils
-import getProject from "src/utils/getProject";
-
+//User project main interactable page
 export default function ProjectPage() {
-  const navigate = useNavigate();
+  //Pass the project ID as prop to children
   const routeParams = useParams();
-
-  const [projectData, setProjectData] = useState(undefined);
-
-  useEffect(() => {
-    async function fetchProject(id) {
-      const dataObj = await getProject(id);
-      if (dataObj.ok) {
-        setProjectData(dataObj.data);
-      } else {
-        navigate("/dashboard");
-      }
-    }
-
-    fetchProject(routeParams.id);
-  }, []);
-
-  if (!projectData) {
-    return null;
-  }
+  const projectID = Number(routeParams.id);
 
   return (
     <>
       <NavBar />
-      <PageWrapper title={projectData.title}>
-        <div className="has-background-dark">
-          <ProjectHeader projectData={projectData} />
-          <ProjectGrid projectData={projectData} />
-        </div>
-      </PageWrapper>
+      <ProjectHeader projectID={projectID} />
     </>
   );
 }

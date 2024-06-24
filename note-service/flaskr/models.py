@@ -57,8 +57,14 @@ class Project(db.Model):
         "Section", backref="project", order_by="Section.sectionNumber"
     )
 
+    # Return dictionary of project section details
+    def toSectionsDict(self):
+        return {
+            "sections": [section.toDict() for section in self.sections],
+        }
+
     # Return dictionary of project summary details
-    def toDict(self):
+    def toSummaryDict(self):
         return {
             "id": self.id,
             "title": self.title,
@@ -67,7 +73,6 @@ class Project(db.Model):
             "projectManager": self.projectManager,
             "projectType": self.projectType,
             "checkBoxHeaders": self.checkboxHeaders,
-            "sections": [section.toDict() for section in self.sections],
         }
 
     # Titlecase the manager and project name

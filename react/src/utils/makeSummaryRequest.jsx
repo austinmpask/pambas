@@ -19,8 +19,12 @@ export default async function makeSummaryRequest() {
       };
     }
   } catch (error) {
-    console.error(`Error: ${error}`);
+    if (error.response.status === 404) {
+      return { ok: false, status: 404 };
+    } else {
+      console.error(`Error: ${error}`);
+    }
   }
   //Redirect to login if no JWT
-  return { ok: false };
+  return { ok: false, status: 400 };
 }

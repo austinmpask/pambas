@@ -48,6 +48,7 @@ async function apiFetch(method, endpoint, uuid = undefined, body = undefined) {
     return {
       ok: false,
       message: `Internal server error at ${endpoint}: ${String(e)}`,
+      status: response.status,
     };
   }
 
@@ -56,12 +57,14 @@ async function apiFetch(method, endpoint, uuid = undefined, body = undefined) {
     return {
       ok: true,
       message: responseBody.message,
+      status: response.status,
     };
   } else {
     //Return error response if failed
     return {
       ok: false,
       message: `Bad response from ${endpoint}: ${responseBody.message}`,
+      status: response.status,
     };
   }
 }

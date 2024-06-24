@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 //Contexts
 import { UserProvider } from "src/context/UserContext";
-import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
+import { ProjectSummaryProvider } from "src/context/ProjectSummaryContext";
 
 //Utils
 import makeAuthRequest from "src/utils/makeAuthRequest";
@@ -31,14 +31,17 @@ export default function AuthWrapper({ children }) {
       const response = await makeAuthRequest();
       //Apply data from auth request to state for context, set authenticated status
       if (response.ok) {
-        setAuthenticated(true);
         //Update user state, then collect the user's projects
         setUserData(response.data);
 
         //Project high level detail request
         const summaryResponse = await makeSummaryRequest();
+
         if (summaryResponse.ok) {
           setProjectSummaryData(summaryResponse.data);
+          setAuthenticated(true);
+        } else if (summaryResponse.status === 404) {
+          setAuthenticated(true);
         }
       } else {
         navigate("/login");
@@ -49,8 +52,8 @@ export default function AuthWrapper({ children }) {
 
   //Provide context providers with initial state data if authenticated
   return authenticated ? (
-    <ProjectSummaryContext.Provider value={projectSummaryData}>
+    <ProjectSummaryProvider initialData={projectSummaryData}>
       <UserProvider initialData={userData} children={children} />
-    </ProjectSummaryContext.Provider>
+    </ProjectSummaryProvider>
   ) : null;
 }

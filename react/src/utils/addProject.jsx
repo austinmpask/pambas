@@ -5,7 +5,6 @@ import addProjectMissingFields from "src/utils/validators/projectForm/addProject
 import repeatedSections from "src/utils/validators/projectForm/repeatedSections";
 import leftHandValidate from "src/utils/validators/projectForm/leftHandValidate";
 import sectionNumberNumeric from "src/utils/validators/projectForm/sectionNumberNumeric";
-
 //Helper to add a new project after the new project form is completed. Errors separated to not overwhelm end user
 export default async function addProject(formData, prettyNames, childrenState) {
   //Check for any missing fields for both parts of form (general info/left hand and dynamic info/right hand)
@@ -51,8 +50,10 @@ export default async function addProject(formData, prettyNames, childrenState) {
 
     //Successfully added project
     if (apiResponse && apiResponse.status === 201) {
+      //Update project summary context
       return {
         ok: true,
+        data: apiResponse.data.message,
       };
     }
   } catch (error) {

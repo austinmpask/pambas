@@ -10,7 +10,7 @@ import NavBar from "src/components/navbar/Navbar";
 
 export default function DashboardPage() {
   const { userData } = useContext(UserContext);
-  const projectSummaryData = useContext(ProjectSummaryContext);
+  const { projectSummaryData } = useContext(ProjectSummaryContext);
 
   const [projectCount, setProjectCount] = useState(0);
 

@@ -142,6 +142,7 @@
 
 .project-title {
   width: auto !important;
+  font-size: 20pt !important;
 }
 
 .project-title-container {
@@ -149,4 +150,19 @@
   flex-direction: row;
   align-items: center;
   max-width: fit-content !important;
+}
+
+.title-card {
+  width: 220px !important;
+  position: fixed;
+}
+
+.edit-field {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+}
+
+.edit-input {
+  position: relative !important;
 }

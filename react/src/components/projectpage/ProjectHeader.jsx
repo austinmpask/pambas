@@ -1,25 +1,33 @@
-import { faSquarePen } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+//React
 import { useContext, useEffect, useRef, useState } from "react";
 
+//Icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSquareMinus, faSquarePlus } from "@fortawesome/free-solid-svg-icons";
+
+//Contexts
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
 
+//Children
+import ProgressBar from "@ramonak/react-progress-bar";
+import ProjectEditableField from "src/components/projectpage/ProjectEditableField";
 import ProjectGrid from "src/components/projectpage/ProjectGrid";
+
 //Title component/wrapper for labeled pages
 export default function ProjectHeader({ projectID }) {
+  //Consume context containing high level project details of all projects
   const { projectSummaryData, setProjectSummaryData } = useContext(
     ProjectSummaryContext
   );
 
-  const [contextSlice, setContextSlice] = useState(undefined);
-  const [projectIndex, setProjectIndex] = useState(undefined);
+  //Indicator if api request is pending
   const [loading, setLoading] = useState(false);
 
-  const titleEditRef = useRef(null);
-  const titleInputRef = useRef(null);
-  const titleRef = useRef(null);
+  //State for slice of context related to current project as to not directly mutate context obj
+  const [contextSlice, setContextSlice] = useState(undefined);
 
-  const [titleInputState, setTitleInputState] = useState("");
+  //State for project index with regard to position in list of this user's projects
+  const [projectIndex, setProjectIndex] = useState(undefined);
 
   useEffect(() => {
     //Isolate the relevant project details from the context based on
@@ -38,90 +46,74 @@ export default function ProjectHeader({ projectID }) {
     );
   }, [projectSummaryData]);
 
+  //Whenever context slice is updated, make request to update project in DB
   useEffect(() => {
     if (loading) {
       setLoading(false);
+      console.log("api req here");
       console.log(contextSlice);
     }
   }, [contextSlice]);
 
-  function hoverOnHandler() {
-    titleEditRef.current.classList.remove("is-hidden");
-  }
+  function updateContext(key, value) {
+    setLoading(true);
+    const newSlice = {
+      ...contextSlice,
+      [key]: value,
+    };
+    const newContext = [...projectSummaryData];
+    //Replace with new slice
+    newContext[projectIndex] = newSlice;
 
-  function hoverOffHandler() {
-    titleEditRef.current.classList.add("is-hidden");
-  }
-
-  function openTitleEdit() {
-    // titleRef.current.classList.add("is-hidden");
-    titleInputRef.current.classList.remove("is-hidden");
-    titleInputRef.current.focus();
-  }
-
-  function closeTitleEdit() {
-    // titleRef.current.classList.remove("is-hidden");
-    titleInputRef.current.blur();
-    titleInputRef.current.classList.add("is-hidden");
-    setTitleInputState("");
-  }
-
-  function handleKeys(event) {
-    if (event.keyCode === 13 && event.ctrlKey) {
-      setLoading(true);
-      const newSlice = { ...contextSlice, title: titleInputState };
-
-      const newContext = [...projectSummaryData];
-      newContext[projectIndex] = newSlice;
-
-      setProjectSummaryData(newContext);
-      closeTitleEdit();
-    } else if (event.keyCode === 27) {
-      closeTitleEdit();
-    }
+    //Update context and close UI
+    setProjectSummaryData(newContext);
   }
 
   return (
     contextSlice && (
-      <div className="m-6 page-wrapper">
-        <div
-          className="project-title-container"
-          onMouseEnter={hoverOnHandler}
-          onMouseLeave={hoverOffHandler}
-          onClick={openTitleEdit}
-        >
-          <h1 ref={titleRef} className="title project-title">
-            {contextSlice.title}
-          </h1>
+      <div className="m-5 page-wrapper">
+        <div className="card has-background-dark title-card">
+          <ProjectEditableField
+            initialContent={contextSlice.title}
+            objKey="title"
+            onSubmit={updateContext}
+            title={true}
+          />
+          <div className="block mb-4 mt-2 ml-3 mr-3">
+            <ProgressBar
+              height="3px"
+              bgColor="#23db5e"
+              isLabelVisible={false}
+              completed={15}
+              maxCompleted={contextSlice.budget}
+            />
+            <span className="icon">
+              <FontAwesomeIcon icon={faSquarePlus} />
+            </span>
+            <span className="icon">
+              <FontAwesomeIcon icon={faSquareMinus} />
+            </span>
 
-          <input
-            ref={titleInputRef}
-            className="input is-medium is-hidden"
-            type="text"
-            placeholder={contextSlice.title}
-            value={titleInputState}
-            onChange={(e) => setTitleInputState(e.target.value)}
-            onKeyDown={handleKeys}
-          ></input>
-          <span ref={titleEditRef} className="icon is-hidden">
-            <FontAwesomeIcon icon={faSquarePen} />
-          </span>
-        </div>
-        <div className="block mb-4">
-          <div className="block">
-            <span>{contextSlice.projectType}</span>
-          </div>
-          <div className="block">
-            <span>{`${
-              contextSlice.budget - contextSlice.billed
-            } hours remaining`}</span>
-          </div>
-          <div className="block">
-            <span>{`PM: ${contextSlice.projectManager}`}</span>
+            <div className="block">
+              <span>{contextSlice.projectType}</span>
+            </div>
+            <div className="block">
+              <span>{`${
+                contextSlice.budget - contextSlice.billed
+              } hours remaining`}</span>
+            </div>
+            <div className="block">
+              <ProjectEditableField
+                initialContent={contextSlice.projectManager}
+                objKey="projectManager"
+                onSubmit={updateContext}
+                title={false}
+              />
+            </div>
           </div>
         </div>
 
-        <div className="m-6 has-background-dark">
+        <div className="m-6">
           <ProjectGrid
             projectID={projectID}
             checkBoxHeaders={contextSlice.checkBoxHeaders}

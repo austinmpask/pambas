@@ -12,115 +12,119 @@ import {
 
 //Utils
 import updateLineItem from "src/utils/updateLineItem";
+import TextBoxHelpers from "../TextBoxHelpers";
 
+// Individual line item for the project grid
 export default function LineItem({ lineItemData }) {
   const [loading, setLoading] = useState(false);
   const [writingNote, setWritingNote] = useState(false);
 
+  //Keep track of contents of note box for the item
   const [noteState, setNoteState] = useState(lineItemData.notes || "");
 
+  //State for the entire line for making updates
   const [lineState, setLineState] = useState({
     checkBoxes: lineItemData.checkBoxes || [0, 0, 0],
     flagMarker: lineItemData.flagMarker || false,
     notes: lineItemData.notes || "",
   });
 
+  //Ref for input box for focus
   const noteRef = useRef(null);
-  const tagRef1 = useRef(null);
-  const tagRef2 = useRef(null);
 
+  //Make request to update the line item upon a change
   useEffect(() => {
     async function putData() {
       const response = await updateLineItem(lineItemData.id, lineState);
 
+      //Successful response, update state to reflect (should not actually change anything)
       if (response.ok) {
         setLoading(false);
         const newState = JSON.parse(response.data);
 
         setLineState(newState);
       } else {
+        //Error response
         console.error(response.error);
         setLoading(false);
       }
     }
 
+    //Only make api request when user made the change to state
     loading && putData();
   }, [lineState]);
 
+  //When no longer writing note, return note to normal zindex
   useEffect(() => {
-    if (writingNote) {
-      tagRef1.current.style.display = "block";
-      tagRef1.current.classList.add("note-scoot");
-    }
-  }, [noteState]);
-
-  useEffect(() => {
-    if (writingNote) {
-      setTimeout(() => {
-        tagRef2.current.style.display = "block";
-        tagRef2.current.classList.add("note-scoot");
-      }, 1);
+    if (!writingNote) {
+      noteRef.current.classList.remove("top");
     }
   }, [writingNote]);
 
   function handleFlagClick(event) {
-    event.preventDefault();
     setLoading(true);
 
-    //Optimistic state
+    //Update state optimistically, trigger api request
     setLineState((previous) => {
       return { ...previous, flagMarker: !previous.flagMarker };
     });
   }
 
   function handleCheckBoxClick(event) {
-    event.preventDefault();
     setLoading(true);
 
+    //Cycle through the checkbox options
     const checkBoxes = [...lineState.checkBoxes];
     const index = event.currentTarget.getAttribute("index");
 
     checkBoxes[index] < 2 ? checkBoxes[index]++ : (checkBoxes[index] = 0);
 
-    //Optimistic state
+    //Optimistic update state, trigger api request
     setLineState((previous) => {
       return { ...previous, checkBoxes: [...checkBoxes] };
     });
   }
 
+  //Handle key shortcuts for saving/closing note box
   function noteKeyDownHandler(event) {
+    //Ctrl enter = save and close
     if (event.keyCode === 13 && event.ctrlKey) {
       setLoading(true);
       setLineState((previous) => {
         return { ...previous, notes: noteState };
       });
-      closeNote(event);
+      closeNote();
+      //Escape = close
     } else if (event.keyCode === 27) {
       setNoteState(lineState.notes);
-      closeNote(event);
+      closeNote();
     }
   }
 
   function openNote() {
     setWritingNote(true);
+    //Expand the row for visibility
     noteRef.current.parentNode.classList.add("expanded");
+
+    //Bring note z index above any others
     noteRef.current.classList.add("top");
+
+    //Focus the note
     noteRef.current.focus();
   }
 
   function closeNote() {
+    //Collapse line item row, unfocus the note
     noteRef.current.parentNode.classList.remove("expanded");
     noteRef.current.blur();
+
+    //Remove the helper tags midway thru transition so it looks nice
     setTimeout(() => {
       setWritingNote(false);
-      tagRef1.current.style.display = "none";
-      tagRef2.current.style.display = "none";
-      noteRef.current.classList.remove("top");
     }, 50);
-    tagRef1.current.classList.remove("note-scoot");
-    tagRef2.current.classList.remove("note-scoot");
   }
 
+  //Open the note if it isnt already open
   function handleNoteClick(event) {
     event.preventDefault();
     !writingNote && openNote();
@@ -178,23 +182,7 @@ export default function LineItem({ lineItemData }) {
             onChange={(e) => setNoteState(e.target.value)}
             onKeyDown={noteKeyDownHandler}
           />
-          {writingNote && (
-            <div>
-              <div
-                ref={tagRef1}
-                className="has-background-dark note-helper note-tag-r"
-              >
-                <span className="tag">CTRL + Enter: Save</span>
-              </div>
-
-              <div
-                ref={tagRef2}
-                className="has-background-dark note-helper note-tag-l"
-              >
-                <span className="tag">ESC: Close</span>
-              </div>
-            </div>
-          )}
+          {writingNote && <TextBoxHelpers content={noteState} />}
         </div>
         <div className="cell line-item-cell centered-cell">
           <span className="icon">

@@ -6,6 +6,7 @@ from flaskr.utils import (
     addProjectWithChildren,
     queryProjectsByUUID,
 )
+from flaskr.models import db
 
 import uuid
 
@@ -36,14 +37,26 @@ def getAllProjects():
 
 
 # Return a specific project for a user by ID
-@project_bp.route("/project/<id>", methods=["GET"])
+@project_bp.route("/project/<id>", methods=["GET", "PUT"])
 def getProject(id):
 
-    # Get the project ID and UUID
+    # Get the project ID
     projID = int(id)
 
+    # Get UUID
+    if request.method == "GET":
+        sentUUID = request.headers.get("UUID")
+
+    elif request.method == "PUT":
+        data = request.get_json()
+        sentUUID = data.get("uuid")
+
+    else:
+        return sendJsonResponse(500, "Error")
+
+    # Make sure UUID valid
     try:
-        user_uuid = uuid.UUID(request.headers.get("UUID"))
+        user_uuid = uuid.UUID(sentUUID)
     except Exception as e:
         return sendJsonResponse(400, "Invalid UUID", e)
 
@@ -59,8 +72,25 @@ def getProject(id):
     if not target:
         return sendJsonResponse(404, "Project not found")
 
-    # Temporarily just return the project to dict
-    return sendJsonResponse(200, target.toSectionsDict())
+    if request.method == "GET":
+        # Return project info as dict
+        return sendJsonResponse(200, target.toSectionsDict())
+
+    # TODO: Clean up this
+    elif request.method == "PUT":
+
+        target.billed = data["billed"] or target.billed
+        target.budget = data["budget"] or target.budget
+        target.checkBoxHeaders = data["checkBoxHeaders"] or target.checkboxHeaders
+        target.projectManager = data["projectManager"] or target.projectManager
+        target.projectType = data["projectType"] or target.projectType
+        target.title = data["title"] or target.title
+
+        db.session.commit()
+
+        return sendJsonResponse(200, target.toSummaryDict())
+
+    return sendJsonResponse(500, "Error todo here")
 
 
 # Create a new project for a particular user

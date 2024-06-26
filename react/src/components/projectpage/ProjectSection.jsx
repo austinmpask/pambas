@@ -26,6 +26,7 @@ export default function ProjectSection({
     oldProjectState.checkBoxHeaders[i] = value;
 
     //Update context
+    //TODO: refactor to make api request happen
     setProjectSummaryData((old) => {
       const newContext = [...old];
       newContext[index] = oldProjectState;

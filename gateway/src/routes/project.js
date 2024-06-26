@@ -20,6 +20,20 @@ projectRouter.get("/project/:id", verifyJWT, async (req, res) => {
   return sendJsonResponse(res, status, JSON.stringify(response.message || ""));
 });
 
+projectRouter.put("/project/:id", verifyJWT, async (req, res) => {
+  const apiEndpoint = getApiEndpoint("/notes", `/project/${req.params.id}`);
+  const response = await apiFetch(
+    "PUT",
+    apiEndpoint,
+    req.sessionUUID,
+    req.body
+  );
+
+  const status = response.ok ? 200 : 500;
+
+  return sendJsonResponse(res, status, JSON.stringify(response.message || ""));
+});
+
 //Create new project for a user
 projectRouter.post("/project", verifyJWT, async (req, res) => {
   //Assign microservice endpoint for use

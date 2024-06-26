@@ -61,7 +61,7 @@ export default function LineItem({ lineItemData }) {
     }
   }, [writingNote]);
 
-  function handleFlagClick(event) {
+  function handleFlagClick() {
     setLoading(true);
 
     //Update state optimistically, trigger api request

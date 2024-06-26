@@ -16,6 +16,7 @@ import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
 import ProgressBar from "@ramonak/react-progress-bar";
 import ProjectEditableField from "src/components/projectpage/ProjectEditableField";
 import ProjectGrid from "src/components/projectpage/ProjectGrid";
+import updateProjectDetail from "src/utils/updateProjectDetail";
 
 //Title component/wrapper for labeled pages
 export default function ProjectHeader({ projectID }) {
@@ -55,11 +56,28 @@ export default function ProjectHeader({ projectID }) {
 
   //Whenever context slice is updated, make request to update project in DB
   useEffect(() => {
-    if (loading) {
-      setLoading(false);
-      console.log("api req here");
+    async function makeRequest() {
       console.log(contextSlice);
+      const response = await updateProjectDetail(projectID, contextSlice);
+
+      if (response.ok) {
+        setLoading(false);
+        const newState = response.data;
+
+        setProjectSummaryData((old) => {
+          const newContext = [...old];
+
+          newContext[projectIndex] = newState;
+          return newContext;
+        });
+      } else {
+        //Error response
+        console.error(response.error);
+        setLoading(false);
+      }
     }
+
+    loading && makeRequest();
   }, [contextSlice]);
 
   function updateContext(key, value) {

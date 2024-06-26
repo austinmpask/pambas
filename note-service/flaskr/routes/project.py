@@ -79,12 +79,14 @@ def getProject(id):
     # TODO: Clean up this
     elif request.method == "PUT":
 
-        target.billed = data["billed"] or target.billed
-        target.budget = data["budget"] or target.budget
-        target.checkBoxHeaders = data["checkBoxHeaders"] or target.checkboxHeaders
-        target.projectManager = data["projectManager"] or target.projectManager
-        target.projectType = data["projectType"] or target.projectType
-        target.title = data["title"] or target.title
+        print(data.get("checkBoxHeaders"))
+
+        target.billed = data.get("billed") or target.billed
+        target.budget = data.get("budget") or target.budget
+        target.checkboxHeaders = data.get("checkBoxHeaders") or target.checkboxHeaders
+        target.projectManager = data.get("projectManager") or target.projectManager
+        target.projectType = data.get("projectType") or target.projectType
+        target.title = data.get("title") or target.title
 
         db.session.commit()
 

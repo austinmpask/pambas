@@ -1,29 +1,35 @@
-import ProjectSection from "src/components/projectpage/ProjectSection";
-import { useNavigate } from "react-router-dom";
-
 //React
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+//Children
+import ProjectSection from "src/components/projectpage/ProjectSection";
 
 //Utils
 import getProject from "src/utils/getProject";
 
-export default function ProjectGrid({ projectID, checkBoxHeaders }) {
+//Grid interface displaying all of the user's projects
+export default function ProjectGrid({ contextSlice, updateContext }) {
   const navigate = useNavigate();
 
+  //State for all the grid details about the project to populate components
   const [projectDetails, setProjectDetails] = useState(undefined);
 
+  //If context has loaded, fetch the bulk project details from api
   useEffect(() => {
     async function fetchProject() {
-      const dataObj = await getProject(projectID);
+      const dataObj = await getProject(contextSlice.id);
       if (dataObj.ok) {
         setProjectDetails(dataObj.data);
       } else {
+        //Couldnt find project/user doesnt own project
         navigate("/dashboard");
       }
     }
 
-    fetchProject();
-  }, []);
+    //Wait until context populated from other api call
+    contextSlice && fetchProject();
+  }, [contextSlice]);
 
   return (
     projectDetails && (
@@ -31,10 +37,11 @@ export default function ProjectGrid({ projectID, checkBoxHeaders }) {
         {projectDetails.sections.map((section, index) => {
           return (
             <ProjectSection
-              checkBoxHeaders={checkBoxHeaders}
+              contextSlice={contextSlice}
               sectionData={section}
               index={index}
               key={index}
+              updateContext={updateContext}
             />
           );
         })}

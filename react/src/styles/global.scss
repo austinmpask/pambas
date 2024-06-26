@@ -166,3 +166,8 @@
 .edit-input {
   position: relative !important;
 }
+
+.edit-span {
+  transition: transform;
+  transition-duration: 200ms;
+}

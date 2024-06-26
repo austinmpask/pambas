@@ -3,7 +3,11 @@ import { useContext, useEffect, useRef, useState } from "react";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquareMinus, faSquarePlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faReceipt,
+  faSquareMinus,
+  faSquarePlus,
+} from "@fortawesome/free-solid-svg-icons";
 
 //Contexts
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
@@ -22,6 +26,9 @@ export default function ProjectHeader({ projectID }) {
 
   //Indicator if api request is pending
   const [loading, setLoading] = useState(false);
+
+  //Indicator if billing UI being used
+  const [billing, setBilling] = useState("");
 
   //State for slice of context related to current project as to not directly mutate context obj
   const [contextSlice, setContextSlice] = useState(undefined);
@@ -84,23 +91,36 @@ export default function ProjectHeader({ projectID }) {
               height="3px"
               bgColor="#23db5e"
               isLabelVisible={false}
-              completed={15}
+              completed={contextSlice.billed}
               maxCompleted={contextSlice.budget}
             />
-            <span className="icon">
-              <FontAwesomeIcon icon={faSquarePlus} />
-            </span>
-            <span className="icon">
-              <FontAwesomeIcon icon={faSquareMinus} />
-            </span>
 
-            <div className="block">
+            {/* <div className="block">
               <span>{contextSlice.projectType}</span>
-            </div>
+            </div> */}
             <div className="block">
               <span>{`${
                 contextSlice.budget - contextSlice.billed
               } hours remaining`}</span>
+              <button
+                className="button"
+                onClick={() =>
+                  updateContext("billed", contextSlice.billed + Number(billing))
+                }
+              >
+                <span className="icon-text">
+                  <span className="icon">
+                    <FontAwesomeIcon icon={faReceipt} />
+                  </span>
+                  <span>Bill it</span>
+                </span>
+              </button>
+              <input
+                className="input"
+                type="number"
+                value={billing}
+                onChange={(e) => setBilling(e.target.value)}
+              />
             </div>
             <div className="block">
               <ProjectEditableField

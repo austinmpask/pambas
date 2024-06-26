@@ -17,6 +17,9 @@ export default function LeftHandMenu() {
           <span>Dashboard</span>
         </span>
       </a>
+      <a href="/timesheet" className="navbar-item">
+        <span>Timesheets</span>
+      </a>
       {/* Dropdown for current projects */}
       <ProjectList />
     </div>

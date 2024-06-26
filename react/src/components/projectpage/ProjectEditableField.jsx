@@ -50,13 +50,13 @@ export default function ProjectEditableField({
 
   return (
     <div
-      className={`edit-field`}
+      className="edit-field"
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
       onClick={() => setEditing(true)}
     >
       {!editing && (
-        <span className={`${title ? "title project-title" : ""}`}>
+        <span className={`edit-span ${title ? "title project-title" : ""}`}>
           {initialContent}
         </span>
       )}

@@ -41,7 +41,11 @@ export default function PendingItemList({ lineID, numPending, setLineState }) {
           </div>
           <div className="message-body">
             {items.map((item, index) => (
-              <PendingItem data={item} key={index} />
+              <PendingItem
+                data={item}
+                key={index}
+                setLineState={setLineState}
+              />
             ))}
           </div>
         </article>

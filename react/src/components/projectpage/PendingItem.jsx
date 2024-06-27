@@ -9,8 +9,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import toTitle from "src/utils/toTitle";
 import shortDate from "src/utils/shortDate";
+import deleteOpenItem from "src/utils/deleteOpenItem";
 
-export default function PendingItem({ data }) {
+export default function PendingItem({ data, setLineState }) {
+  async function deleteItem() {
+    const response = await deleteOpenItem(data.id);
+
+    if (!response.ok) {
+      response.errors.forEach((error) => {
+        console.error(error);
+      });
+    } else {
+      setLineState((prev) => {
+        return { ...prev, pendingItems: prev.pendingItems - 1 };
+      });
+    }
+  }
   return (
     <article className="message mb-2 pending-item-card">
       <div className="message-header pending-item-header">
@@ -20,7 +34,7 @@ export default function PendingItem({ data }) {
           </span>
           <span className="">{toTitle(data.itemName)}</span>
         </span>
-        <span className="icon tag-button">
+        <span className="icon tag-button" onClick={deleteItem}>
           <FontAwesomeIcon icon={faCircleXmark} />
         </span>
       </div>

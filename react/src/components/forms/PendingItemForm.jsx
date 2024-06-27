@@ -45,6 +45,7 @@ export default function PendingItemForm({
 
   function closeModal() {
     setOpen(false);
+    setLoading(false);
     setFormData({
       itemName: "",
       controlOwner: "",

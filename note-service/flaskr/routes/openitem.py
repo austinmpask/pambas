@@ -53,3 +53,30 @@ def postOpenItem():
         )
 
     return sendJsonResponse(201, newItem.toDict())
+
+
+@openItemBp.route("/openitem/<id>", methods=["DELETE"])
+def deleteOpenItem(id):
+
+    itemID = int(id)
+    # TODO: safety checks for ownership
+
+    openItem = db.session.query(PendingItem).filter_by(id=itemID).first()
+
+    if not openItem:
+        return sendJsonResponse(404, "Item not found")
+
+    # TODO error handling
+
+    try:
+
+        db.session.delete(openItem)
+
+        db.session.commit()
+
+    except Exception as e:
+        return sendJsonResponse(
+            500, "DB error removing open item, add error handling todo"
+        )
+
+    return sendJsonResponse(200, itemID)

@@ -31,8 +31,7 @@ async function apiFetch(method, endpoint, uuid = undefined, body = undefined) {
     case "DELETE":
       options = {
         method: "DELETE",
-        body: JSON.stringify({ uuid: String(uuid) }),
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", uuid },
       };
       break;
   }

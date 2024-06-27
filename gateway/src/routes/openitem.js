@@ -6,6 +6,19 @@ const { getApiEndpoint } = require("../utils/getApiEndpoint");
 
 const openItemRouter = express.Router();
 
+openItemRouter.put("/openitem/:id/followup", verifyJWT, async (req, res) => {
+  const apiEndpoint = getApiEndpoint(
+    "/notes",
+    `/openitem/${req.params.id}/followup`
+  );
+
+  const response = await apiFetch("PUT", apiEndpoint, req.sessionUUID, {});
+
+  const status = response.ok ? 200 : 500;
+
+  return sendJsonResponse(res, status, response.message);
+});
+
 openItemRouter.delete("/openitem/:id", verifyJWT, async (req, res) => {
   const apiEndpoint = getApiEndpoint("/notes", `/openitem/${req.params.id}`);
 

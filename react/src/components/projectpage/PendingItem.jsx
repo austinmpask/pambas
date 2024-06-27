@@ -7,11 +7,20 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+import { useEffect, useState } from "react";
+
 import toTitle from "src/utils/toTitle";
 import shortDate from "src/utils/shortDate";
 import deleteOpenItem from "src/utils/deleteOpenItem";
+import followupOnItem from "src/utils/followupOnItem";
 
 export default function PendingItem({ data, setLineState }) {
+  const [itemData, setItemData] = useState({ ...data });
+
+  useEffect(() => {
+    setItemData({ ...data });
+  }, [data]);
+
   async function deleteItem() {
     const response = await deleteOpenItem(data.id);
 
@@ -25,6 +34,20 @@ export default function PendingItem({ data, setLineState }) {
       });
     }
   }
+
+  async function followup() {
+    const response = await followupOnItem(data.id);
+
+    if (!response.ok) {
+      response.errors.forEach((error) => {
+        console.error(error);
+      });
+    } else {
+      setItemData((prev) => {
+        return { ...prev, lastContactDate: response.data };
+      });
+    }
+  }
   return (
     <article className="message mb-2 pending-item-card">
       <div className="message-header pending-item-header">
@@ -32,7 +55,7 @@ export default function PendingItem({ data, setLineState }) {
           <span className="icon">
             <FontAwesomeIcon icon={faFile} />
           </span>
-          <span className="">{toTitle(data.itemName)}</span>
+          <span className="">{toTitle(itemData.itemName)}</span>
         </span>
         <span className="icon tag-button" onClick={deleteItem}>
           <FontAwesomeIcon icon={faCircleXmark} />
@@ -41,16 +64,16 @@ export default function PendingItem({ data, setLineState }) {
 
       <div className="message-body">
         <div className="content is-small mb-4">
-          <p>{`Created at: ${shortDate(data.createdAt)}`}</p>
+          <p>{`Created at: ${shortDate(itemData.createdAt)}`}</p>
           <h4>
             <span className="icon-text">
               <span className="icon">
                 <FontAwesomeIcon icon={faCircleUser} />
               </span>
-              <span>{toTitle(data.controlOwner)}</span>
+              <span>{toTitle(itemData.controlOwner)}</span>
             </span>
           </h4>
-          <p>{toTitle(data.description, true)}</p>
+          <p>{toTitle(itemData.description, true)}</p>
         </div>
         <div className="pending-item-footer">
           <span className="tag is-dark">
@@ -59,12 +82,13 @@ export default function PendingItem({ data, setLineState }) {
                 <FontAwesomeIcon icon={faEnvelope} />
               </span>
               <span>
-                {(data.lastContact && shortDate(data.lastContact)) ||
-                  "No Contact"}
+                {itemData.lastContactDate
+                  ? shortDate(itemData.lastContactDate)
+                  : "No contact"}
               </span>
             </span>
           </span>
-          <span className="tag is-success tag-button">
+          <span className="tag is-success tag-button" onClick={followup}>
             <span className="icon-text">
               <span className="icon">
                 <FontAwesomeIcon icon={faPaperPlane} />

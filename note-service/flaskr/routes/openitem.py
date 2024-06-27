@@ -6,8 +6,57 @@ from flaskr.utils import (
 from flaskr.models import db, PendingItem
 
 import uuid
+from datetime import datetime
 
 openItemBp = Blueprint("openItem", __name__)
+
+
+@openItemBp.route("/openitem/<id>/followup", methods=["PUT"])
+def followupOnItem(id):
+    itemID = int(id)
+
+    item = db.session.query(PendingItem).filter_by(id=itemID).first()
+
+    if not item:
+        return sendJsonResponse(404, "Item not found")
+
+    try:
+
+        item.lastContactDate = datetime.now()
+
+        db.session.commit()
+
+    except Exception as e:
+        return sendJsonResponse(500, "add error handling here for put followup")
+
+    return sendJsonResponse(200, item.lastContactDate)
+
+
+@openItemBp.route("/openitem/<id>", methods=["DELETE"])
+def deleteOpenItem(id):
+
+    itemID = int(id)
+    # TODO: safety checks for ownership
+
+    openItem = db.session.query(PendingItem).filter_by(id=itemID).first()
+
+    if not openItem:
+        return sendJsonResponse(404, "Item not found")
+
+    # TODO error handling
+
+    try:
+
+        db.session.delete(openItem)
+
+        db.session.commit()
+
+    except Exception as e:
+        return sendJsonResponse(
+            500, "DB error removing open item, add error handling todo"
+        )
+
+    return sendJsonResponse(200, itemID)
 
 
 @openItemBp.route("/openitem", methods=["POST"])
@@ -53,30 +102,3 @@ def postOpenItem():
         )
 
     return sendJsonResponse(201, newItem.toDict())
-
-
-@openItemBp.route("/openitem/<id>", methods=["DELETE"])
-def deleteOpenItem(id):
-
-    itemID = int(id)
-    # TODO: safety checks for ownership
-
-    openItem = db.session.query(PendingItem).filter_by(id=itemID).first()
-
-    if not openItem:
-        return sendJsonResponse(404, "Item not found")
-
-    # TODO error handling
-
-    try:
-
-        db.session.delete(openItem)
-
-        db.session.commit()
-
-    except Exception as e:
-        return sendJsonResponse(
-            500, "DB error removing open item, add error handling todo"
-        )
-
-    return sendJsonResponse(200, itemID)

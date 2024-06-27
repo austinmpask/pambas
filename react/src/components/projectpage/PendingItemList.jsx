@@ -1,7 +1,13 @@
+import { useState } from "react";
 import PendingItem from "./PendingItem";
+import PendingItemForm from "src/components/forms/PendingItemForm";
 
 export default function PendingItemList({ data }) {
   console.log(data);
+
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  //TODO: GET /openitems or whatever
 
   const dummyData = [
     {
@@ -22,18 +28,24 @@ export default function PendingItemList({ data }) {
     },
   ];
   return (
-    <div>
-      <article className="message pending-item-list">
-        <div className="message-header">
-          <span>{`${data.pendingItems} Pending Items`}</span>
-          <button className="button">Add</button>
-        </div>
-        <div className="message-body">
-          {dummyData.map((item, index) => (
-            <PendingItem data={item} key={index} />
-          ))}
-        </div>
-      </article>
-    </div>
+    <>
+      <PendingItemForm lineID={data.id} open={menuOpen} setOpen={setMenuOpen} />
+
+      <div>
+        <article className="message pending-item-list">
+          <div className="message-header">
+            <span>{`${data.pendingItems} Pending Items`}</span>
+            <button className="button" onClick={() => setMenuOpen(true)}>
+              Add
+            </button>
+          </div>
+          <div className="message-body">
+            {dummyData.map((item, index) => (
+              <PendingItem data={item} key={index} />
+            ))}
+          </div>
+        </article>
+      </div>
+    </>
   );
 }

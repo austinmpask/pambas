@@ -1,4 +1,5 @@
 import {
+  faCircleUser,
   faCircleXmark,
   faEnvelope,
   faFile,
@@ -24,7 +25,14 @@ export default function PendingItem({ data }) {
       <div className="message-body">
         <div className="content is-small mb-4">
           <p>{`Created at: ${data.createdAt}`}</p>
-          <h4>{data.controlOwner}</h4>
+          <h4>
+            <span className="icon-text">
+              <span className="icon">
+                <FontAwesomeIcon icon={faCircleUser} />
+              </span>
+              <span>{data.controlOwner}</span>
+            </span>
+          </h4>
           <p>{data.description}</p>
         </div>
         <div className="pending-item-footer">

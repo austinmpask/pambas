@@ -5,14 +5,12 @@ import ProjectEditableField from "src/components/projectpage/ProjectEditableFiel
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from "react";
+import { ProjectUpdaterContext } from "../../pages/ProjectPage";
 
 //Individual section within the project grid
-export default function ProjectSection({
-  contextSlice,
-  sectionData,
-  index,
-  updateContext,
-}) {
+export default function ProjectSection({ contextSlice, sectionData, index }) {
+  const updateContext = useContext(ProjectUpdaterContext);
   //Apply a change to whatever index of the header array the user edited, then update context with that
   function updateHeaders(i, value) {
     const newHeaders = [...contextSlice.checkBoxHeaders];

@@ -9,7 +9,7 @@ import ProjectSection from "src/components/projectpage/ProjectSection";
 import getProject from "src/utils/getProject";
 
 //Grid interface displaying all of the user's projects
-export default function ProjectGrid({ contextSlice, updateContext }) {
+export default function ProjectGrid({ contextSlice }) {
   const navigate = useNavigate();
 
   //State for all the grid details about the project to populate components
@@ -41,7 +41,6 @@ export default function ProjectGrid({ contextSlice, updateContext }) {
               sectionData={section}
               index={index}
               key={index}
-              updateContext={updateContext}
             />
           );
         })}

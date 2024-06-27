@@ -22,6 +22,7 @@ const { registerRouter } = require("./routes/register");
 const { projectRouter } = require("./routes/project");
 const { allProjectsRouter } = require("./routes/allProjects");
 const { lineItemRouter } = require("./routes/lineitem");
+const { openItemRouter } = require("./routes/openitem");
 
 //Security middleware, allow frontend
 app.use(
@@ -71,6 +72,7 @@ app.use(registerRouter);
 app.use(projectRouter);
 app.use(allProjectsRouter);
 app.use(lineItemRouter);
+app.use(openItemRouter);
 
 //404 not found error
 app.use((_req, res) => {

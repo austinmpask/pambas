@@ -1,5 +1,5 @@
 //React
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,11 +8,14 @@ import { faReceipt } from "@fortawesome/free-solid-svg-icons";
 //Children
 import ProgressBar from "@ramonak/react-progress-bar";
 import ProjectEditableField from "src/components/projectpage/ProjectEditableField";
+import { ProjectUpdaterContext } from "src/pages/ProjectPage";
 
 //Header containing editable project info. Uses slice of context provided by page wrapper parent
-export default function ProjectHeader({ contextSlice, updateContext }) {
+export default function ProjectHeader({ contextSlice }) {
   //State of the billing input field (temprarily here)
   const [billing, setBilling] = useState("");
+
+  const updateContext = useContext(ProjectUpdaterContext);
 
   return (
     contextSlice && (

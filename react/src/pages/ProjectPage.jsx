@@ -1,5 +1,5 @@
 //React
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState, createContext } from "react";
 import { useParams } from "react-router-dom";
 
 //Contexts
@@ -12,6 +12,9 @@ import ProjectGrid from "src/components/projectpage/ProjectGrid";
 
 //Utils
 import updateProjectDetail from "src/utils/updateProjectDetail";
+
+//Context to pass updater function to children
+export const ProjectUpdaterContext = createContext(undefined);
 
 //User project main interactable page. Isolates a slice of state for the current project which is passed as prop to children
 export default function ProjectPage() {
@@ -102,16 +105,12 @@ export default function ProjectPage() {
   return (
     <>
       <NavBar />
-      <ProjectHeader
-        contextSlice={contextSlice}
-        updateContext={updateContext}
-      />
-      <div className="m-6">
-        <ProjectGrid
-          contextSlice={contextSlice}
-          updateContext={updateContext}
-        />
-      </div>
+      <ProjectUpdaterContext.Provider value={updateContext}>
+        <ProjectHeader contextSlice={contextSlice} />
+        <div className="m-6">
+          <ProjectGrid contextSlice={contextSlice} />
+        </div>
+      </ProjectUpdaterContext.Provider>
     </>
   );
 }

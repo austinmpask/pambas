@@ -1,36 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PendingItem from "./PendingItem";
 import PendingItemForm from "src/components/forms/PendingItemForm";
+import getPendingItems from "../../utils/getPendingItems";
 
-export default function PendingItemList({ data, setLineState }) {
-  console.log(data);
-
+export default function PendingItemList({ lineID, numPending, setLineState }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  //TODO: GET /openitems or whatever
+  const [items, setItems] = useState([]);
 
-  const dummyData = [
-    {
-      id: 3,
-      itemName: "Query Screenshot",
-      description: "Screenshot showing how the user list was made",
-      controlOwner: "Bob Joe",
-      lastContact: "12/10/24",
-      createdAt: "12/8/24",
-    },
-    {
-      id: 4,
-      itemName: "User List",
-      description: "Export of all users for AWS",
-      controlOwner: "Jane Doe",
-      lastContact: "12/11/24",
-      createdAt: "12/9/24",
-    },
-  ];
+  useEffect(() => {
+    async function getItems() {
+      const dataObj = await getPendingItems(lineID);
+      if (dataObj.ok) {
+        setItems(dataObj.data);
+      } else {
+        //Couldnt find project/user doesnt own project
+        console.error("error");
+      }
+    }
+
+    numPending !== undefined && lineID !== undefined && getItems();
+  }, [numPending]);
+
   return (
     <>
       <PendingItemForm
-        lineID={data.id}
+        lineID={lineID}
         open={menuOpen}
         setOpen={setMenuOpen}
         setLineState={setLineState}
@@ -39,13 +34,13 @@ export default function PendingItemList({ data, setLineState }) {
       <div>
         <article className="message pending-item-list">
           <div className="message-header">
-            <span>{`${data.pendingItems} Pending Items`}</span>
+            <span>{`${numPending} Pending Items`}</span>
             <button className="button" onClick={() => setMenuOpen(true)}>
               Add
             </button>
           </div>
           <div className="message-body">
-            {dummyData.map((item, index) => (
+            {items.map((item, index) => (
               <PendingItem data={item} key={index} />
             ))}
           </div>

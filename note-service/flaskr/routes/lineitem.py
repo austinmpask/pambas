@@ -10,6 +10,30 @@ import json
 lineitem_bp = Blueprint("lineitem", __name__)
 
 
+# Return a list of all pending items for a given line item
+@lineitem_bp.route("/lineitem/<id>/pendingitems", methods=["GET"])
+def getPendingItemsForLine(id):
+    lineItemID = int(id)
+
+    try:
+        user_uuid = uuid.UUID(request.headers.get("UUID"))
+    except Exception as e:
+        return sendJsonResponse(400, "Invalid UUID", e)
+
+    lineItem = db.session.query(LineItem).filter_by(id=lineItemID).first()
+
+    if not lineItem:
+        return sendJsonResponse(404, "Line item not found")
+
+    # Make sure it is associated with a project owned by that UUID
+    owner = lineItem.section.project.uuid
+
+    if user_uuid != owner:
+        return sendJsonResponse(403, "Forbidden")
+
+    return sendJsonResponse(200, lineItem.getPendingItems())
+
+
 @lineitem_bp.route("/lineitem/<id>", methods=["PUT"])
 @jsonRequired
 def updateLineItem(id):

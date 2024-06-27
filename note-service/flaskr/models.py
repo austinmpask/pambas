@@ -135,7 +135,7 @@ class LineItem(db.Model):
 
     # Return a dict of PendingItem objects associated with this line item
     def getPendingItems(self):
-        return [item for item in self.pendingItems]
+        return [item.toDict() for item in self.pendingItems]
 
 
 class PendingItem(db.Model):

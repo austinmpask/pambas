@@ -36,9 +36,6 @@ export default function PendingItemForm({
         console.error(error);
       });
     } else {
-      //Successful addition
-      console.log("success");
-      console.log(response.data);
       setLineState((prev) => {
         return { ...prev, pendingItems: prev.pendingItems + 1 };
       });

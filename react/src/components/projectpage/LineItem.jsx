@@ -201,7 +201,11 @@ export default function LineItem({ lineItemData }) {
             </span>
           </button>
           {menuOpen && (
-            <PendingItemList data={lineItemData} setLineState={setLineState} />
+            <PendingItemList
+              lineID={lineItemData.id}
+              numPending={lineState.pendingItems}
+              setLineState={setLineState}
+            />
           )}
         </div>
       </div>

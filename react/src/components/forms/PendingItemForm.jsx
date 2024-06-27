@@ -5,7 +5,12 @@ import { useContext, useState } from "react";
 import handleFormChange from "src/utils/handleFormChange";
 import addOpenItem from "src/utils/addOpenItem";
 
-export default function PendingItemForm({ lineID, open, setOpen }) {
+export default function PendingItemForm({
+  lineID,
+  open,
+  setOpen,
+  setLineState,
+}) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     itemName: "",
@@ -34,6 +39,9 @@ export default function PendingItemForm({ lineID, open, setOpen }) {
       //Successful addition
       console.log("success");
       console.log(response.data);
+      setLineState((prev) => {
+        return { ...prev, pendingItems: prev.pendingItems + 1 };
+      });
       closeModal();
     }
   }

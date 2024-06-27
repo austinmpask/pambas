@@ -30,6 +30,7 @@ export default function LineItem({ lineItemData }) {
     checkBoxes: lineItemData.checkBoxes || [0, 0, 0],
     flagMarker: lineItemData.flagMarker || false,
     notes: lineItemData.notes || "",
+    pendingItems: lineItemData.pendingItems || 0,
   });
 
   //Ref for input box for focus
@@ -196,10 +197,12 @@ export default function LineItem({ lineItemData }) {
               <span className="icon">
                 <FontAwesomeIcon icon={faFile} />
               </span>
-              <span>{lineItemData.pendingItems}</span>
+              <span>{lineState.pendingItems}</span>
             </span>
           </button>
-          {menuOpen && <PendingItemList data={lineItemData} />}
+          {menuOpen && (
+            <PendingItemList data={lineItemData} setLineState={setLineState} />
+          )}
         </div>
       </div>
     </>

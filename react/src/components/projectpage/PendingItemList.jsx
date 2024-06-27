@@ -2,7 +2,7 @@ import { useState } from "react";
 import PendingItem from "./PendingItem";
 import PendingItemForm from "src/components/forms/PendingItemForm";
 
-export default function PendingItemList({ data }) {
+export default function PendingItemList({ data, setLineState }) {
   console.log(data);
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -29,7 +29,12 @@ export default function PendingItemList({ data }) {
   ];
   return (
     <>
-      <PendingItemForm lineID={data.id} open={menuOpen} setOpen={setMenuOpen} />
+      <PendingItemForm
+        lineID={data.id}
+        open={menuOpen}
+        setOpen={setMenuOpen}
+        setLineState={setLineState}
+      />
 
       <div>
         <article className="message pending-item-list">

@@ -12,12 +12,15 @@ import {
 
 //Utils
 import updateLineItem from "src/utils/updateLineItem";
-import TextBoxHelpers from "../TextBoxHelpers";
+import TextBoxHelpers from "src/components/TextBoxHelpers";
+import PendingItemList from "src/components/projectpage/PendingItemList";
 
 // Individual line item for the project grid
 export default function LineItem({ lineItemData }) {
   const [loading, setLoading] = useState(false);
   const [writingNote, setWritingNote] = useState(false);
+
+  const [menuOpen, setMenuOpen] = useState(false);
 
   //Keep track of contents of note box for the item
   const [noteState, setNoteState] = useState(lineItemData.notes || "");
@@ -184,10 +187,19 @@ export default function LineItem({ lineItemData }) {
           />
           {writingNote && <TextBoxHelpers content={noteState} />}
         </div>
-        <div className="cell line-item-cell centered-cell">
-          <span className="icon">
-            <FontAwesomeIcon icon={faFile} />
-          </span>
+        <div className="cell line-item-cell centered-cell item-cell">
+          <button
+            className="button"
+            onClick={() => setMenuOpen((prev) => !prev)}
+          >
+            <span className="icon-text">
+              <span className="icon">
+                <FontAwesomeIcon icon={faFile} />
+              </span>
+              <span>{lineItemData.pendingItems}</span>
+            </span>
+          </button>
+          {menuOpen && <PendingItemList data={lineItemData} />}
         </div>
       </div>
     </>

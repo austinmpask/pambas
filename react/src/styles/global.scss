@@ -171,3 +171,37 @@
   transition: transform;
   transition-duration: 200ms;
 }
+
+.pending-item-list {
+  position: absolute !important;
+  left: 100%;
+  top: 0;
+  width: 300px;
+}
+
+.item-cell {
+  position: relative !important;
+}
+
+.pending-item-header {
+  height: 18px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 6px !important;
+  padding-right: 6px !important;
+}
+
+.pending-item-card {
+  border: 1px solid rgb(68, 68, 68);
+}
+
+.pending-item-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.tag-button {
+  cursor: pointer;
+}

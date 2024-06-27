@@ -130,8 +130,12 @@ class LineItem(db.Model):
             "checkBoxes": self.checkBoxes,
             "notes": self.notes,
             "sectionID": self.sectionID,
-            "pendingItems": [pendingItem.toDict() for pendingItem in self.pendingItems],
+            "pendingItems": len(self.pendingItems),
         }
+
+    # Return a dict of PendingItem objects associated with this line item
+    def getPendingItems(self):
+        return [item for item in self.pendingItems]
 
 
 class PendingItem(db.Model):

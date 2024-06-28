@@ -4,12 +4,17 @@ import { useContext, useState } from "react";
 
 import handleFormChange from "src/utils/handleFormChange";
 import addOpenItem from "src/utils/addOpenItem";
+import toTitle from "src/utils/toTitle";
 
+//Form which can be used to add a new pending item or edit an existing one
 export default function PendingItemForm({
   lineID,
   open,
   setOpen,
   setLineState,
+  editing = false,
+  itemID,
+  itemData,
 }) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -27,18 +32,31 @@ export default function PendingItemForm({
     event.preventDefault();
     setLoading(true);
 
-    const response = await addOpenItem(formData, lineID);
+    //For creating a new item
+    if (!editing) {
+      const response = await addOpenItem(formData, lineID);
 
-    //Check for error, forward status to user
-    if (!response.ok) {
-      setLoading(false);
-      response.errors.forEach((error) => {
-        console.error(error);
-      });
+      //Check for error, forward status to user
+      if (!response.ok) {
+        setLoading(false);
+        response.errors.forEach((error) => {
+          console.error(error);
+        });
+      } else {
+        setLineState((prev) => {
+          return { ...prev, pendingItems: prev.pendingItems + 1 };
+        });
+        closeModal();
+      }
     } else {
-      setLineState((prev) => {
-        return { ...prev, pendingItems: prev.pendingItems + 1 };
-      });
+      //Editing a line item
+      const payload = {
+        itemName: formData.itemName || itemData.itemName,
+        controlOwner: formData.controlOwner || itemData.controlOwner,
+        description: formData.description || itemData.description,
+      };
+      console.log("api request here to ID: " + itemID);
+      console.log(payload);
       closeModal();
     }
   }
@@ -59,7 +77,9 @@ export default function PendingItemForm({
         <div className="modal-background"></div>
         <div className="modal-card">
           <header className="modal-card-head">
-            <p className="modal-card-title">Add Pending Item</p>
+            <p className="modal-card-title">{`${
+              editing ? "Edit " : "Add "
+            }Pending Item`}</p>
             <button
               className="delete"
               aria-label="close"
@@ -83,7 +103,11 @@ export default function PendingItemForm({
                     className="input"
                     type="text"
                     name="itemName"
-                    placeholder="User Query Screenshot"
+                    placeholder={
+                      editing
+                        ? toTitle(itemData.itemName)
+                        : "User Query Screenshot"
+                    }
                     disabled={loading}
                     value={formData.itemName}
                     onChange={handleChange}
@@ -104,7 +128,9 @@ export default function PendingItemForm({
                   <input
                     className="input"
                     type="text"
-                    placeholder="Jane Doe"
+                    placeholder={
+                      editing ? toTitle(itemData.controlOwner) : "Jane Doe"
+                    }
                     value={formData.controlOwner}
                     disabled={loading}
                     name="controlOwner"
@@ -118,7 +144,11 @@ export default function PendingItemForm({
                 <div className="control">
                   <textarea
                     className="textarea"
-                    placeholder="Screenshot from Active Directory showing how user population was generated"
+                    placeholder={
+                      editing
+                        ? toTitle(itemData.description, true)
+                        : "Screenshot from Active Directory showing how user population was generated"
+                    }
                     name="description"
                     value={formData.description}
                     onChange={handleChange}

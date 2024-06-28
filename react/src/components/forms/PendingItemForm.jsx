@@ -5,6 +5,7 @@ import { useContext, useState } from "react";
 import handleFormChange from "src/utils/handleFormChange";
 import addOpenItem from "src/utils/addOpenItem";
 import toTitle from "src/utils/toTitle";
+import putOpenItem from "../../utils/putOpenItem";
 
 //Form which can be used to add a new pending item or edit an existing one
 export default function PendingItemForm({
@@ -15,6 +16,7 @@ export default function PendingItemForm({
   editing = false,
   itemID,
   itemData,
+  setItemData,
 }) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -55,8 +57,24 @@ export default function PendingItemForm({
         controlOwner: formData.controlOwner || itemData.controlOwner,
         description: formData.description || itemData.description,
       };
-      console.log("api request here to ID: " + itemID);
-      console.log(payload);
+      const response = await putOpenItem(formData, itemID);
+      if (!response.ok) {
+        setLoading(false);
+        response.errors.forEach((error) => {
+          console.error(error);
+        });
+      } else {
+        closeModal();
+      }
+      console.log(response.data);
+      setItemData((prev) => {
+        return {
+          ...prev,
+          controlOwner: response.data.controlOwner,
+          itemName: response.data.itemName,
+          description: response.data.description,
+        };
+      });
       closeModal();
     }
   }

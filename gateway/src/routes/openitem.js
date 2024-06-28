@@ -19,6 +19,21 @@ openItemRouter.put("/openitem/:id/followup", verifyJWT, async (req, res) => {
   return sendJsonResponse(res, status, response.message);
 });
 
+openItemRouter.put("/openitem/:id", verifyJWT, async (req, res) => {
+  const apiEndpoint = getApiEndpoint("/notes", `/openitem/${req.params.id}`);
+
+  const response = await apiFetch(
+    "PUT",
+    apiEndpoint,
+    req.sessionUUID,
+    req.body
+  );
+
+  const status = response.ok ? 200 : 500;
+
+  return sendJsonResponse(res, status, response.message);
+});
+
 openItemRouter.delete("/openitem/:id", verifyJWT, async (req, res) => {
   const apiEndpoint = getApiEndpoint("/notes", `/openitem/${req.params.id}`);
 

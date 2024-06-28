@@ -32,31 +32,57 @@ def followupOnItem(id):
     return sendJsonResponse(200, item.lastContactDate)
 
 
-@openItemBp.route("/openitem/<id>", methods=["DELETE"])
+@openItemBp.route("/openitem/<id>", methods=["DELETE", "PUT"])
 def deleteOpenItem(id):
 
-    itemID = int(id)
-    # TODO: safety checks for ownership
+    if request.method == "DELETE":
 
-    openItem = db.session.query(PendingItem).filter_by(id=itemID).first()
+        itemID = int(id)
+        # TODO: safety checks for ownership
 
-    if not openItem:
-        return sendJsonResponse(404, "Item not found")
+        openItem = db.session.query(PendingItem).filter_by(id=itemID).first()
 
-    # TODO error handling
+        if not openItem:
+            return sendJsonResponse(404, "Item not found")
 
-    try:
+        # TODO error handling
 
-        db.session.delete(openItem)
+        try:
 
-        db.session.commit()
+            db.session.delete(openItem)
 
-    except Exception as e:
-        return sendJsonResponse(
-            500, "DB error removing open item, add error handling todo"
-        )
+            db.session.commit()
 
-    return sendJsonResponse(200, itemID)
+        except Exception as e:
+            return sendJsonResponse(
+                500, "DB error removing open item, add error handling todo"
+            )
+
+        return sendJsonResponse(200, itemID)
+
+    elif request.method == "PUT":
+        itemID = int(id)
+
+        data = request.get_json()
+        # TODO: safety checks for ownership
+        print(data)
+
+        openItem = db.session.query(PendingItem).filter_by(id=itemID).first()
+
+        if not openItem:
+            return sendJsonResponse(404, "Item not found")
+
+        try:
+            openItem.itemName = data.get("itemName") or openItem.itemName
+            openItem.controlOwner = data.get("controlOwner") or openItem.controlOwner
+            openItem.description = data.get("description") or openItem.description
+
+            db.session.commit()
+
+        except Exception as e:
+            return sendJsonResponse(500, "Error handling here for put openitem")
+
+        return sendJsonResponse(200, openItem.toDict())
 
 
 @openItemBp.route("/openitem", methods=["POST"])

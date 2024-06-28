@@ -64,6 +64,7 @@ export default function PendingItem({ data, setLineState }) {
         editing={true}
         itemID={itemData.id}
         itemData={itemData}
+        setItemData={setItemData}
       />
       <article className="message mb-2 pending-item-card">
         <div className="message-header pending-item-header">

@@ -1,0 +1,6 @@
+List of endpoints for this service:
+
+LINEITEM
+
+GET /lineitem/<id>/pendingitems/
+PUT /lineitem/<id>

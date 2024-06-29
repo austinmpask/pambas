@@ -1,8 +1,6 @@
 from flask import Blueprint, request
-from flaskr.utils import (
-    sendJsonResponse,
-    jsonRequired,
-)
+from flaskr.utils import sendJsonResponse
+from flaskr.utils.routeDecorators import jsonRequired
 from flaskr.models import db, PendingItem
 
 import uuid

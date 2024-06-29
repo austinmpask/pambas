@@ -1,88 +1,68 @@
-from flask import Blueprint, request
-from flaskr.utils import (
-    sendJsonResponse,
-    jsonRequired,
-)
-from flaskr.models import db, LineItem
-import uuid
 import json
+from flask import Blueprint, request
+from flaskr.utils import sendJsonResponse, singleLookup, validateLineItem
+from flaskr.utils.routeDecorators import jsonRequired, uuidRequired
+from flaskr.models import db, LineItem
 
-lineitem_bp = Blueprint("lineitem", __name__)
+lineItemBP = Blueprint("lineitem", __name__)
 
 
 # Return a list of all pending items for a given line item
-@lineitem_bp.route("/lineitem/<id>/pendingitems", methods=["GET"])
-def getPendingItemsForLine(id):
-    lineItemID = int(id)
+@lineItemBP.route("/lineitem/<id>/pendingitems", methods=["GET"])
+@uuidRequired(True)
+def getPendingItemsForLine(userUUID, id):
 
-    try:
-        user_uuid = uuid.UUID(request.headers.get("UUID"))
-    except Exception as e:
-        return sendJsonResponse(400, "Invalid UUID", e)
+    # Query for the specific line item
+    query = singleLookup(LineItem, id, userUUID)
 
-    lineItem = db.session.query(LineItem).filter_by(id=lineItemID).first()
+    # Error response if lookup was not OK
+    if query[0] != 200:
+        return sendJsonResponse(*query)
 
-    if not lineItem:
-        return sendJsonResponse(404, "Line item not found")
+    # Query result will be in 2nd index of tuple if OK
+    lineItem = query[1]
 
-    # Make sure it is associated with a project owned by that UUID
-    owner = lineItem.section.project.uuid
-
-    if user_uuid != owner:
-        return sendJsonResponse(403, "Forbidden")
-
+    # Return dict of pending items
     return sendJsonResponse(200, lineItem.getPendingItems())
 
 
-@lineitem_bp.route("/lineitem/<id>", methods=["PUT"])
+# Update a line item record, particularly for the flag/checkbox/notes attributes
+@lineItemBP.route("/lineitem/<id>", methods=["PUT"])
 @jsonRequired
-def updateLineItem(id):
+@uuidRequired(False)
+def updateLineItem(userUUID, id):
 
-    data = request.get_json()
+    # Lookup the line item
+    query = singleLookup(LineItem, id, userUUID)
 
-    # Make sure there was contents in JSON body
-    if not data:
-        return sendJsonResponse(400, "Bad request")
+    # Error response if lookup was not OK
+    if query[0] != 200:
+        return sendJsonResponse(*query)
 
-    # Ensure valid UUID
-    try:
-        user_uuid = uuid.UUID(data.get("uuid"))
-    except Exception as e:
-        return sendJsonResponse(400, "Invalid UUID", e)
+    # Query result will be in 2nd index of tuple if OK
+    lineItem = query[1]
 
-    # Find the line item in database
-    lineItem = db.session.query(LineItem).filter_by(id=id).first()
+    # Get the request body. Decorator ensured existence
+    requestBody = request.get_json()
 
-    # Handle error for not found
-    if not lineItem:
-        return sendJsonResponse(404, "Line item not found")
+    # Validate request body
+    errors = validateLineItem(requestBody)
 
-    # Make sure it is associated with a project owned by that UUID
-    owner = lineItem.section.project.uuid
-
-    if user_uuid != owner:
-        return sendJsonResponse(403, "Forbidden")
-
-    # Update the record
-
-    # Check for missing keys, separately, since these may have valid falsey values
-    if data.get("flagMarker") is None or data.get("notes") is None:
-        return sendJsonResponse(400, "Missing request attributes")
+    # Abort if there were validation errors
+    if len(errors):
+        return sendJsonResponse(400, errors)
 
     # Update record
     try:
-        lineItem.flagMarker = data.get("flagMarker")
-        lineItem.checkBoxes = data.get("checkBoxes") or lineItem.checkBoxes
-        lineItem.notes = data.get("notes")
+        lineItem.flagMarker = requestBody.get("flagMarker")
+        lineItem.checkBoxes = requestBody.get("checkBoxes")
+        lineItem.notes = requestBody.get("notes")
 
         db.session.commit()
 
-        updatedItem = {
-            "flagMarker": lineItem.flagMarker,
-            "checkBoxes": lineItem.checkBoxes,
-            "notes": lineItem.notes,
-        }
-        return sendJsonResponse(200, json.dumps(updatedItem))
-    except Exception:
+        # Return the relevant updated attributes only
+        return sendJsonResponse(200, json.dumps(lineItem.toDict()))
+    except Exception as e:
+        # If theres an error, rollback transaction and provide context
         db.session.rollback()
-        return sendJsonResponse(500, "Error updating notes DB")
+        return sendJsonResponse(500, f"Database error while updating record: {e}")

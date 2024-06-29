@@ -1,6 +1,24 @@
 List of endpoints for this service:
 
-LINEITEM
+----------LINEITEM----------
 
-GET /lineitem/<id>/pendingitems/
+GET /lineitem/<id>/pendingitems/ !!!! FIX THIS
 PUT /lineitem/<id>
+
+----------OPENITEM----------
+
+PUT /openitem/<id>/followup/
+PUT /openitem/<id>
+DELETE /openitem/<id>
+POST /openitem/
+
+
+----------PROJECT----------
+
+GET /project/<id>
+PUT /project/<id>
+DELETE /project/<id> !!! ADD THIS
+GET /project/
+POST /project/
+
+

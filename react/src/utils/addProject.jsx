@@ -58,6 +58,7 @@ export default async function addProject(formData, prettyNames, childrenState) {
     }
   } catch (error) {
     //Forward any error
+    console.error(error);
     errors = [`Internal error while adding project: ${error}`];
     return {
       ok: false,

@@ -53,11 +53,18 @@ export default function PendingItemForm({
     } else {
       //Editing a line item
       const payload = {
-        itemName: formData.itemName || itemData.itemName,
-        controlOwner: formData.controlOwner || itemData.controlOwner,
-        description: formData.description || itemData.description,
+        itemName:
+          formData.itemName === "" ? itemData.itemName : formData.itemName,
+        controlOwner:
+          formData.controlOwner === ""
+            ? itemData.controlOwner
+            : formData.itemName,
+        description:
+          formData.description === ""
+            ? itemData.description
+            : formData.description,
       };
-      const response = await putOpenItem(formData, itemID);
+      const response = await putOpenItem(payload, itemID);
       if (!response.ok) {
         setLoading(false);
         response.errors.forEach((error) => {

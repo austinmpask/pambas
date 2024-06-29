@@ -124,13 +124,13 @@ def postProject():
         return sendJsonResponse(*validation)
 
     title = data.get("name")
-    projectType = data.get("type")
+
     manager = data.get("manager")
     budget = data.get("budget")
 
     # Create the project with all requisite nested table entries
     dbResponse = addProjectWithChildren(
-        user_uuid, title, projectType, manager, budget, sections
+        user_uuid, title, "Other", manager, budget, sections
     )
 
     # Helper includes error handling for response

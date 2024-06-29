@@ -1,4 +1,4 @@
-from flaskr.models import db, Project, Section, LineItem, projectTypes
+from flaskr.models import db, Project, Section, LineItem
 
 
 # Helper to create a full project with all of its child elements in the db tables
@@ -11,7 +11,7 @@ def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectio
                 title=title,
                 projectManager=manager,
                 budget=int(budget),
-                projectType=projectTypes[projectType],
+                projectType="Other",
             )
             db.session.add(userProject)
             db.session.commit()

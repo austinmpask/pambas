@@ -17,6 +17,7 @@ export default async function putOpenItem(formData, itemID) {
       };
     }
   } catch (error) {
+    console.error(error);
     errors = [`Internal error while editing open item: ${error}`];
     return {
       ok: false,

@@ -1,8 +1,8 @@
 """create tables
 
-Revision ID: f9a8b237f530
+Revision ID: a36c5424871b
 Revises: 
-Create Date: 2024-06-30 04:42:46.988621
+Create Date: 2024-06-30 07:11:31.180893
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'f9a8b237f530'
+revision = 'a36c5424871b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,7 +29,7 @@ def upgrade():
     sa.Column('checkbox_headers', sa.ARRAY(sa.String(length=15)), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.CheckConstraint("length(project_manager) >= 2 AND length(project_manager) <= 50 AND project_manager ~* '^[A-Za-z ]+$'", name='check_project_manager'),
-    sa.CheckConstraint("length(project_type) >= 2 AND length(project_type) <= 15 AND project_type IN ('SOC 2 Type 1','Other','SOC 2 Type 2','SOC 1 Type 2','SOC 1 Type 1')", name='check_project_type'),
+    sa.CheckConstraint("length(project_type) >= 2 AND length(project_type) <= 15 AND project_type IN ('SOC 2 Type 2','SOC 1 Type 1','Other','SOC 2 Type 1','SOC 1 Type 2')", name='check_project_type'),
     sa.CheckConstraint("length(title) >= 2 AND length(title) <= 30 AND title ~* '^[A-Za-z0-9]+$'", name='check_title'),
     sa.CheckConstraint('0 <= billed AND billed <= 200', name='check_billed'),
     sa.CheckConstraint('0 <= budget AND budget <= 200', name='check_budget'),
@@ -47,9 +47,9 @@ def upgrade():
     op.create_table('line_items',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('flag_marker', sa.Boolean(), nullable=False),
-    sa.Column('control_number', sa.String(length=5), nullable=True),
+    sa.Column('control_number', sa.String(length=5), nullable=False),
     sa.Column('check_boxes', sa.ARRAY(sa.Integer()), nullable=False),
-    sa.Column('notes', sa.Text(), nullable=True),
+    sa.Column('notes', sa.Text(), nullable=False),
     sa.Column('section_id', sa.Integer(), nullable=False),
     sa.CheckConstraint('array_length(check_boxes, 1) = 3', name='check_check_boxes_length'),
     sa.CheckConstraint('length(control_number) >= 4 AND length(control_number) <= 5', name='check_control_number_length'),
@@ -60,8 +60,8 @@ def upgrade():
     op.create_table('pending_items',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('item_name', sa.String(length=40), nullable=False),
-    sa.Column('description', sa.Text(), nullable=True),
-    sa.Column('control_owner', sa.String(length=50), nullable=True),
+    sa.Column('description', sa.Text(), nullable=False),
+    sa.Column('control_owner', sa.String(length=50), nullable=False),
     sa.Column('last_contact_date', sa.DateTime(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('line_item_id', sa.Integer(), nullable=False),

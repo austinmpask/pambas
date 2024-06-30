@@ -1,6 +1,5 @@
 from flask import Blueprint, request
-from flaskr.utils import sendJsonResponse, singleLookup
-from flaskr.utils.routeDecorators import jsonRequired, uuidRequired
+from flaskr.utils import sendJsonResponse, singleLookup, jsonRequired, uuidRequired
 from flaskr.models import db, LineItem, PendingItem
 from flaskr.validators import Validators
 from datetime import datetime

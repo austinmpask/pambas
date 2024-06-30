@@ -18,11 +18,13 @@ class LineItem(Base):
     id = Column(Integer, primary_key=True)
 
     flag_marker = Column(Boolean, nullable=False, default=False)
-    control_number = Column(String(DataFields.CONTROL_NUM_MAX_LENGTH), default="")
+    control_number = Column(
+        String(DataFields.CONTROL_NUM_MAX_LENGTH), default="", nullable=False
+    )
 
     check_boxes = Column(ARRAY(Integer), nullable=False, default=[0, 0, 0])
 
-    notes = Column(Text, nullable=True, default="")
+    notes = Column(Text, nullable=False, default="")
 
     # FK
     section_id = Column(Integer, ForeignKey("sections.id"), nullable=False)

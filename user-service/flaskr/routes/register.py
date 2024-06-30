@@ -1,48 +1,39 @@
 from flask import request, Blueprint
 from flaskr.models import db, User
-from flaskr.utils import sendJsonResponse, jsonRequired
-import uuid
+from flaskr.utils import sendJsonResponse, jsonRequired, uuidRequired
+from flaskr.validators import Validators
 
-register_bp = Blueprint("register", __name__)
+registerBP = Blueprint("register", __name__)
 
 
 # Register a new user in user DB
-@register_bp.route("/register", methods=["POST"])
+@registerBP.route("/register", methods=["POST"])
 @jsonRequired
-def register():
+@uuidRequired(False)
+def registerUser(userUUID):
 
     # Parse the request body
-    data = request.get_json()
-    firstName = data.get("first_name")
-    lastName = data.get("last_name")
+    reqBody = request.get_json()
 
-    # Catch error if UUID is none or "" or otherwise invalid
+    # Try to create user in the user DB and commit
     try:
-        user_uuid = uuid.UUID(data.get("uuid"))
+        # Ensure validations pass
+        firstName = Validators.firstName(reqBody.get("first_name"))
+        lastName = Validators.lastName(reqBody.get("last_name"))
+
+        newUser = User(uuid=userUUID, first_name=firstName, last_name=lastName)
+
+        db.session.add(newUser)
+        db.session.commit()
+
+        # Successfully registered user, return the UUID to gateway
+        return sendJsonResponse(201, newUser.uuid)
+
+    # Catch validation errors
+    except (ValueError, TypeError) as e:
+        db.session.rollback()
+        return sendJsonResponse(400, str(e))
+    # Catch all
     except Exception as e:
-        # UUID missing/invalid
-        return sendJsonResponse(400, "Invalid UUID", e)
-
-    # Validate that other items are present and not empty
-    if firstName and lastName:
-        # Make first/last name title case
-        firstName = firstName.title()
-        lastName = lastName.title()
-
-        # Create user in the user DB and commit
-        # Ensure that constraints and validators are passed
-        try:
-            newUser = User(uuid=user_uuid, firstName=firstName, lastName=lastName)
-            db.session.add(newUser)
-            db.session.commit()
-
-            # Successfully registered user, return the UUID for use in User service
-            return sendJsonResponse(201, newUser.uuid)
-
-        # Catch errors from model constraints
-        except Exception as e:
-            db.session.rollback()
-            return sendJsonResponse(400, "User DB Error", e)
-
-    # One or more of the request fields was None/empty
-    return sendJsonResponse(400, "Missing firstname/lastname")
+        db.session.rollback()
+        return sendJsonResponse(500, f"User Database error while registering User: {e}")

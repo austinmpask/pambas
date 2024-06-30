@@ -4,8 +4,9 @@ from flaskr.utils import (
     addProjectWithChildren,
     queryProjectsByUUID,
     singleLookup,
+    jsonRequired,
+    uuidRequired,
 )
-from flaskr.utils.routeDecorators import jsonRequired, uuidRequired
 from flaskr.models import db, Project
 from flaskr.validators import Validators
 

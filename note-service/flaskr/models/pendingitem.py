@@ -18,9 +18,9 @@ class PendingItem(Base):
     id = Column(Integer, primary_key=True)
 
     item_name = Column(String(DataFields.PENDING_ITEM_NAME_MAX_LENGTH), nullable=False)
-    description = Column(Text, nullable=True, default="")
+    description = Column(Text, nullable=False, default="")
     control_owner = Column(
-        String(DataFields.FULL_NAME_MAX_LENGTH), nullable=True, default=""
+        String(DataFields.FULL_NAME_MAX_LENGTH), nullable=False, default=""
     )
     last_contact_date = Column(DateTime, nullable=True)
     created_at = Column(DateTime, nullable=False, default=datetime.now())

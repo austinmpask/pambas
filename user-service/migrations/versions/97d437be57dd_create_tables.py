@@ -1,8 +1,8 @@
-"""empty message
+"""create tables
 
-Revision ID: b922eb8a47be
+Revision ID: 97d437be57dd
 Revises: 
-Create Date: 2024-05-08 22:20:45.590665
+Create Date: 2024-06-30 07:03:22.779911
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b922eb8a47be'
+revision = '97d437be57dd'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,9 +21,11 @@ def upgrade():
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('uuid', sa.UUID(), nullable=False),
-    sa.Column('firstName', sa.String(length=20), nullable=False),
-    sa.Column('lastName', sa.String(length=20), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('first_name', sa.String(length=25), nullable=False),
+    sa.Column('last_name', sa.String(length=25), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.CheckConstraint("length(first_name) >= 2 AND length(first_name) <= 25 AND first_name ~* '^[A-Za-z ]+$'", name='check_first_name'),
+    sa.CheckConstraint("length(last_name) >= 2 AND length(last_name) <= 25 AND last_name ~* '^[A-Za-z ]+$'", name='check_last_name'),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('uuid')
     )

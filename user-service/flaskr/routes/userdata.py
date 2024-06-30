@@ -1,69 +1,63 @@
 from flask import request, Blueprint
-from flaskr.models import db, User
-from flaskr.utils import sendJsonResponse, jsonRequired, queryForUserByUUID
-import uuid
+from flaskr.models import db
+from flaskr.utils import (
+    sendJsonResponse,
+    jsonRequired,
+    uuidRequired,
+    queryForUserByUUID,
+)
+from flaskr.validators import Validators
 
-userdata_bp = Blueprint("userdata", __name__)
+userdataBP = Blueprint("userdata", __name__)
 
 
-# Get and update user data by UUID in JSON request body
-@userdata_bp.route("/userdata", methods=["GET"])
-def getUserData():
-
-    # Check if UUID is valid
-    try:
-        user_uuid = uuid.UUID(request.headers.get("UUID"))
-    except Exception as e:
-        return sendJsonResponse(400, "Invalid UUID", e)
+# Get and user data by UUID
+@userdataBP.route("/userdata", methods=["GET"])
+@uuidRequired(True)
+def getUserData(userUUID):
 
     # Find the user in user DB, errors handled by helper function
-    user = queryForUserByUUID(user_uuid)
+    status, body = queryForUserByUUID(userUUID)
 
-    # Send error response if unsuccessful
-    if not isinstance(user, User):
-        return sendJsonResponse(*user)
+    # Convert user information if there wasnt an error
+    if status == 200:
+        body = body.toSafeDict()
 
-    # Respond with the user info if user found
-    return sendJsonResponse(200, user.toSafeDict())
+    # Respond with status and user info or error
+    return sendJsonResponse(status, body)
 
 
 # Modify user infromation in the user database (first/last name etc.)
-@userdata_bp.route("/userdata", methods=["PUT"])
+@userdataBP.route("/userdata", methods=["PUT"])
 @jsonRequired
-def putUserData():
-
-    # Parse request
-    data = request.get_json()
-
-    # Check if UUID is valid
-    try:
-        user_uuid = uuid.UUID(data.get("uuid"))
-    except Exception as e:
-        return sendJsonResponse(400, "Invalid UUID", e)
-
-    # Exit if no data is provided with UUID
-    if len(data.keys()) < 2:
-        return sendJsonResponse(400, "Missing attributes")
+@uuidRequired(False)
+def putUserData(userUUID):
 
     # Find the user in user DB
-    user = queryForUserByUUID(user_uuid)
+    status, user = queryForUserByUUID(userUUID)
 
-    # Send error response if unsuccessful
-    if not isinstance(user, User):
-        return sendJsonResponse(*user)
+    # Abort if lookup error
+    if status != 200:
+        return sendJsonResponse(status, user)
 
-    # Gather data from request, use existing data as default to dynamically handle multiple replacements
-    firstName = data.get("first_name") or user.firstName
-    lastName = data.get("last_name") or user.lastName
+    # Parse request body
+    reqBody = request.get_json()
 
-    # Update the record
+    # Attempt to update record
     try:
-        user.firstName = firstName
-        user.lastName = lastName
+        user.first_name = Validators.firstName(reqBody.get("first_name"))
+        user.last_name = Validators.lastName(reqBody.get("last_name"))
+
         db.session.commit()
+
+        # Successful update, respond with user info
+        return sendJsonResponse(200, user.toSafeDict())
+
+    # Catch validation errors
+    except (ValueError, TypeError) as e:
+        db.session.rollback()
+        return sendJsonResponse(400, str(e))
+    # Catch all
     except Exception as e:
         db.session.rollback()
-        return sendJsonResponse(400, "User DB error", e)
-
-    # Respond with the user info
-    return sendJsonResponse(200, user.toSafeDict())
+        return sendJsonResponse(500, f"User database error while editing User: {e}")

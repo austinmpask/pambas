@@ -7,4 +7,4 @@ def sendJsonResponse(code, message):
 
     ok = True if code in okCodes else False
 
-    return jsonify({"code": code, "ok": ok, "message": message})
+    return (jsonify({"code": code, "ok": ok, "message": message}), code)

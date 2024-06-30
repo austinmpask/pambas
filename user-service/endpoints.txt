@@ -1,0 +1,10 @@
+List of endpoints for this service:
+
+----------REGISTER----------
+
+POST /register/
+
+----------USERDATA----------
+
+GET /userdata/
+PUT /userdata/

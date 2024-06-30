@@ -77,6 +77,8 @@ export default function ProjectPage() {
   useEffect(() => {
     async function makeRequest() {
       //Make request
+
+      console.log(contextSlice);
       const response = await updateProjectDetail(projectID, contextSlice);
 
       if (response.ok) {

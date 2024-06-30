@@ -2,6 +2,7 @@ import uuid
 from functools import wraps
 from flask import request
 from .sendJsonResponse import sendJsonResponse
+from flaskr.validators import Validators
 
 genericError = "Bad Request:"
 
@@ -53,7 +54,7 @@ def uuidRequired(header=False):
 
             # Check UUID is valid
             try:
-                validUUID = uuid.UUID(sentUUID)
+                validUUID = Validators.stringUUID(sentUUID)
             except Exception as e:
                 return sendJsonResponse(400, f"{genericError} Invalid UUID: {e}")
 

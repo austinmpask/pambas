@@ -23,7 +23,7 @@ class DataFields:
     BUDGET_TYPE = float
     BUDGET_INCREMENTAL = 0.25
 
-    BILLED_MIN = 0.25
+    BILLED_MIN = 0
     BILLED_MAX = 200
     BILLED_TYPE = float
     BILLED_INCREMENTAL = 0.25
@@ -47,6 +47,15 @@ class DataFields:
     HEADER_MIN_LENGTH = 0
     HEADER_MAX_LENGTH = 15
     HEADER_TYPE = str
+
+    SECTIONS_LIST_TYPE = list
+    SECTIONS_LIST_MIN = 1
+    SECTIONS_LIST_MAX = 20
+
+    SECTION_CONTROLS_MIN = 1
+    SECTION_CONTROLS_MAX = 25
+
+    SECTION_DICT_TYPE = dict
 
     # Section
     SECTION_NUM_MIN = 1

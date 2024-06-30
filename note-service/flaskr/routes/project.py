@@ -1,137 +1,133 @@
 from flask import Blueprint, request
 from flaskr.utils import (
     sendJsonResponse,
-    validateSections,
     addProjectWithChildren,
     queryProjectsByUUID,
+    singleLookup,
 )
-
-from flaskr.utils.routeDecorators import jsonRequired
-from flaskr.models import db
-
-import uuid
-
-project_bp = Blueprint("project", __name__)
+from flaskr.utils.routeDecorators import jsonRequired, uuidRequired
+from flaskr.models import db, Project
+from flaskr.validators import Validators
 
 
-# Return all projects owned by a user with high level information about each
-@project_bp.route("/project", methods=["GET"])
-def getAllProjects():
+projectBP = Blueprint("project", __name__)
+
+
+# Get the full details for a specific project
+@projectBP.route("/project/<id>", methods=["GET"])
+@uuidRequired(True)
+def getProject(userUUID, id):
+
+    # Lookup the project
+    status, response = singleLookup(Project, id, userUUID)
+
+    # If successful lookup & owned by UUID, return the section details
+    if status == 200:
+        response = response.toSectionsDict()
+
+    return sendJsonResponse(status, response)
+
+
+# Edit the high level summary info for a specific project
+@projectBP.route("/project/<id>", methods=["PUT"])
+@jsonRequired
+@uuidRequired(False)
+def putProject(userUUID, id):
+
+    # Validate req body
+    reqBody = request.get_json()
 
     try:
-        user_uuid = uuid.UUID(request.headers.get("UUID"))
+        billed = Validators.billed(reqBody.get("billed"))
+        budget = Validators.budget(reqBody.get("budget"))
+        checkboxHeaders = Validators.checkboxHeaders(reqBody.get("checkBoxHeaders"))
+        projectManager = Validators.projectManager(reqBody.get("projectManager"))
+        projectType = Validators.projectType(reqBody.get("projectType"))
+        title = Validators.projectTitle(reqBody.get("title"))
+        projectID = Validators.fkID(int(id))
+
+    # Forward validation errors
+    except (ValueError, TypeError) as e:
+        return sendJsonResponse(400, str(e))
+
+    # Catch all
     except Exception as e:
-        return sendJsonResponse(400, "Invalid UUID", e)
+        return sendJsonResponse(500, f"Bad request: {str(e)}")
+
+    # Lookup the project
+    status, response = singleLookup(Project, projectID, userUUID)
+
+    # Abort if issue finding project
+    if status != 200:
+        return sendJsonResponse(status, response)
+
+    # Edit the project
+    try:
+        response.billed = billed
+        response.budget = budget
+        response.checkboxHeaders = checkboxHeaders
+        response.projectManager = projectManager
+        response.projectType = projectType
+        response.title = title
+
+        # Successful modification
+        db.session.commit()
+        return sendJsonResponse(200, response.toSummaryDict())
+
+    # Catch validation errors
+    except (ValueError, TypeError) as e:
+        db.session.rollback()
+        return sendJsonResponse(400, str(e))
+
+    # Catch all
+    except Exception as e:
+        db.session.rollback()
+        return sendJsonResponse(500, f"Database error while updating project: {e}")
+
+
+# Return all projects owned by a user with high level summary information about each
+@projectBP.route("/project", methods=["GET"])
+@uuidRequired(True)
+def getAllProjects(userUUID):
 
     # Get all the projects for the user
-    projects = queryProjectsByUUID(user_uuid)
+    status, response = queryProjectsByUUID(userUUID)
 
-    if projects[0] == 200:
-        # Get the details as a dict for each project
-        projectDicts = [project.toSummaryDict() for project in projects[1]]
+    # Get the details as a dict for each project if successful lookup
+    if status == 200:
+        response = [project.toSummaryDict() for project in response]
 
-        # Send the response to gateway. Includes status code and project dict, or errors
-        return sendJsonResponse(200, projectDicts)
-
-    else:
-        return sendJsonResponse(*projects)
-
-
-# Return a specific project for a user by ID
-@project_bp.route("/project/<id>", methods=["GET", "PUT"])
-def getProject(id):
-
-    # Get the project ID
-    projID = int(id)
-
-    # Get UUID
-    if request.method == "GET":
-        sentUUID = request.headers.get("UUID")
-
-    elif request.method == "PUT":
-        data = request.get_json()
-        sentUUID = data.get("uuid")
-
-    else:
-        return sendJsonResponse(500, "Error")
-
-    # Make sure UUID valid
-    try:
-        user_uuid = uuid.UUID(sentUUID)
-    except Exception as e:
-        return sendJsonResponse(400, "Invalid UUID", e)
-
-    # Query for all projects owned by the user
-    projects = queryProjectsByUUID(user_uuid)
-
-    if projects[0] != 200:
-        return sendJsonResponse(*projects)
-
-    # Of the user's projects, find the one with matching id
-    target = next((project for project in projects[1] if project.id == projID), None)
-
-    if not target:
-        return sendJsonResponse(404, "Project not found")
-
-    if request.method == "GET":
-        # Return project info as dict
-        return sendJsonResponse(200, target.toSectionsDict())
-
-    # TODO: Clean up this
-    elif request.method == "PUT":
-
-        print(data.get("checkBoxHeaders"))
-
-        target.billed = data.get("billed") or target.billed
-        target.budget = data.get("budget") or target.budget
-        target.checkboxHeaders = data.get("checkBoxHeaders") or target.checkboxHeaders
-        target.projectManager = data.get("projectManager") or target.projectManager
-        target.projectType = data.get("projectType") or target.projectType
-        target.title = data.get("title") or target.title
-
-        db.session.commit()
-
-        return sendJsonResponse(200, target.toSummaryDict())
-
-    return sendJsonResponse(500, "Error todo here")
+    # Return the status and error/projects
+    return sendJsonResponse(status, response)
 
 
 # Create a new project for a particular user
-@project_bp.route("/project", methods=["POST"])
+@projectBP.route("/project", methods=["POST"])
 @jsonRequired
-def postProject():
+@uuidRequired(False)
+def postProject(userUUID):
 
-    data = request.get_json()
+    reqBody = request.get_json()
 
-    # Confirm UUID is valid. Gateway adds UUID to the req. body
+    # Validate the incoming data
     try:
-        user_uuid = uuid.UUID(data.get("uuid"))
+        sectionsList = Validators.sectionsList(reqBody.get("sections"))
+        title = Validators.projectTitle(reqBody.get("name"))
+        projectManager = Validators.projectManager(reqBody.get("manager"))
+        type = Validators.projectType("Other")
+        budget = Validators.budget(reqBody.get("budget"))
+
+    # Catch validation errors
+    except (ValueError, TypeError) as e:
+        return sendJsonResponse(400, str(e))
+    # Catch all
     except Exception as e:
-        return sendJsonResponse(400, "Invalid UUID", e)
-
-    # Abort if no data provided with UUID
-    if len(data.keys()) < 2:
-        return sendJsonResponse(400, "Missing all attributes")
-
-    # Confirm expected request body is recieved
-    sections = data.get("sections")
-
-    # Check section integrity
-    validation = validateSections(sections)
-
-    # Send error response if something was wrong/missing
-    if validation[0] != 200:
-        return sendJsonResponse(*validation)
-
-    title = data.get("name")
-
-    manager = data.get("manager")
-    budget = data.get("budget")
+        return sendJsonResponse(400, f"Bad request: {str(e)}")
 
     # Create the project with all requisite nested table entries
-    dbResponse = addProjectWithChildren(
-        user_uuid, title, "Other", manager, budget, sections
+    status, body = addProjectWithChildren(
+        userUUID, title, type, projectManager, budget, sectionsList
     )
 
     # Helper includes error handling for response
-    return sendJsonResponse(*dbResponse)
+    return sendJsonResponse(status, body)

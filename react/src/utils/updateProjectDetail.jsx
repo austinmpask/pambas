@@ -10,6 +10,7 @@ export default async function updateProjectDetail(id, projectState) {
       return { ok: true, data: message };
     }
   } catch (error) {
+    console.error(error);
     return {
       ok: false,
       error: `Internal error while updating database: ${error}`,

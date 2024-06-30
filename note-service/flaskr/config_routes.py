@@ -7,6 +7,6 @@ def configureRoutes(app):
 
         # Register blueprints for API endpoints
         app.register_blueprint(flaskr.routes.index_bp)
-        app.register_blueprint(project.project_bp)
+        app.register_blueprint(project.projectBP)
         app.register_blueprint(lineItem.lineItemBP)
         app.register_blueprint(openItem.openItemBP)

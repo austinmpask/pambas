@@ -95,13 +95,13 @@ class Validators:
             Validators.validateAlpha(word, n)
         return val
 
-    # @staticmethod
-    # def validateUUID(val):
-    #     try:
-    #         val = uuid.UUID(val)
-    #     except (ValueError, TypeError):
-    #         raise ValueError("Invalid UUID")
-    #     return val
+    @staticmethod
+    def validateUUID(val):
+        try:
+            val = uuid.UUID(val)
+        except (ValueError, TypeError):
+            raise ValueError("Invalid UUID")
+        return val
 
     @staticmethod
     def validateControlNumStr(val):
@@ -110,6 +110,63 @@ class Validators:
 
         if (not all([item.isnumeric() for item in lst])) or len(lst) != 2:
             raise ValueError("Invalid control number format, XX.XX required")
+        return val
+
+    @staticmethod
+    def validateNumeric(val, prettyName):
+        if not val.isnumeric():
+            raise ValueError(f"{prettyName} must be numeric")
+        return val
+
+    @staticmethod
+    def validateSectionDictFormat(val):
+        # Make sure only 2 keys
+        if len(val.items()) != 2:
+            raise ValueError("Section must have 2 items")
+
+        sectionNum = val.get("section")
+        controlsNum = val.get("controls")
+
+        # Make sure the 2 keys are the expected ones
+        if sectionNum is None or controlsNum is None:
+            raise ValueError("Incorrect section format")
+
+        # Make sure Section & Control number exist and are ints or str
+        n = "Section/Control Number"
+        for num in (sectionNum, controlsNum):
+            Validators.validateExists(num, n)
+            Validators.validateType(num, n, (int, str))
+
+            if isinstance(num, str):
+                Validators.validateNumeric(num, n)
+
+        # Validate that section number is in range
+        Validators.validateRange(
+            int(sectionNum),
+            "Section Number",
+            DataFields.SECTION_NUM_MIN,
+            DataFields.SECTION_NUM_MAX,
+        )
+
+        # Validate that controls # is in range
+        Validators.validateRange(
+            int(controlsNum),
+            "# of Controls",
+            DataFields.SECTION_CONTROLS_MIN,
+            DataFields.SECTION_CONTROLS_MAX,
+        )
+
+        return {"section": int(sectionNum), "controls": int(controlsNum)}
+
+    @staticmethod
+    def duplicateSectionNum(val):
+        listLen = len(val)
+
+        setLen = len(set(section["section"] for section in val))
+
+        if listLen != setLen:
+            raise ValueError("Repeated section numbers are not allowed")
+
         return val
 
     # ----- PROJECT MODEL ----- #
@@ -121,6 +178,15 @@ class Validators:
         Validators.validateExists(val, n)
         Validators.validateType(val, n, DataFields.UUID_TYPE)
         return val
+
+    @staticmethod
+    def stringUUID(val) -> uuid.UUID:
+        n = "UUID as String"
+        # Tests
+        Validators.validateExists(val, n)
+        Validators.validateType(val, n, str)
+        # Convert to uuid obj
+        return Validators.validateUUID(val)
 
     @staticmethod
     def projectTitle(val) -> str:
@@ -141,6 +207,7 @@ class Validators:
     def budget(val) -> DataFields.BUDGET_TYPE:
         n = "Budget"
         # Tests
+        val = DataFields.BUDGET_TYPE(val)
         Validators.validateExists(val, n)
         Validators.validateType(val, n, (int, DataFields.BUDGET_TYPE))
         Validators.validateRange(val, n, DataFields.BUDGET_MIN, DataFields.BUDGET_MAX)
@@ -151,6 +218,7 @@ class Validators:
     def billed(val) -> DataFields.BILLED_TYPE:
         n = "Billed Hours"
         # Tests
+        val = DataFields.BILLED_TYPE(val)
         Validators.validateExists(val, n)
         Validators.validateType(val, n, (int, DataFields.BILLED_TYPE))
         Validators.validateRange(val, n, DataFields.BILLED_MIN, DataFields.BILLED_MAX)
@@ -208,6 +276,34 @@ class Validators:
 
         # Sanitize and return
         return [str(item).strip().upper() for item in val]
+
+    @staticmethod
+    def sectionDict(val) -> DataFields.SECTION_DICT_TYPE:
+        n = "Section"
+        # Tests
+        Validators.validateExists(val, n)
+        Validators.validateType(val, n, DataFields.SECTION_DICT_TYPE)
+        # Ensure that contents are int
+        return Validators.validateSectionDictFormat(val)
+
+    @staticmethod
+    def sectionsList(val) -> DataFields.SECTIONS_LIST_TYPE:
+        n = "Sections List"
+        # Tests
+        Validators.validateExists(val, n)
+        Validators.validateType(val, n, DataFields.SECTIONS_LIST_TYPE)
+        Validators.validateLength(
+            val, n, DataFields.SECTIONS_LIST_MIN, DataFields.SECTIONS_LIST_MAX
+        )
+
+        newList = []
+        # Make sure each section dict is appropriate. Convert to int from str if necessary
+        for section in val:
+            newList.append(Validators.sectionDict(section))
+
+        # Ensure no duplicate section numbers, return the int version
+        Validators.duplicateSectionNum(newList)
+        return newList
 
     # ----- SECTION MODEL ----- #
 
@@ -339,8 +435,8 @@ class Validators:
         return val
 
     @staticmethod
-    def lineItemID(val) -> int:
-        n = "Line Item Foreign Key"
+    def fkID(val) -> int:
+        n = "Foreign Key"
         # Tests
         Validators.validateExists(val, n)
         Validators.validateType(val, n, int)

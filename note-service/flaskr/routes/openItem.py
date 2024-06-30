@@ -115,7 +115,7 @@ def postOpenItem(userUUID):
 
     # First validate line item id FK
     try:
-        lineItemID = Validators.lineItemID(reqBody.get("lineID"))
+        lineItemID = Validators.fkID(reqBody.get("lineID"))
     except (ValueError, TypeError) as e:
         return sendJsonResponse(500, str(e))
 

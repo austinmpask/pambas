@@ -1,8 +1,8 @@
 """create tables
 
-Revision ID: 3f6022db49d0
+Revision ID: cdb257509f11
 Revises: 
-Create Date: 2024-05-28 00:55:59.810823
+Create Date: 2024-06-30 01:10:52.394252
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '3f6022db49d0'
+revision = 'cdb257509f11'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,13 +21,19 @@ def upgrade():
     op.create_table('projects',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('uuid', sa.UUID(), nullable=False),
-    sa.Column('title', sa.String(length=20), nullable=False),
-    sa.Column('budget', sa.Integer(), nullable=False),
-    sa.Column('billed', sa.Integer(), nullable=False),
-    sa.Column('projectManager', sa.String(length=25), nullable=False),
-    sa.Column('projectType', sa.String(length=15), nullable=False),
-    sa.Column('checkboxHeaders', sa.ARRAY(sa.String(length=20)), nullable=False),
+    sa.Column('title', sa.String(length=30), nullable=False),
+    sa.Column('budget', sa.Float(), nullable=False),
+    sa.Column('billed', sa.Float(), nullable=False),
+    sa.Column('project_manager', sa.String(length=50), nullable=False),
+    sa.Column('project_type', sa.String(length=15), nullable=False),
+    sa.Column('checkbox_headers', sa.ARRAY(sa.String(length=15)), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.CheckConstraint("length(project_manager) >= 2 AND length(project_manager) <= 50 AND project_manager ~* '^[A-Za-z ]+$'", name='check_project_manager'),
+    sa.CheckConstraint("length(project_type) >= 2 AND length(project_type) <= 15 AND project_type IN ('SOC 2 Type 1','Other','SOC 2 Type 2','SOC 1 Type 1','SOC 1 Type 2')", name='check_project_type'),
+    sa.CheckConstraint("length(title) >= 2 AND length(title) <= 30 AND title ~* '^[A-Za-z0-9]+$'", name='check_title'),
+    sa.CheckConstraint('0 <= billed AND billed <= 200', name='check_billed'),
+    sa.CheckConstraint('0 <= budget AND budget <= 200', name='check_budget'),
+    sa.CheckConstraint('array_length(checkbox_headers, 1) = 3', name='check_checkbox_headers'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('sections',
@@ -49,9 +55,9 @@ def upgrade():
     )
     op.create_table('pending_items',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('itemName', sa.String(length=20), nullable=False),
+    sa.Column('itemName', sa.String(length=40), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
-    sa.Column('controlOwner', sa.String(length=25), nullable=True),
+    sa.Column('controlOwner', sa.String(length=50), nullable=True),
     sa.Column('lastContactDate', sa.DateTime(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('lineItemID', sa.Integer(), nullable=False),

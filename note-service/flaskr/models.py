@@ -1,4 +1,5 @@
 from sqlalchemy.schema import Column, ForeignKey
+from sqlalchemy import CheckConstraint
 from sqlalchemy.types import (
     String,
     Integer,
@@ -28,9 +29,9 @@ class Project(db.Model):
     title = Column(String(DataFields.PROJECT_TITLE_MAX_LENGTH), nullable=False)
     budget = Column(Float, nullable=False)
     billed = Column(Float, nullable=False, default=0)
-    projectManager = Column(String(DataFields.FULL_NAME_MAX_LENGTH), nullable=False)
-    projectType = Column(String(DataFields.PROJECT_TYPE_MAX_LENGTH), nullable=False)
-    checkboxHeaders = Column(
+    project_manager = Column(String(DataFields.FULL_NAME_MAX_LENGTH), nullable=False)
+    project_type = Column(String(DataFields.PROJECT_TYPE_MAX_LENGTH), nullable=False)
+    checkbox_headers = Column(
         ARRAY(String(DataFields.HEADER_MAX_LENGTH)),
         nullable=False,
         default=["Prep", "Inquiry", "Inspection"],
@@ -60,17 +61,46 @@ class Project(db.Model):
     def valBilled(self, _key, val):
         return Validators.billed(val)
 
-    @validates("projectManager")
+    @validates("project_manager")
     def varManager(self, _key, val):
         return Validators.projectManager(val)
 
-    @validates("projectType")
+    @validates("project_type")
     def varProjectType(self, _key, val):
         return Validators.projectType(val)
 
-    @validates("checkboxHeaders")
+    @validates("checkbox_headers")
     def varCheckHeaders(self, _key, val):
         return Validators.checkboxHeaders(val)
+    
+    # ----- Constraints ----- #
+
+    __table_args__ = (
+        CheckConstraint(
+            f'length(title) >= {DataFields.PROJECT_TITLE_MIN_LENGTH} AND length(title) <= {DataFields.PROJECT_TITLE_MAX_LENGTH} AND title ~* \'^[A-Za-z0-9]+$\'',
+            name='check_title'
+        ),
+        CheckConstraint(
+            f'{DataFields.BUDGET_MIN} <= budget AND budget <= {DataFields.BUDGET_MAX}',
+            name='check_budget'
+        ),
+        CheckConstraint(
+            f'{DataFields.BILLED_MIN} <= billed AND billed <= {DataFields.BILLED_MAX}',
+            name='check_billed'
+        ),
+        CheckConstraint(
+            f'length(project_manager) >= {DataFields.FULL_NAME_MIN_LENGTH} AND length(project_manager) <= {DataFields.FULL_NAME_MAX_LENGTH} AND project_manager ~* \'^[A-Za-z ]+$\'',
+            name='check_project_manager'
+        ),
+        CheckConstraint(
+            f'length(project_type) >= {DataFields.PROJECT_TYPE_MIN_LENGTH} AND length(project_type) <= {DataFields.PROJECT_TYPE_MAX_LENGTH} AND project_type IN ({",".join(["\'" + pt + "\'" for pt in DataFields.PROJECT_TYPES])})',
+            name='check_project_type'
+        ),
+        CheckConstraint(
+            f'array_length(checkbox_headers, 1) = {DataFields.NUM_CHECKBOX}',
+            name='check_checkbox_headers'
+        ),
+    )
 
     # ----- Instance Methods ----- #
 
@@ -87,9 +117,9 @@ class Project(db.Model):
             "title": self.title,
             "budget": self.budget,
             "billed": self.billed,
-            "projectManager": self.projectManager,
-            "projectType": self.projectType,
-            "checkBoxHeaders": self.checkboxHeaders,
+            "projectManager": self.project_manager,
+            "projectType": self.project_type,
+            "checkBoxHeaders": self.checkbox_headers,
         }
 
 
@@ -129,7 +159,7 @@ class LineItem(db.Model):
 
     checkBoxes = Column(ARRAY(Integer), nullable=False, default=[0, 0, 0])
 
-    notes = Column(Text(DataFields.NOTES_MAX_LENGTH), nullable=True, default="")
+    notes = Column(Text, nullable=True, default="")
 
     # FK
     sectionID = Column(Integer, ForeignKey("sections.id"), nullable=False)
@@ -180,7 +210,7 @@ class PendingItem(db.Model):
 
     itemName = Column(String(DataFields.PENDING_ITEM_NAME_MAX_LENGTH), nullable=False)
     description = Column(
-        Text(DataFields.PENDING_ITEM_DESC_MAX_LENGTH), nullable=True, default=""
+        Text, nullable=True, default=""
     )
     controlOwner = Column(
         String(DataFields.FULL_NAME_MAX_LENGTH), nullable=True, default=""

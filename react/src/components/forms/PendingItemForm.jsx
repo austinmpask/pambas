@@ -58,7 +58,7 @@ export default function PendingItemForm({
         controlOwner:
           formData.controlOwner === ""
             ? itemData.controlOwner
-            : formData.itemName,
+            : formData.controlOwner,
         description:
           formData.description === ""
             ? itemData.description

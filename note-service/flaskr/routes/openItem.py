@@ -23,7 +23,7 @@ def followupOnItem(userUUID, id):
 
     # Attempt to update date
     try:
-        body.lastContactDate = Validators.lastContactDate(datetime.now())
+        body.last_contact_date = Validators.lastContactDate(datetime.now())
         db.session.commit()
 
     # Forward appropriate error messages from validators
@@ -39,7 +39,7 @@ def followupOnItem(userUUID, id):
         )
 
     # Respond with the new date if successful
-    return sendJsonResponse(200, body.lastContactDate)
+    return sendJsonResponse(200, body.last_contact_date)
 
 
 # Delete an open item
@@ -85,8 +85,8 @@ def putOpenItem(userUUID, id):
 
     # Attempt to update DB
     try:
-        body.itemName = Validators.itemName(reqBody.get("itemName"))
-        body.controlOwner = Validators.controlOwner(reqBody.get("controlOwner"))
+        body.item_name = Validators.itemName(reqBody.get("itemName"))
+        body.control_owner = Validators.controlOwner(reqBody.get("controlOwner"))
         body.description = Validators.description(reqBody.get("description"))
 
         db.session.commit()
@@ -131,10 +131,10 @@ def postOpenItem(userUUID):
         description = Validators.description(reqBody.get("description"))
 
         newItem = PendingItem(
-            itemName=itemName,
-            controlOwner=controlOwner,
+            item_name=itemName,
+            control_owner=controlOwner,
             description=description,
-            lineItemID=lineItemID,
+            line_item_id=lineItemID,
         )
 
         db.session.add(newItem)

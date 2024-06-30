@@ -18,7 +18,7 @@ def safetyCheck(record, userUUID):
         owner = record.section.project.uuid
 
     elif objType is PendingItem:
-        owner = record.lineItem.section.project.uuid
+        owner = record.line_item.section.project.uuid
 
     else:
         raise ValueError(f"Unexpected type: {objType}")

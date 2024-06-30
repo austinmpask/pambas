@@ -10,9 +10,9 @@ def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectio
         userProject = Project(
             uuid=userUUID,
             title=title,
-            projectManager=manager,
             budget=budget,
-            projectType=projectType,
+            project_manager=manager,
+            project_type=projectType,
         )
 
         db.session.add(userProject)
@@ -39,7 +39,7 @@ def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectio
 
         # Add section to DB, with projectID as foreign key
         try:
-            newSection = Section(sectionNumber=secNum, projectID=userProject.id)
+            newSection = Section(section_number=secNum, project_id=userProject.id)
             db.session.add(newSection)
             db.session.commit()
 
@@ -63,7 +63,7 @@ def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectio
             # Add line item to DB session
             try:
                 lineItem = LineItem(
-                    controlNumber=controlNumber, sectionID=newSection.id
+                    control_number=controlNumber, section_id=newSection.id
                 )
                 db.session.add(lineItem)
 

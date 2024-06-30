@@ -65,9 +65,9 @@ def putProject(userUUID, id):
     try:
         response.billed = billed
         response.budget = budget
-        response.checkboxHeaders = checkboxHeaders
-        response.projectManager = projectManager
-        response.projectType = projectType
+        response.checkbox_headers = checkboxHeaders
+        response.project_manager = projectManager
+        response.project_type = projectType
         response.title = title
 
         # Successful modification

@@ -1,8 +1,8 @@
 """create tables
 
-Revision ID: cdb257509f11
+Revision ID: b270ef002397
 Revises: 
-Create Date: 2024-06-30 01:10:52.394252
+Create Date: 2024-06-30 04:07:44.572033
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'cdb257509f11'
+revision = 'b270ef002397'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,7 +29,7 @@ def upgrade():
     sa.Column('checkbox_headers', sa.ARRAY(sa.String(length=15)), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.CheckConstraint("length(project_manager) >= 2 AND length(project_manager) <= 50 AND project_manager ~* '^[A-Za-z ]+$'", name='check_project_manager'),
-    sa.CheckConstraint("length(project_type) >= 2 AND length(project_type) <= 15 AND project_type IN ('SOC 2 Type 1','Other','SOC 2 Type 2','SOC 1 Type 1','SOC 1 Type 2')", name='check_project_type'),
+    sa.CheckConstraint("length(project_type) >= 2 AND length(project_type) <= 15 AND project_type IN ('SOC 2 Type 1','SOC 2 Type 2','Other','SOC 1 Type 1','SOC 1 Type 2')", name='check_project_type'),
     sa.CheckConstraint("length(title) >= 2 AND length(title) <= 30 AND title ~* '^[A-Za-z0-9]+$'", name='check_title'),
     sa.CheckConstraint('0 <= billed AND billed <= 200', name='check_billed'),
     sa.CheckConstraint('0 <= budget AND budget <= 200', name='check_budget'),
@@ -38,30 +38,37 @@ def upgrade():
     )
     op.create_table('sections',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('sectionNumber', sa.Integer(), nullable=False),
-    sa.Column('projectID', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['projectID'], ['projects.id'], ),
+    sa.Column('section_number', sa.Integer(), nullable=False),
+    sa.Column('project_id', sa.Integer(), nullable=False),
+    sa.CheckConstraint('section_number >= 1 AND section_number <= 99', name='check_section_number'),
+    sa.ForeignKeyConstraint(['project_id'], ['projects.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('line_items',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('flagMarker', sa.Boolean(), nullable=False),
-    sa.Column('controlNumber', sa.String(length=5), nullable=True),
-    sa.Column('checkBoxes', sa.ARRAY(sa.Integer()), nullable=False),
+    sa.Column('flag_marker', sa.Boolean(), nullable=False),
+    sa.Column('control_number', sa.String(length=5), nullable=True),
+    sa.Column('check_boxes', sa.ARRAY(sa.Integer()), nullable=False),
     sa.Column('notes', sa.Text(), nullable=True),
-    sa.Column('sectionID', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['sectionID'], ['sections.id'], ),
+    sa.Column('section_id', sa.Integer(), nullable=False),
+    sa.CheckConstraint('array_length(check_boxes, 1) = 3', name='check_check_boxes_length'),
+    sa.CheckConstraint('length(control_number) >= 4 AND length(control_number) <= 5', name='check_control_number_length'),
+    sa.CheckConstraint('length(notes) >= 0 AND length(notes) <= 2000', name='check_notes_length'),
+    sa.ForeignKeyConstraint(['section_id'], ['sections.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('pending_items',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('itemName', sa.String(length=40), nullable=False),
+    sa.Column('item_name', sa.String(length=40), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
-    sa.Column('controlOwner', sa.String(length=50), nullable=True),
-    sa.Column('lastContactDate', sa.DateTime(), nullable=True),
+    sa.Column('control_owner', sa.String(length=50), nullable=True),
+    sa.Column('last_contact_date', sa.DateTime(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('lineItemID', sa.Integer(), nullable=False),
-    sa.ForeignKeyConstraint(['lineItemID'], ['line_items.id'], ),
+    sa.Column('line_item_id', sa.Integer(), nullable=False),
+    sa.CheckConstraint("length(control_owner) >= 2 AND length(control_owner) <= 50 AND control_owner ~* '^[A-Za-z ]+$'", name='check_control_owner'),
+    sa.CheckConstraint("length(item_name) >= 2 AND length(item_name) <= 40 AND item_name ~* '^[A-Za-z0-9 ]+$'", name='check_item_name'),
+    sa.CheckConstraint('length(description) >= 0 AND length(description) <= 200', name='check_description'),
+    sa.ForeignKeyConstraint(['line_item_id'], ['line_items.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###

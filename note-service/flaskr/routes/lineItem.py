@@ -39,8 +39,8 @@ def updateLineItem(userUUID, id):
 
     # Attempt to update record with validators & sanitation
     try:
-        body.flagMarker = Validators.flagMarker(requestBody.get("flagMarker"))
-        body.checkBoxes = Validators.checkBoxes(requestBody.get("checkBoxes"))
+        body.flag_marker = Validators.flagMarker(requestBody.get("flagMarker"))
+        body.check_boxes = Validators.checkBoxes(requestBody.get("checkBoxes"))
         body.notes = Validators.notes(requestBody.get("notes"))
 
         db.session.commit()

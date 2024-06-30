@@ -16,7 +16,12 @@ class Section(Base):
     project_id = Column(Integer, ForeignKey("projects.id"), nullable=False)
 
     # Back references
-    line_items = relationship("LineItem", backref="section", order_by="LineItem.id")
+    line_items = relationship(
+        "LineItem",
+        backref="section",
+        cascade="all, delete-orphan",
+        order_by="LineItem.id",
+    )
 
     # ----- Validators ----- #
 

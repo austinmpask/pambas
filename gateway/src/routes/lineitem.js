@@ -6,29 +6,21 @@ const { getApiEndpoint } = require("../utils/getApiEndpoint");
 
 const lineItemRouter = express.Router();
 
-lineItemRouter.get(
-  "/lineitem/:id/pendingitems",
-  verifyJWT,
-  async (req, res) => {
-    const apiEndpoint = getApiEndpoint(
-      "/notes",
-      `/lineitem/${req.params.id}/pendingitems`
-    );
+lineItemRouter.get("/lineitem/:id/openitems", verifyJWT, async (req, res) => {
+  const apiEndpoint = getApiEndpoint(
+    "/notes",
+    `/lineitem/${req.params.id}/openitems`
+  );
 
-    const response = await apiFetch("GET", apiEndpoint, req.sessionUUID);
+  const response = await apiFetch("GET", apiEndpoint, req.sessionUUID);
 
-    let status = 200;
-    if (!response.ok) {
-      status = 500;
-    }
-
-    return sendJsonResponse(
-      res,
-      status,
-      JSON.stringify(response.message || [])
-    );
+  let status = 200;
+  if (!response.ok) {
+    status = 500;
   }
-);
+
+  return sendJsonResponse(res, status, JSON.stringify(response.message || []));
+});
 
 lineItemRouter.put("/lineitem/:id", verifyJWT, async (req, res) => {
   const apiEndpoint = getApiEndpoint("/notes", `/lineitem/${req.params.id}`);

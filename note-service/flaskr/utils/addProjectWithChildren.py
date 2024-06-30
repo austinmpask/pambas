@@ -25,11 +25,6 @@ def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectio
 
     # Create the SECTIONS and LINE ITEMS
 
-    # Save created sections/line items to a list to roll back if necessary.
-    # Must commit sections inorder to use as foreign key
-    sectionCache = []
-    lineItemCache = []
-
     dbError = None
 
     for section in sectionsList:
@@ -43,9 +38,6 @@ def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectio
             db.session.add(newSection)
             db.session.commit()
 
-            # Add created section object to cache incase of need for manual removal
-            sectionCache.append(newSection)
-
         # Catch errors for adding sections, abort process if error occurs
         except Exception as e:
             db.session.rollback()
@@ -53,8 +45,6 @@ def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectio
             break
 
         # Create the line items which are associated with the successfully created section
-
-        localLineItemCache = []
 
         for i in range(controlsNum):
             # Convert control number into a string of XX.XX format
@@ -66,9 +56,6 @@ def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectio
                     control_number=controlNumber, section_id=newSection.id
                 )
                 db.session.add(lineItem)
-
-                # Add created line item object to a locally scoped cache
-                localLineItemCache.append(lineItem)
 
             except Exception as e:
                 # If there is an error, rollback will get rid of the line items which havent been committed
@@ -88,22 +75,11 @@ def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectio
             dbError = f"Database error while committing LineItems: {e}"
             break
 
-        # Add the successfully added line item objects to the cache incase a future error requires manual removal
-        lineItemCache.extend(localLineItemCache)
-
     # Manually clean up anything added to DB prior to breakage if necessary
     if dbError:
 
-        # Delete project
+        # Delete project, cascades to children
         db.session.delete(userProject)
-
-        # Delete sections
-        for section in sectionCache:
-            db.session.delete(section)
-
-        # Delete line items
-        for item in lineItemCache:
-            db.session.delete(item)
 
         # Send appropriate error message
         db.session.commit()

@@ -28,6 +28,32 @@ def getProject(userUUID, id):
     return sendJsonResponse(status, response)
 
 
+# Delete a project by ID
+@projectBP.route("/project/<id>", methods=["DELETE"])
+@uuidRequired(True)
+def deleteProject(userUUID, id):
+
+    # Lookup the project
+    status, body = singleLookup(Project, id, userUUID)
+
+    # Error response if lookup was not OK
+    if status != 200:
+        return sendJsonResponse(status, body)
+
+    # Attempt to delete the project
+    try:
+        db.session.delete(body)
+        db.session.commit()
+
+        # No DB error, success. Respond with ID of deleted project
+        return sendJsonResponse(200, int(id))
+
+    except Exception as e:
+        # Rollback and respond with error if DB has error
+        db.session.rollback()
+        return sendJsonResponse(500, f"Database error while deleting project: {e}")
+
+
 # Edit the high level summary info for a specific project
 @projectBP.route("/project/<id>", methods=["PUT"])
 @jsonRequired

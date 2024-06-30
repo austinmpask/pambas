@@ -17,7 +17,7 @@ POST /openitem/
 
 GET /project/<id>
 PUT /project/<id>
-DELETE /project/<id> !!! ADD THIS
+DELETE /project/<id>
 GET /project/
 POST /project/
 

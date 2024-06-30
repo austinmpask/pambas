@@ -29,7 +29,10 @@ class LineItem(Base):
 
     # Back references
     pending_items = relationship(
-        "PendingItem", backref="line_item", order_by="PendingItem.id"
+        "PendingItem",
+        backref="line_item",
+        cascade="all, delete-orphan",
+        order_by="PendingItem.id",
     )
 
     # ----- Validators ----- #

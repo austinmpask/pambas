@@ -37,7 +37,7 @@ class Project(Base):
 
     # Back references
     sections = relationship(
-        "Section", backref="project", order_by="Section.section_number"
+        "Section", backref="project", cascade="all, delete-orphan", order_by="Section.section_number"
     )
 
     # ----- Validators ----- #

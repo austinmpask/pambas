@@ -9,7 +9,7 @@ lineItemBP = Blueprint("lineitem", __name__)
 
 
 # Return a list of all pending items for a given line item
-@lineItemBP.route("/lineitem/<id>/pendingitems", methods=["GET"])
+@lineItemBP.route("/lineitem/<id>/openitems", methods=["GET"])
 @uuidRequired(True)
 def getPendingItemsForLine(userUUID, id):
 

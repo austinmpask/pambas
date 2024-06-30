@@ -1,4 +1,3 @@
-import uuid
 from functools import wraps
 from flask import request
 from .sendJsonResponse import sendJsonResponse

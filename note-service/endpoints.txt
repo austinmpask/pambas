@@ -2,7 +2,7 @@ List of endpoints for this service:
 
 ----------LINEITEM----------
 
-GET /lineitem/<id>/pendingitems/ !!!! FIX THIS
+GET /lineitem/<id>/openitems/
 PUT /lineitem/<id>
 
 ----------OPENITEM----------

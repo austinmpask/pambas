@@ -28,7 +28,7 @@ export default async function loginUser(formData) {
   //Prepare payload for API req.
   const payload = {
     password: formData.password,
-    ...credValid,
+    credential: credValid[Object.keys(credValid)[0]],
   };
 
   //Make request to api
@@ -40,8 +40,9 @@ export default async function loginUser(formData) {
         ok: true,
       };
     }
-  } catch {
+  } catch (error) {
     //Error while making request
+    console.error(error);
     return {
       ok: false,
       errors: ["Invalid login!"],

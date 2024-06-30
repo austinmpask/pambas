@@ -1,26 +1,26 @@
 from flaskr.models import db, User
-import validators
 
 
-# Helper to query db for login
-def queryForUser(email=None, username=None):
+# Helper to query db for login based on a credential
+def queryForUser(credentials):
     # Query for a user using email as default
-    user = None
+    isEmail, credential = credentials
+
+    # Attempt lookup
     try:
-        if email and validators.email(email):
-            user = db.session.query(User).filter_by(email=email).first()
+        # Case of email
+        if isEmail:
+            user = db.session.query(User).filter_by(email=credential).first()
 
-        # TODO add username validator
-        elif username:
-            user = db.session.query(User).filter_by(user_name=username).first()
-
+        # Case of username
         else:
-            return (400, "Invalid email/username")
+            user = db.session.query(User).filter_by(user_name=credential).first()
 
-    except:
-        return (500, "Auth DB query error")
+        # Send OK status if user found, 404 if no match
+        status = 200 if user else 404
 
-    if not user:
-        return (404, "User not found")
+        return (status, user)
 
-    return user
+    # Catch DB error
+    except Exception as e:
+        return (500, f"Auth database error while looking up User: {str(e)}")

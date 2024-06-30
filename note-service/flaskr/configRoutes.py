@@ -1,4 +1,4 @@
-from flaskr.routes import project, lineItem, openItem, indexBP
+from flaskr.routes import projectBP, lineItemBP, openItemBP, indexBP
 
 
 def configureRoutes(app):
@@ -6,6 +6,6 @@ def configureRoutes(app):
 
         # Register blueprints for API endpoints
         app.register_blueprint(indexBP)
-        app.register_blueprint(project.projectBP)
-        app.register_blueprint(lineItem.lineItemBP)
-        app.register_blueprint(openItem.openItemBP)
+        app.register_blueprint(projectBP)
+        app.register_blueprint(lineItemBP)
+        app.register_blueprint(openItemBP)

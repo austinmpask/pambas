@@ -1,14 +1,10 @@
 from flask import jsonify
 
 
-# Standardized response format
-def sendJsonResponse(code, message, error=None):
+# Simplify sending responses
+def sendJsonResponse(code, message):
     okCodes = {200, 201}
 
-    status = "Success" if code in okCodes else "Error"
-    trace = str(error) if error else "None"
+    ok = True if code in okCodes else False
 
-    return (
-        jsonify({"code": code, "status": status, "message": message, "trace": trace}),
-        code,
-    )
+    return (jsonify({"code": code, "ok": ok, "message": message}), code)

@@ -1,10 +1,13 @@
 from flask import Blueprint
 from flaskr.utils import sendJsonResponse
+from .login import loginBP  # noqa
+from .register import registerBP  # noqa
+from .shallowdelete import shallowDeleteBP  # noqa
 
-index_bp = Blueprint("index", __name__)
+indexBP = Blueprint("index", __name__)
 
 
 # Healthcheck for gateway docker compose
-@index_bp.route("/", methods=["GET"])
+@indexBP.route("/", methods=["GET"])
 def index():
-    return sendJsonResponse(200, "ok from auth service")
+    return sendJsonResponse(200, "OK from auth service")

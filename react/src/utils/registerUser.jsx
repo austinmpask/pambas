@@ -41,6 +41,7 @@ export default async function registerUser(formData, prettyNames) {
       };
     }
   } catch (error) {
+    console.error(error);
     //Error while making request, determine if its from duplicate entry
     error.response.data.message &&
     error.response.data.message.includes("Bad response from")

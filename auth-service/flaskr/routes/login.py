@@ -1,44 +1,66 @@
 from flask import request, make_response, Blueprint, current_app
 from flaskr.config import bcrypt
-from flaskr.utils import sendJsonResponse, queryForUser, jsonRequired
+from flaskr.utils import (
+    sendJsonResponse,
+    queryForUser,
+    jsonRequired,
+    uuidRequired,
+    queryForUserByUUID,
+)
 import jwt
-from flaskr.models import User
+from flaskr.validators import Validators
 
-login_bp = Blueprint("login", __name__)
+loginBP = Blueprint("login", __name__)
 
 
-@login_bp.route("/login", methods=["POST"])
+# Return the email and username for a UUID provided in the req. header
+@loginBP.route("/login", methods=["GET"])
+@uuidRequired(True)
+def getLogin(userUUID):
+
+    # Find the user in user db
+    status, body = queryForUserByUUID(userUUID)
+
+    # Convert user info if there isnt error
+    if status == 200:
+        body = body.toSafeDict()
+
+    # Respond with the user info or error
+    return sendJsonResponse(status, body)
+
+
+# Accepts a credential, which can be an email or username, and plaintext password
+@loginBP.route("/login", methods=["POST"])
 @jsonRequired
-def login():
+def postLogin():
     # Parse request body
-    data = request.get_json()
+    reqBody = request.get_json()
 
-    username = data.get("username")
-    email = data.get("email")
-    password = data.get("password")
+    try:
+        credential = Validators.credential(reqBody.get("credential"))
+        password = Validators.plainPassword(reqBody.get("password"))
 
-    # Exit operation if neither username nor email is provided
-    if not (email or username):
-        return sendJsonResponse(400, "Login credential missing")
+    # Catch validation errors
+    except (ValueError, TypeError) as e:
+        return sendJsonResponse(400, str(e))
 
-    # Exit operation if a password is not provided
-    if not password:
-        return sendJsonResponse(400, "Password missing")
+    # Catch all
+    except Exception as e:
+        return sendJsonResponse(500, f"Could not process credential/password: {str(e)}")
 
-    # Query DB for a matching user, will use email by default, or username if no email
+    # Query DB for a matching user
+    status, body = queryForUser(credential)
 
-    user = queryForUser(email=email, username=username)
-
-    # Handle errors from helper function
-    if not isinstance(user, User):
-        return sendJsonResponse(*user)
+    # Abort if error or user not found
+    if status != 200:
+        sendJsonResponse(status, body or "User not found")
 
     # User exists in the DB, check passwords
-    if bcrypt.check_password_hash(user.password_hash, password):
+    if bcrypt.check_password_hash(body.password_hash, password):
 
         # User matched, generate JWT with UUID payload
         sessionJWT = jwt.encode(
-            {"uuid": str(user.uuid)},
+            {"uuid": str(body.uuid)},
             current_app.config["SECRET_KEY"],
             algorithm="HS256",
         )
@@ -51,4 +73,5 @@ def login():
         )
         return response
 
-    return sendJsonResponse(401, "Unauthorized: Incorrect login")
+    # Incorrect password, unauthorized
+    return sendJsonResponse(401, "Unauthorized")

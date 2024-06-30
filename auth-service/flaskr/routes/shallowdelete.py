@@ -3,11 +3,11 @@ from flaskr.models import db, User
 from flaskr.utils import sendJsonResponse, jsonRequired, queryForUserByUUID
 import uuid
 
-shallowDelete_bp = Blueprint("shallowDelete", __name__)
+shallowDeleteBP = Blueprint("shallowDelete", __name__)
 
 
 # Delete user data ONLY from the auth db. This is not an application wide user deletion
-@shallowDelete_bp.route("/shallowdelete", methods=["DELETE"])
+@shallowDeleteBP.route("/shallowdelete", methods=["DELETE"])
 @jsonRequired
 def shallowDelete():
 

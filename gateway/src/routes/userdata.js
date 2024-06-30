@@ -11,7 +11,7 @@ const userDataRouter = express.Router();
 userDataRouter.get("/userdata", verifyJWT, async (req, res) => {
   //Get full API endpoints which will be used later
   const userApiEndpoint = getApiEndpoint("/users", "/userdata");
-  const authApiEndpoint = getApiEndpoint("/auth", "/getlogin");
+  const authApiEndpoint = getApiEndpoint("/auth", "/login");
 
   //Make request to microservices, errors handled by helper
 

@@ -1,0 +1,14 @@
+List of endpoints for this service:
+
+----------LOGIN----------
+
+GET /login/
+POST /login/
+
+----------REGISTER----------
+
+POST /register/
+
+----------SHALLOWDELETE----------
+
+DELETE /shallowdelete/

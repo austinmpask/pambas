@@ -1,8 +1,10 @@
 const express = require("express");
-const { sendJsonResponse } = require("../utils/sendJsonResponse");
-const { validateRegData } = require("../utils/validateRegData");
-const { getApiEndpoint } = require("../utils/getApiEndpoint");
-const { apiFetch } = require("../utils/apiFetch");
+const {
+  sendJsonResponse,
+  validateRegData,
+  apiEnd,
+  apiFetch,
+} = require("../utils/");
 
 const registerRouter = express.Router();
 
@@ -17,8 +19,8 @@ registerRouter.post("/register", async (req, res) => {
   if (!ok) return sendJsonResponse(res, 400, message);
 
   //Assign microservice endpoints for use
-  const authApiEndpoint = getApiEndpoint("/auth", "/register");
-  const userApiEndpoint = getApiEndpoint("/users", "/register");
+  const authApiEndpoint = apiEnd("/auth", "/register");
+  const userApiEndpoint = apiEnd("/users", "/register");
 
   //Make registration request to auth service
   const authRes = await apiFetch("POST", authApiEndpoint, undefined, req.body);
@@ -40,7 +42,7 @@ registerRouter.post("/register", async (req, res) => {
 
   if (!userRes.ok) {
     //If there was an error with the user registration, roll back the auth registration
-    const authRemEndpoint = getApiEndpoint("/auth", "/shallowdelete");
+    const authRemEndpoint = apiEnd("/auth", "/shallowdelete");
     const delRes = await apiFetch("DELETE", authRemEndpoint, userUUID);
 
     if (delRes.ok) {
@@ -59,4 +61,4 @@ registerRouter.post("/register", async (req, res) => {
   return sendJsonResponse(res, 201, "Successful registration");
 });
 
-module.exports = { registerRouter };
+module.exports = registerRouter;

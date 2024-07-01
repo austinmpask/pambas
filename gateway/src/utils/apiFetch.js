@@ -1,71 +1,39 @@
 const fetch = require("node-fetch");
 
-//This module is largely to reduce boilerplate, and is tailored specifically for the specific requirements of existing gateway endpoints
-async function apiFetch(method, endpoint, uuid = undefined, body = undefined) {
-  //Determine appropriate fetch options for fetch & UUID placement
-  let options;
-  switch (method) {
-    case "GET":
-      options = {
-        method: "GET",
-        headers: { "Content-Type": "application/json", uuid },
-      };
-      break;
+//Reduce fetch boilerplate when making service requests
+async function apiFetch(
+  method,
+  endpoint,
+  userUUID = undefined,
+  body = undefined
+) {
+  //Determine appropriate fetch options, i.e. if body is required
+  const options = {
+    method,
+    headers: {
+      "Content-Type": "application/json",
+      ...(userUUID && { userUUID }),
+    },
+  };
 
-    case "PUT":
-      options = {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...body, uuid: String(uuid) }),
-      };
-      break;
-
-    case "POST":
-      options = {
-        method: "POST",
-        body: JSON.stringify(body),
-        headers: { "Content-Type": "application/json" },
-      };
-      break;
-
-    case "DELETE":
-      options = {
-        method: "DELETE",
-        headers: { "Content-Type": "application/json", uuid },
-      };
-      break;
+  // Add JSON body for put/post. PATCH not used
+  if ((method === "PUT" || method === "POST") && body) {
+    options.body = JSON.stringify(body);
   }
 
-  //Attempt to fetch from endpoint, if successful, return response body
-  let response;
-  let responseBody;
+  //Attempt to fetch from endpoint, if successful, return response body message from service
   try {
-    response = await fetch(endpoint, options);
-    responseBody = await response.json();
-  } catch (e) {
-    //Return error info if request failed
-    return {
-      ok: false,
-      message: `Internal server error at ${endpoint}: ${String(e)}`,
-      status: response.status,
-    };
-  }
+    const response = await fetch(endpoint, options);
+    const responseBody = await response.json();
 
-  if (response && responseBody && response.ok) {
-    //Successful request and response, return response body
+    return { status: response.status, message: responseBody.message };
+  } catch (e) {
+    //Return error info if there was an error with request
     return {
-      ok: true,
-      message: responseBody.message,
-      status: response.status,
-    };
-  } else {
-    //Return error response if failed
-    return {
-      ok: false,
-      message: `Bad response from ${endpoint}: ${responseBody.message}`,
-      status: response.status,
+      status: 500,
+      message: `Internal server error at ${endpoint}: ${String(e)}`,
     };
   }
 }
 
-module.exports = { apiFetch };
+module.exports = apiFetch;

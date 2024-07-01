@@ -1,0 +1,39 @@
+List of gateway endpoints:
+
+----------PROJECT----------
+
+GET /project/:id -> /notes/project/<id>
+PUT /project/:id -> /notes/project/<id>
+DELETE /project/:id -> /notes/project/<id> !!! ADD THIS
+
+GET /project/ -> /notes/project/
+POST /project/ -> /notes/project/
+
+
+----------LINEITEM----------
+
+GET /lineitem/:id/openitems/ -> /notes/lineitem/<id>/openitems/
+
+PUT /lineitem/:id/ -> /notes/lineitem/<id>/
+
+----------OPENITEM----------
+
+PUT /openitem/:id/followup/ -> /notes/openitem/<id>/followup/
+
+PUT /openitem/:id/ -> /notes/openitem/<id>/
+DELETE /openitem/:id/ -> /notes/openitem/<id>/
+
+POST /openitem/ -> /notes/openitem/
+
+----------REGISTER----------
+
+POST /register/ -> /auth/register/
+                -> /users/register/
+
+
+----------USER---------- EDIT THIS NAME!!!!!
+
+GET /user/ -> /users/userdata/ !!! EDIT THESE NAMES (data)
+           -> /auth/login/
+
+PUT /user/ -> /users/userdata/

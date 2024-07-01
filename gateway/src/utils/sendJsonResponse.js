@@ -1,12 +1,9 @@
 //Standardized response formatting
-function sendJsonResponse(res, code, message, trace = "None available") {
-  const okCodes = [200, 201];
+function sendJsonResponse(res, code, message) {
   res.status(code).json({
-    code: code,
-    status: okCodes.includes(code) ? "Success" : "Error",
-    message: message,
-    trace: trace,
+    code,
+    message: JSON.stringify(message),
   });
 }
 
-module.exports = { sendJsonResponse };
+module.exports = sendJsonResponse;

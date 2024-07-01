@@ -1,8 +1,6 @@
 const express = require("express");
-const { sendJsonResponse } = require("../utils/sendJsonResponse");
-const { getApiEndpoint } = require("../utils/getApiEndpoint");
-const { apiFetch } = require("../utils/apiFetch");
-const { verifyJWT } = require("../middlewares/verifyJWT");
+const { sendJsonResponse, apiEnd, apiFetch } = require("../utils/");
+const { verifyJWT } = require("../middlewares/");
 
 const userDataRouter = express.Router();
 
@@ -10,8 +8,8 @@ const userDataRouter = express.Router();
 //Services expect UUID in request header
 userDataRouter.get("/userdata", verifyJWT, async (req, res) => {
   //Get full API endpoints which will be used later
-  const userApiEndpoint = getApiEndpoint("/users", "/userdata");
-  const authApiEndpoint = getApiEndpoint("/auth", "/login");
+  const userApiEndpoint = apiEnd("/users", "/userdata");
+  const authApiEndpoint = apiEnd("/auth", "/login");
 
   //Make request to microservices, errors handled by helper
 
@@ -42,7 +40,7 @@ userDataRouter.get("/userdata", verifyJWT, async (req, res) => {
 //User service expected request body: first_name, last_name, uuid*
 userDataRouter.put("/userdata", verifyJWT, async (req, res) => {
   //Get endpoint, send api req.
-  const apiEndpoint = getApiEndpoint("/users", "/userdata");
+  const apiEndpoint = apiEnd("/users", "/userdata");
 
   const apiRes = await apiFetch("PUT", apiEndpoint, req.sessionUUID, req.body);
   if (!apiRes.ok) return sendJsonResponse(res, 500, apiRes.message);
@@ -51,4 +49,4 @@ userDataRouter.put("/userdata", verifyJWT, async (req, res) => {
   return sendJsonResponse(res, 200, JSON.stringify(apiRes.message));
 });
 
-module.exports = { userDataRouter };
+module.exports = userDataRouter;

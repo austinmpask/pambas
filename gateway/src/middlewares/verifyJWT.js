@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { sendJsonResponse } = require("../utils/sendJsonResponse");
+const { sendJsonResponse } = require("../utils/");
 
 const JWT_SECRET_KEY = process.env.SECRET_KEY || "secret";
 
@@ -9,7 +9,7 @@ function verifyJWT(req, res, next) {
   const token = req.cookies.token || undefined;
 
   if (!token) {
-    return sendJsonResponse(res, 405, "Forbidden, token missing");
+    return sendJsonResponse(res, 403, "Forbidden: Missing JWT");
   }
 
   //Verify token
@@ -20,8 +20,8 @@ function verifyJWT(req, res, next) {
     req.sessionUUID = decoded.uuid;
     next();
   } catch (e) {
-    return sendJsonResponse(res, 405, "Forbidden, invalid token");
+    return sendJsonResponse(res, 403, "Forbidden: Invalid JWT");
   }
 }
 
-module.exports = { verifyJWT };
+module.exports = verifyJWT;

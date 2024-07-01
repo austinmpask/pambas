@@ -92,4 +92,4 @@ function validatePassword(password) {
     : { ok: true, message: "" };
 }
 
-module.exports = { validateRegData };
+module.exports = validateRegData;

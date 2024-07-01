@@ -1,59 +1,26 @@
 const express = require("express");
-const { verifyJWT } = require("../middlewares/verifyJWT");
-const { sendJsonResponse } = require("../utils/sendJsonResponse");
-const { apiFetch } = require("../utils/apiFetch");
-const { getApiEndpoint } = require("../utils/getApiEndpoint");
+const { verifyJWT, simpleRequest } = require("../middlewares/");
 
 const openItemRouter = express.Router();
 
-openItemRouter.put("/openitem/:id/followup", verifyJWT, async (req, res) => {
-  const apiEndpoint = getApiEndpoint(
-    "/notes",
-    `/openitem/${req.params.id}/followup`
-  );
+//Update the last contacted date on an open item
+openItemRouter.put(
+  "/openitem/:id/followup",
+  verifyJWT,
+  simpleRequest("PUT", "/notes", {})
+);
 
-  const response = await apiFetch("PUT", apiEndpoint, req.sessionUUID, {});
+//Update open item details (name, owner, description)
+openItemRouter.put("/openitem/:id", verifyJWT, simpleRequest("PUT", "/notes"));
 
-  const status = response.ok ? 200 : 500;
+//Delete an open item by id
+openItemRouter.delete(
+  "/openitem/:id",
+  verifyJWT,
+  simpleRequest("DELETE", "/notes")
+);
 
-  return sendJsonResponse(res, status, response.message);
-});
+//Create a new openitem
+openItemRouter.post("/openitem", verifyJWT, simpleRequest("POST", "/notes"));
 
-openItemRouter.put("/openitem/:id", verifyJWT, async (req, res) => {
-  const apiEndpoint = getApiEndpoint("/notes", `/openitem/${req.params.id}`);
-
-  const response = await apiFetch(
-    "PUT",
-    apiEndpoint,
-    req.sessionUUID,
-    req.body
-  );
-
-  const status = response.ok ? 200 : 500;
-
-  return sendJsonResponse(res, status, response.message);
-});
-
-openItemRouter.delete("/openitem/:id", verifyJWT, async (req, res) => {
-  const apiEndpoint = getApiEndpoint("/notes", `/openitem/${req.params.id}`);
-
-  const response = await apiFetch("DELETE", apiEndpoint, req.sessionUUID);
-
-  const status = response.ok ? 200 : 500;
-
-  return sendJsonResponse(res, status, response.message);
-});
-
-openItemRouter.post("/openitem", verifyJWT, async (req, res) => {
-  const apiEndpoint = getApiEndpoint("/notes", "/openitem");
-
-  const body = { ...req.body, uuid: String(req.sessionUUID) };
-
-  const response = await apiFetch("POST", apiEndpoint, undefined, body);
-
-  const status = response.ok ? 201 : 500;
-
-  return sendJsonResponse(res, status, response.message);
-});
-
-module.exports = { openItemRouter };
+module.exports = openItemRouter;

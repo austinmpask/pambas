@@ -10,7 +10,7 @@ openItemBP = Blueprint("openItem", __name__)
 # Update the followup date to current date for an open item
 @openItemBP.route("/openitem/<id>/followup", methods=["PUT"])
 @jsonRequired
-@uuidRequired(False)
+@uuidRequired
 def followupOnItem(userUUID, id):
 
     # Query for the specific open item
@@ -43,7 +43,7 @@ def followupOnItem(userUUID, id):
 
 # Delete an open item
 @openItemBP.route("/openitem/<id>", methods=["DELETE"])
-@uuidRequired(True)
+@uuidRequired
 def deleteOpenItem(userUUID, id):
 
     # Query for the specific open item
@@ -70,7 +70,7 @@ def deleteOpenItem(userUUID, id):
 # Modify open item details (name, owner, description)
 @openItemBP.route("/openitem/<id>", methods=["PUT"])
 @jsonRequired
-@uuidRequired(False)
+@uuidRequired
 def putOpenItem(userUUID, id):
 
     # Query for the specific open item
@@ -106,7 +106,7 @@ def putOpenItem(userUUID, id):
 # Create an open item associated with line item ID provided thru req body
 @openItemBP.route("/openitem", methods=["POST"])
 @jsonRequired
-@uuidRequired(False)
+@uuidRequired
 def postOpenItem(userUUID):
 
     # Parse req body

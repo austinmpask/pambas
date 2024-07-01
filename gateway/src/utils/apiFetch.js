@@ -24,9 +24,9 @@ async function apiFetch(
   //Attempt to fetch from endpoint, if successful, return response body message from service
   try {
     const response = await fetch(endpoint, options);
-    const responseBody = await response.json();
+    const { status, message } = await response.json();
 
-    return { status: response.status, message: responseBody.message };
+    return { status, message };
   } catch (e) {
     //Return error info if there was an error with request
     return {

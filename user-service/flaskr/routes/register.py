@@ -9,7 +9,7 @@ registerBP = Blueprint("register", __name__)
 # Register a new user in user DB
 @registerBP.route("/register", methods=["POST"])
 @jsonRequired
-@uuidRequired(False)
+@uuidRequired
 def registerUser(userUUID):
 
     # Parse the request body

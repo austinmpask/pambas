@@ -33,7 +33,7 @@ export default async function loginUser(formData) {
 
   //Make request to api
   try {
-    const apiResponse = await axios.post("/api/auth/login", payload);
+    const apiResponse = await axios.post("/api/login", payload);
     //Success
     if (apiResponse && apiResponse.status === 200) {
       return {

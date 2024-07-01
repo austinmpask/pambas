@@ -16,7 +16,7 @@ projectBP = Blueprint("project", __name__)
 
 # Get the full details for a specific project
 @projectBP.route("/project/<id>", methods=["GET"])
-@uuidRequired(True)
+@uuidRequired
 def getProject(userUUID, id):
 
     # Lookup the project
@@ -31,7 +31,7 @@ def getProject(userUUID, id):
 
 # Delete a project by ID
 @projectBP.route("/project/<id>", methods=["DELETE"])
-@uuidRequired(True)
+@uuidRequired
 def deleteProject(userUUID, id):
 
     # Lookup the project
@@ -58,7 +58,7 @@ def deleteProject(userUUID, id):
 # Edit the high level summary info for a specific project
 @projectBP.route("/project/<id>", methods=["PUT"])
 @jsonRequired
-@uuidRequired(False)
+@uuidRequired
 def putProject(userUUID, id):
 
     # Validate req body
@@ -114,7 +114,7 @@ def putProject(userUUID, id):
 
 # Return all projects owned by a user with high level summary information about each
 @projectBP.route("/project", methods=["GET"])
-@uuidRequired(True)
+@uuidRequired
 def getAllProjects(userUUID):
 
     # Get all the projects for the user
@@ -131,7 +131,7 @@ def getAllProjects(userUUID):
 # Create a new project for a particular user
 @projectBP.route("/project", methods=["POST"])
 @jsonRequired
-@uuidRequired(False)
+@uuidRequired
 def postProject(userUUID):
 
     reqBody = request.get_json()

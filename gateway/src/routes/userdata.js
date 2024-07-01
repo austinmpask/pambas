@@ -1,52 +1,38 @@
 const express = require("express");
 const { sendJsonResponse, apiEnd, apiFetch } = require("../utils/");
-const { verifyJWT } = require("../middlewares/");
+const { verifyJWT, simpleRequest } = require("../middlewares/");
 
 const userDataRouter = express.Router();
 
 //Get user data by UUID from user service and auth service
-//Services expect UUID in request header
 userDataRouter.get("/userdata", verifyJWT, async (req, res) => {
-  //Get full API endpoints which will be used later
-  const userApiEndpoint = apiEnd("/users", "/userdata");
-  const authApiEndpoint = apiEnd("/auth", "/login");
-
-  //Make request to microservices, errors handled by helper
-
   //Make req. to user service
-  const userRes = await apiFetch("GET", userApiEndpoint, req.sessionUUID);
+  const userApiEnd = apiEnd("/users", "/userdata");
+  const userResp = await apiFetch("GET", userApiEnd, req.sessionUUID);
 
-  //If no respnse from helper, request failed and appropriate response has been sent
-  if (!userRes.ok) return sendJsonResponse(res, 500, userRes.message);
+  //Abort and forward error if occurred
+  if (userResp.status !== 200) {
+    return sendJsonResponse(res, userResp.status, userResp.message);
+  }
 
   //Make req. to auth service
-  const authRes = await apiFetch("GET", authApiEndpoint, req.sessionUUID);
-  if (!authRes.ok) return sendJsonResponse(res, 500, authRes.message);
+  const authApiEnd = apiEnd("/auth", "/login");
+  const authResp = await apiFetch("GET", authApiEnd, req.sessionUUID);
 
+  //Abort and forward error if occurred
+  if (authResp.status !== 200) {
+    return sendJsonResponse(res, authResp.status, authResp.message);
+  }
+  console.log(userResp.message);
   //Successful api responses, send gateway response
   //Response includes first/last name, email, username
-  return sendJsonResponse(
-    res,
-    200,
-    JSON.stringify({
-      ...userRes.message,
-      ...authRes.message,
-    })
-  );
+  return sendJsonResponse(res, 200, {
+    ...userResp.message,
+    ...authResp.message,
+  });
 });
 
 //Update first or last name in user service
-//Gateway expected request body: first_name, last_name
-//User service expected request body: first_name, last_name, uuid*
-userDataRouter.put("/userdata", verifyJWT, async (req, res) => {
-  //Get endpoint, send api req.
-  const apiEndpoint = apiEnd("/users", "/userdata");
-
-  const apiRes = await apiFetch("PUT", apiEndpoint, req.sessionUUID, req.body);
-  if (!apiRes.ok) return sendJsonResponse(res, 500, apiRes.message);
-
-  //Successful api response, send gateway response
-  return sendJsonResponse(res, 200, JSON.stringify(apiRes.message));
-});
+userDataRouter.put("/userdata", verifyJWT, simpleRequest("PUT", "/users"));
 
 module.exports = userDataRouter;

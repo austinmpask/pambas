@@ -8,7 +8,7 @@ export default async function makeAuthRequest() {
 
     //User was authenticated, data rec.
     if (response.status === 200) {
-      const dataObj = JSON.parse(response.data.message);
+      const dataObj = response.data.message;
 
       //Return user data for context
       return {

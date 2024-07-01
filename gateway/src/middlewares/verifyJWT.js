@@ -8,6 +8,7 @@ function verifyJWT(req, res, next) {
   //Take token from parsed cookies
   const token = req.cookies.token || undefined;
 
+  //Abort if there is no token
   if (!token) {
     return sendJsonResponse(res, 403, "Forbidden: Missing JWT");
   }

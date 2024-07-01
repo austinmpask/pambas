@@ -21,7 +21,7 @@ export default async function updateUserInfo(formData, prettyNames) {
     });
 
     //Successful update
-    if (apiResponse && apiResponse.status === 200) {
+    if (apiResponse.status === 200) {
       const message = JSON.parse(apiResponse.data.message);
 
       //Pass back the updated user info inorder to update context

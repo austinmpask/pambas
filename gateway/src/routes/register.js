@@ -1,64 +1,51 @@
 const express = require("express");
-const {
-  sendJsonResponse,
-  validateRegData,
-  apiEnd,
-  apiFetch,
-} = require("../utils/");
+const { sendJsonResponse, apiEnd, apiFetch } = require("../utils/");
 
 const registerRouter = express.Router();
 
 //Handle user registration, creates user in auth and user services
-//Auth service expected request body: username, email, password
-//User service expected request body: uuid, first_name, last_name
 registerRouter.post("/register", async (req, res) => {
-  //Ensure the request body is complete and clean
-  const { ok, message } = validateRegData(req.body);
-
-  //If invalid, respond with the error
-  if (!ok) return sendJsonResponse(res, 400, message);
-
   //Assign microservice endpoints for use
-  const authApiEndpoint = apiEnd("/auth", "/register");
-  const userApiEndpoint = apiEnd("/users", "/register");
+  const authEnd = apiEnd("/auth", "/register");
+  const userEnd = apiEnd("/users", "/register");
 
-  //Make registration request to auth service
-  const authRes = await apiFetch("POST", authApiEndpoint, undefined, req.body);
+  //Make registration request to auth service. Should respond with UUID
+  const authResp = await apiFetch("POST", authEnd, undefined, req.body);
 
-  //Send error response if bad api response
-  if (!authRes.ok) return sendJsonResponse(res, 500, authRes.message);
+  //Abort if bad auth response
+  if (authResp.status !== 201) {
+    return sendJsonResponse(res, authResp.status, authResp.message);
+  }
 
-  //With successful resposne, api will pass the UUID in the response body. Extract
-  const userUUID = authRes.message;
-
-  //Register the user in the user db with the same UUID returned by auth db
+  //Register the user in the user db with the same UUID returned by auth db. User service will validate
   const body = {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
-    uuid: userUUID,
   };
 
-  const userRes = await apiFetch("POST", userApiEndpoint, undefined, body);
+  //Make request
+  const userResp = await apiFetch("POST", userEnd, authResp.message, body);
 
-  if (!userRes.ok) {
-    //If there was an error with the user registration, roll back the auth registration
-    const authRemEndpoint = apiEnd("/auth", "/shallowdelete");
-    const delRes = await apiFetch("DELETE", authRemEndpoint, userUUID);
+  //If there was an error with the user registration, roll back the auth registration
+  if (userResp.status !== 201) {
+    const authDelEnd = apiEnd("/auth", "/shallowdelete");
+    const delResp = await apiFetch("DELETE", authDelEnd, authResp.message);
 
-    if (delRes.ok) {
-      //If the rollback was successful, respond with the error from the user service only
-      return sendJsonResponse(res, 500, userRes.message);
-    } else {
-      //If the rollback was unsuccessful, respond with errors from user service & deletion attempt
-      return sendJsonResponse(res, 500, {
-        userError: userRes.message,
-        authError: delRes.message,
-      });
+    //Forward the error that caused the rollback
+    if (delResp.status === 200) {
+      return sendJsonResponse(res, 500, userResp.message);
     }
+
+    //If there was an issue deleting the user, forward that instead
+    return sendJsonResponse(
+      res,
+      500,
+      `Error while rolling back User addition to auth service: ${delResp.message}`
+    );
   }
 
-  //Success if the user response is ok
-  return sendJsonResponse(res, 201, "Successful registration");
+  //Successful registration
+  return sendJsonResponse(res, 201, "Success");
 });
 
 module.exports = registerRouter;

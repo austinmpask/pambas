@@ -37,7 +37,10 @@ class Project(Base):
 
     # Back references
     sections = relationship(
-        "Section", backref="project", cascade="all, delete-orphan", order_by="Section.section_number"
+        "Section",
+        backref="project",
+        cascade="all, delete-orphan",
+        order_by="Section.section_number",
     )
 
     # ----- Validators ----- #
@@ -68,33 +71,33 @@ class Project(Base):
     @validates("checkbox_headers")
     def varCheckHeaders(self, _key, val):
         return Validators.checkboxHeaders(val)
-    
+
     # ----- Constraints ----- #
 
     __table_args__ = (
         CheckConstraint(
-            f'length(title) >= {DataFields.PROJECT_TITLE_MIN_LENGTH} AND length(title) <= {DataFields.PROJECT_TITLE_MAX_LENGTH} AND title ~* \'^[A-Za-z0-9]+$\'',
-            name='check_title'
+            f"length(title) >= {DataFields.PROJECT_TITLE_MIN_LENGTH} AND length(title) <= {DataFields.PROJECT_TITLE_MAX_LENGTH} AND title ~* '^[A-Za-z0-9]+$'",
+            name="check_title",
         ),
         CheckConstraint(
-            f'{DataFields.BUDGET_MIN} <= budget AND budget <= {DataFields.BUDGET_MAX}',
-            name='check_budget'
+            f"{DataFields.BUDGET_MIN} <= budget AND budget <= {DataFields.BUDGET_MAX}",
+            name="check_budget",
         ),
         CheckConstraint(
-            f'{DataFields.BILLED_MIN} <= billed AND billed <= {DataFields.BILLED_MAX}',
-            name='check_billed'
+            f"{DataFields.BILLED_MIN} <= billed AND billed <= {DataFields.BILLED_MAX}",
+            name="check_billed",
         ),
         CheckConstraint(
-            f'length(project_manager) >= {DataFields.FULL_NAME_MIN_LENGTH} AND length(project_manager) <= {DataFields.FULL_NAME_MAX_LENGTH} AND project_manager ~* \'^[A-Za-z ]+$\'',
-            name='check_project_manager'
+            f"length(project_manager) >= {DataFields.FULL_NAME_MIN_LENGTH} AND length(project_manager) <= {DataFields.FULL_NAME_MAX_LENGTH} AND project_manager ~* '^[A-Za-z ]+$'",
+            name="check_project_manager",
         ),
         CheckConstraint(
-            f'length(project_type) >= {DataFields.PROJECT_TYPE_MIN_LENGTH} AND length(project_type) <= {DataFields.PROJECT_TYPE_MAX_LENGTH} AND project_type IN ({",".join(["\'" + pt + "\'" for pt in DataFields.PROJECT_TYPES])})',
-            name='check_project_type'
+            f"length(project_type) >= {DataFields.PROJECT_TYPE_MIN_LENGTH} AND length(project_type) <= {DataFields.PROJECT_TYPE_MAX_LENGTH}",
+            name="check_project_type",
         ),
         CheckConstraint(
-            f'array_length(checkbox_headers, 1) = {DataFields.NUM_CHECKBOX}',
-            name='check_checkbox_headers'
+            f"array_length(checkbox_headers, 1) = {DataFields.NUM_CHECKBOX}",
+            name="check_checkbox_headers",
         ),
     )
 

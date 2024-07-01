@@ -15,7 +15,7 @@ loginBP = Blueprint("login", __name__)
 
 # Return the email and username for a UUID provided in the req. header
 @loginBP.route("/login", methods=["GET"])
-@uuidRequired(True)
+@uuidRequired
 def getLogin(userUUID):
 
     # Find the user in user db
@@ -48,8 +48,11 @@ def postLogin():
     except Exception as e:
         return sendJsonResponse(500, f"Could not process credential/password: {str(e)}")
 
+    print(credential)
     # Query DB for a matching user
     status, body = queryForUser(credential)
+
+    print(status)
 
     # Abort if error or user not found
     if status != 200:

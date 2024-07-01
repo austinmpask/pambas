@@ -14,7 +14,7 @@ shallowDeleteBP = Blueprint("shallowDelete", __name__)
 # Used if there is a registration error between services
 @shallowDeleteBP.route("/shallowdelete", methods=["DELETE"])
 @jsonRequired
-@uuidRequired(True)
+@uuidRequired
 def shallowDelete(userUUID):
 
     # Lookup user by UUID

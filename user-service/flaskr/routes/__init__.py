@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flaskr.utils import sendJsonResponse
-from .register import registerBP
-from .userdata import userdataBP
+from .register import registerBP #noqa
+from .userdata import userdataBP #noqa
 
 indexBP = Blueprint("index", __name__)
 

@@ -14,6 +14,4 @@ const services = [
   },
 ];
 
-//Forbidden microservice endpoints - not to be directly accessed. Only to be accessed by gateway logic
-
 module.exports = services;

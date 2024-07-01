@@ -2,12 +2,11 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const express = require("express");
 const helmet = require("helmet");
-// const { createProxyMiddleware } = require("http-proxy-middleware");
 const morgan = require("morgan");
-
-//Helpers & constants
 const { sendJsonResponse } = require("./utils/");
-// const services = require("./services");
+
+//Constants
+
 const PORT = process.env.PORT || 3000;
 const FRONTEND_URL = process.env.FRONTEND_URL || "http://frontend:3000/";
 const app = express();
@@ -20,6 +19,7 @@ const {
   projectRouter,
   lineItemRouter,
   openItemRouter,
+  loginRouter,
 } = require("./routes");
 
 //Security middleware, allow frontend
@@ -38,25 +38,6 @@ app.use(morgan("tiny"));
 //Parse cookies
 app.use(cookieParser());
 
-//Forward requests to services for unblocked endpoints
-// services.forEach(({ route, target }) => {
-//   app.use(
-//     route,
-//     createProxyMiddleware({
-//       target: target,
-//       changeOrigin: true,
-//       //Optional trailing "/" for endpoints
-//       pathRewrite: (path) => {
-//         const len = path.length;
-//         if (len > 1 && path[len - 1] === "/") {
-//           path = path.slice(0, -1);
-//         }
-//         return path;
-//       },
-//     })
-//   );
-// });
-
 //Parse request bodies
 app.use(express.json());
 
@@ -67,6 +48,7 @@ app.use(registerRouter);
 app.use(projectRouter);
 app.use(lineItemRouter);
 app.use(openItemRouter);
+app.use(loginRouter);
 
 //404 not found error
 app.use((_req, res) => {

@@ -13,7 +13,7 @@ userdataBP = Blueprint("userdata", __name__)
 
 # Get and user data by UUID
 @userdataBP.route("/userdata", methods=["GET"])
-@uuidRequired(True)
+@uuidRequired
 def getUserData(userUUID):
 
     # Find the user in user DB, errors handled by helper function
@@ -30,7 +30,7 @@ def getUserData(userUUID):
 # Modify user infromation in the user database (first/last name etc.)
 @userdataBP.route("/userdata", methods=["PUT"])
 @jsonRequired
-@uuidRequired(False)
+@uuidRequired
 def putUserData(userUUID):
 
     # Find the user in user DB

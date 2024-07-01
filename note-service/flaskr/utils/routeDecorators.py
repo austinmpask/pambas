@@ -20,46 +20,22 @@ def jsonRequired(func):
     return jsonCheck
 
 
-# Decorator to validate UUID for certain routes. Can be in the header or body
-def uuidRequired(header=False):
+# Decorator to validate UUID for certain routes.
+def uuidRequired(func):
 
-    # Actual decorator
-    def decorator(func):
-        @wraps(func)
-        def uuidCheck(*args, **kwargs):
+    @wraps(func)
+    def uuidCheck(*args, **kwargs):
 
-            # UUID may be in header or body depending on request type
-            # Extract from header
-            if header:
-                sentUUID = request.headers.get("UUID")
+        # Extract from header
+        sentUUID = request.headers.get("userUUID")
 
-            # Extract from body
-            else:
-                data = request.get_json()
+        # Check UUID is valid
+        try:
+            validUUID = Validators.stringUUID(sentUUID)
+        except Exception as e:
+            return sendJsonResponse(400, f"{genericError} Invalid UUID: {e}")
 
-                # Ensure there was a json req. body
-                if not data:
-                    return sendJsonResponse(
-                        400, f"{genericError} Missing JSON request body"
-                    )
+        # UUID is valid, pass it to the route handler
+        return func(validUUID, *args, **kwargs)
 
-                sentUUID = data.get("uuid")
-
-            # Check some kind of data was sent
-            if not sentUUID:
-                return sendJsonResponse(
-                    400, f"{genericError} Missing UUID from request"
-                )
-
-            # Check UUID is valid
-            try:
-                validUUID = Validators.stringUUID(sentUUID)
-            except Exception as e:
-                return sendJsonResponse(400, f"{genericError} Invalid UUID: {e}")
-
-            # UUID is valid, pass it to the route handler
-            return func(validUUID, *args, **kwargs)
-
-        return uuidCheck
-
-    return decorator
+    return uuidCheck

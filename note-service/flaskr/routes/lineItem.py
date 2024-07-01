@@ -9,7 +9,7 @@ lineItemBP = Blueprint("lineitem", __name__)
 
 # Return a list of all pending items for a given line item
 @lineItemBP.route("/lineitem/<id>/openitems", methods=["GET"])
-@uuidRequired(True)
+@uuidRequired
 def getPendingItemsForLine(userUUID, id):
 
     # Query for the specific line item
@@ -23,7 +23,7 @@ def getPendingItemsForLine(userUUID, id):
 # Update a line item record, particularly for the flag/checkbox/notes attributes
 @lineItemBP.route("/lineitem/<id>", methods=["PUT"])
 @jsonRequired
-@uuidRequired(False)
+@uuidRequired
 def updateLineItem(userUUID, id):
 
     # Lookup the line item

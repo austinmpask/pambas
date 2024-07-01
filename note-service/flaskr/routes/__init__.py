@@ -1,8 +1,8 @@
 from flask import Blueprint
 from flaskr.utils import sendJsonResponse
-from .lineItem import lineItemBP
-from .openItem import openItemBP
-from .project import projectBP
+from .lineItem import lineItemBP  # noqa
+from .openItem import openItemBP  # noqa
+from .project import projectBP  # noqa
 
 indexBP = Blueprint("index", __name__)
 

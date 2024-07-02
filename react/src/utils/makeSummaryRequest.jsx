@@ -9,9 +9,8 @@ export default async function makeSummaryRequest() {
     const response = await axios.get("/api/project");
 
     //User was authenticated, data rec.
-    if (response.status === 200) {
-      const data = JSON.parse(response.data.message);
-
+    const data = JSON.parse(response.data.message);
+    if (data.status === 200) {
       //Return project data for context
       return {
         ok: true,

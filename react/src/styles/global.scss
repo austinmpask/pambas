@@ -201,11 +201,14 @@
   flex-direction: row;
   justify-content: space-between;
 }
-
 .tag-button {
   cursor: pointer;
 }
 
 .pending-item-title {
   cursor: pointer;
+}
+
+.field-error {
+  min-height: 1.5em;
 }

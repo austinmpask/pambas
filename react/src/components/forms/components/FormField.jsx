@@ -9,14 +9,16 @@ export default function FormField({
   validations,
   loading,
   register,
+  type = "text",
+  size = "ff-small",
 }) {
   return (
-    <div className="field">
+    <div className={`field ${size} mb-1`}>
       <label className="label">{label}</label>
       <div className="control has-icons-right">
         <input
           className={`input ${error ? "is-danger" : ""}`}
-          type="text"
+          type={type}
           {...register(field, validations)}
           disabled={loading}
         />
@@ -25,8 +27,8 @@ export default function FormField({
             <FontAwesomeIcon icon={faExclamationTriangle} color="red" />
           </span>
         )}
-        <div>
-          <p className="help is-danger field-error">{error}</p>
+        <div className="field-error">
+          <p className="help is-danger">{error}</p>
         </div>
       </div>
     </div>

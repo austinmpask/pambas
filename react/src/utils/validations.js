@@ -142,5 +142,83 @@ export class Validators {
     },
   };
 
-  static Email = {};
+  static FirstName = {
+    required: requiredMsg(DataFields.FIRST_NAME_LABEL),
+    minLength: {
+      value: DataFields.NAME_SINGLE_MIN,
+      message: rangeError(
+        DataFields.FIRST_NAME_LABEL,
+        DataFields.NAME_SINGLE_MIN,
+        DataFields.NAME_SINGLE_MAX
+      ),
+    },
+    maxLength: {
+      value: DataFields.NAME_SINGLE_MAX,
+      message: rangeError(
+        DataFields.FIRST_NAME_LABEL,
+        DataFields.NAME_SINGLE_MIN,
+        DataFields.NAME_SINGLE_MAX
+      ),
+    },
+  };
+
+  static LastName = {
+    required: requiredMsg(DataFields.LAST_NAME_LABEL),
+    minLength: {
+      value: DataFields.NAME_SINGLE_MIN,
+      message: rangeError(
+        DataFields.LAST_NAME_LABEL,
+        DataFields.NAME_SINGLE_MIN,
+        DataFields.NAME_SINGLE_MAX
+      ),
+    },
+    maxLength: {
+      value: DataFields.NAME_SINGLE_MAX,
+      message: rangeError(
+        DataFields.LAST_NAME_LABEL,
+        DataFields.NAME_SINGLE_MIN,
+        DataFields.NAME_SINGLE_MAX
+      ),
+    },
+  };
+
+  static Email = {
+    required: requiredMsg(DataFields.EMAIL_LABEL),
+    minLength: {
+      value: DataFields.EMAIL_MIN,
+      message: rangeError(
+        DataFields.EMAIL_LABEL,
+        DataFields.EMAIL_MIN,
+        DataFields.EMAIL_MAX
+      ),
+    },
+    maxLength: {
+      value: DataFields.EMAIL_MAX,
+      message: rangeError(
+        DataFields.EMAIL_LABEL,
+        DataFields.EMAIL_MIN,
+        DataFields.EMAIL_MAX
+      ),
+    },
+  };
+
+  static Username = {
+    required: requiredMsg(DataFields.USER_LABEL),
+    minLength: {
+      value: DataFields.USER_MIN,
+      message: rangeError(
+        DataFields.USER_LABEL,
+        DataFields.USER_MIN,
+        DataFields.USER_MAX
+      ),
+    },
+    maxLength: {
+      value: DataFields.USER_MAX,
+      message: rangeError(
+        DataFields.USER_LABEL,
+        DataFields.USER_MIN,
+        DataFields.USER_MAX
+      ),
+    },
+  };
 }

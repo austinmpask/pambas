@@ -210,5 +210,25 @@
 }
 
 .field-error {
-  min-height: 1.5em;
+  min-height: 1.2em;
+}
+
+.ff-small {
+  width: 180px;
+}
+
+.ff-med {
+  width: 240px;
+}
+.ff-large {
+  width: 340px;
+}
+
+.inline {
+  display: flex !important;
+  flex-direction: row;
+}
+
+.fit-box {
+  width: fit-content !important;
 }

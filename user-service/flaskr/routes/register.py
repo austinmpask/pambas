@@ -18,8 +18,8 @@ def registerUser(userUUID):
     # Try to create user in the user DB and commit
     try:
         # Ensure validations pass
-        firstName = Validators.firstName(reqBody.get("first_name"))
-        lastName = Validators.lastName(reqBody.get("last_name"))
+        firstName = Validators.firstName(reqBody.get("firstName"))
+        lastName = Validators.lastName(reqBody.get("lastName"))
 
         newUser = User(uuid=userUUID, first_name=firstName, last_name=lastName)
 

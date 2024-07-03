@@ -19,8 +19,8 @@ registerRouter.post("/register", async (req, res) => {
 
   //Register the user in the user db with the same UUID returned by auth db. User service will validate
   const body = {
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
   };
 
   //Make request

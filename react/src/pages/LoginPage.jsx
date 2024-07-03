@@ -1,10 +1,11 @@
-import LoginBox from "src/components/LoginBox";
+//Children
+import PageWrapper from "src/components/PageWrapper";
+import LoginForm from "../components/forms/LoginForm";
 
 export default function LoginPage() {
   return (
-    <>
-      <LoginBox />
-      <div className="login-page"></div>
-    </>
+    <PageWrapper title="Login">
+      <LoginForm />
+    </PageWrapper>
   );
 }

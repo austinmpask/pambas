@@ -4,11 +4,14 @@ import { useNavigate } from "react-router-dom";
 
 //Toasts
 import { ToastContainer } from "react-toastify";
-import { toastError, toastSuccess } from "src/styles/toasts";
 
-//Utils
-import handleFormChange from "src/utils/handleFormChange";
-import registerUser from "src/utils/registerUser";
+//Form
+import { useForm } from "react-hook-form";
+import FormField from "../forms/components/FormField";
+import SubmitAlt from "src/components/forms/components/SubmitAlt";
+
+import { Validators, DataFields } from "../../utils/validations";
+import toastRequest from "../../utils/toastRequest";
 
 //User registration form
 export default function RegisterForm() {
@@ -17,151 +20,115 @@ export default function RegisterForm() {
   //Loading state for visuals
   const [loading, setLoading] = useState(false);
 
-  //Track state of form data
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    username: "",
-    password: "",
-  });
-
-  //Formatted field names for error messages
-  const prettyNames = {
-    firstName: "First Name",
-    lastName: "Last Name",
-    email: "Email",
-    username: "Username",
-    password: "Password",
-  };
-
-  //Wrap generic form helper to include state func
-  function handleChange(event) {
-    return handleFormChange(event, setFormData);
-  }
+  //Form setup
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   //Submit form and register user
-  async function handleSubmit(event) {
-    event.preventDefault();
-    setLoading(true);
-
-    //Attempt to register the user
-    const response = await registerUser(formData, prettyNames);
-
-    //Check for error, forward status to user
-    if (!response.ok) {
-      setLoading(false);
-      response.errors.forEach((error) => {
-        toastError(error);
-      });
-    } else {
-      //Successful registration, redirect
-      toastSuccess("Success! Redirecting to login...");
-      setTimeout(() => {
-        navigate("/login");
-      }, 2000);
-    }
+  async function registerUser(data) {
+    await toastRequest({
+      method: "POST",
+      route: "/register",
+      data,
+      setLoading,
+      success: "Success! Redirecting to login...",
+      successCB: () => {
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
+      },
+    });
   }
 
   return (
     <>
       <ToastContainer />
-      <form onSubmit={handleSubmit}>
-        <div className="field">
-          <label className="label">First Name</label>
-          <div className="control mb-3">
-            <input
-              className="input"
-              type="text"
-              placeholder="First Name"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              disabled={loading}
-            ></input>
+      <form
+        className="box container fit-box"
+        onSubmit={handleSubmit((data) => registerUser(data))}
+      >
+        <h2 className="title is-4 has-text-weight-bold mb-5">
+          Personal Information
+        </h2>
+        <div className="m-4">
+          <div className="inline">
+            <div className="mr-6">
+              <FormField
+                field="firstName"
+                error={errors.firstName?.message}
+                label={DataFields.FIRST_NAME_LABEL}
+                validations={Validators.FirstName}
+                loading={loading}
+                register={register}
+              />
+            </div>
+
+            <FormField
+              field="lastName"
+              error={errors.lastName?.message}
+              label={DataFields.LAST_NAME_LABEL}
+              validations={Validators.LastName}
+              loading={loading}
+              register={register}
+            />
           </div>
+          <FormField
+            field="email"
+            error={errors.email?.message}
+            label={DataFields.EMAIL_LABEL}
+            validations={Validators.Email}
+            loading={loading}
+            size=""
+            register={register}
+          />
         </div>
 
-        <div className="field">
-          <label className="label">Last Name</label>
-          <div className="control mb-3">
-            <input
-              className="input"
-              type="text"
-              placeholder="Last Name"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              disabled={loading}
-            ></input>
-          </div>
+        <h2 className="title is-4 has-text-weight-bold mb-5">
+          Login Information
+        </h2>
+        <div className="m-4">
+          <FormField
+            field="username"
+            error={errors.username?.message}
+            label={DataFields.USER_LABEL}
+            validations={Validators.Username}
+            loading={loading}
+            size="ff-med"
+            register={register}
+          />
+
+          <FormField
+            field="password"
+            error={errors.password?.message}
+            label={DataFields.PASS_LABEL}
+            validations={Validators.Password}
+            loading={loading}
+            type="password"
+            size="ff-med"
+            register={register}
+          />
+
+          <FormField
+            field="passwordConfirm"
+            error={errors.passwordConfirm?.message}
+            label={"Confirm Password"}
+            validations={Validators.Password}
+            loading={loading}
+            type="password"
+            size="ff-med"
+            register={register}
+          />
         </div>
 
-        <div className="field">
-          <label className="label">Email</label>
-          <div className="control mb-3">
-            <input
-              className="input"
-              type="text"
-              placeholder="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              disabled={loading}
-            ></input>
-          </div>
-        </div>
-
-        <div className="field">
-          <label className="label">Username</label>
-          <div className="control mb-3">
-            <input
-              className="input"
-              type="text"
-              placeholder="Username"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              disabled={loading}
-            ></input>
-          </div>
-        </div>
-
-        <div className="field">
-          <label className="label">Password</label>
-          <div className="control mb-3">
-            <input
-              className="input"
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              disabled={loading}
-            ></input>
-          </div>
-        </div>
-
-        <div className="field is-grouped">
-          <div className="control">
-            <button
-              type="submit"
-              className={`button is-link ${loading && " is-loading"}`}
-              disabled={loading}
-            >
-              Register
-            </button>
-          </div>
-          <div className="control">
-            <button
-              onClick={() => navigate("/login")}
-              className="button is-light"
-              disabled={loading}
-            >
-              Login
-            </button>
-          </div>
-        </div>
+        <SubmitAlt
+          submitLabel="Register"
+          altLabel="Login Instead"
+          altAction={() => navigate("/login")}
+          loading={loading}
+        />
       </form>
     </>
   );

@@ -23,11 +23,11 @@ userDataRouter.get("/userdata", verifyJWT, async (req, res) => {
   if (authResp.status !== 200) {
     return sendJsonResponse(res, authResp.status, authResp.message);
   }
-  console.log(userResp.message);
   //Successful api responses, send gateway response
   //Response includes first/last name, email, username
   return sendJsonResponse(res, 200, {
-    ...userResp.message,
+    firstName: userResp.message.first_name,
+    lastName: userResp.message.last_name,
     ...authResp.message,
   });
 });

@@ -16,12 +16,11 @@ export default async function makeRequest(
   const req = methods[method];
 
   //Attempt to make request
-  const okCodes = new Set([200, 201]);
+  const okCodes = new Set([200, 201, 304]);
   let ok = false;
 
   try {
-    const apiResponse = await req(`/api/${route}`, data);
-
+    const apiResponse = await req(`/api${route}`, data);
     //Successful response, no errors
     ok = apiResponse && okCodes.has(apiResponse.status);
 
@@ -32,6 +31,7 @@ export default async function makeRequest(
       message: apiResponse.data.message,
     };
   } catch (e) {
+    //Send any error back in same format
     return {
       ok,
       status: e.response.data.code,

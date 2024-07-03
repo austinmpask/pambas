@@ -53,7 +53,7 @@ export default function LoginForm() {
       >
         <h2 className="title is-4 has-text-weight-bold mb-5">Login</h2>
         <div className="m-4">
-          <div className="mb-2 login-field">
+          <div className="mb-2">
             <FormField
               field="credential"
               error={errors.credential?.message}
@@ -65,7 +65,7 @@ export default function LoginForm() {
             />
           </div>
 
-          <div className="login-bottom login-field">
+          <div>
             <FormField
               field="password"
               error={errors.password?.message}

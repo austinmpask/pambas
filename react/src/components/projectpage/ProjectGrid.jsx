@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import ProjectSection from "src/components/projectpage/ProjectSection";
 
 //Utils
-import getProject from "src/utils/getProject";
+import toastRequest from "../../utils/toastRequest";
 
 //Grid interface displaying all of the user's projects
 export default function ProjectGrid({ contextSlice }) {
@@ -18,13 +18,14 @@ export default function ProjectGrid({ contextSlice }) {
   //If context has loaded, fetch the bulk project details from api
   useEffect(() => {
     async function fetchProject() {
-      const dataObj = await getProject(contextSlice.id);
-      if (dataObj.ok) {
-        setProjectDetails(dataObj.data);
-      } else {
-        //Couldnt find project/user doesnt own project
-        navigate("/dashboard");
-      }
+      await toastRequest({
+        method: "GET",
+        route: `/project/${contextSlice.id}`,
+        sToastDisabled: true,
+        eToastDisabled: true,
+        successCB: (data) => setProjectDetails(data),
+        errorCB: () => navigate("/dashboard"),
+      });
     }
 
     //Wait until context populated from other api call

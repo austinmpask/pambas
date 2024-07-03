@@ -79,11 +79,21 @@ export default function ProjectPage() {
       //Make request
 
       console.log(contextSlice);
-      const response = await updateProjectDetail(projectID, contextSlice);
+
+      // const response = await makeRequest(
+      //   "GET",
+      //   `/project/${projectID}`,
+      //   contextSlice
+      // );
+
+      // console.log(response);
+
+      // const response = await updateProjectDetail(projectID, contextSlice);
 
       if (response.ok) {
         setLoading(false);
 
+        console.log(response);
         //Update the context with what is returned by api. Should not truly change any values (context was previously optimistically updated)
         const newState = response.data;
 

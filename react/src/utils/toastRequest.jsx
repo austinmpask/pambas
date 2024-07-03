@@ -14,6 +14,8 @@ export default async function toastRequest({
   error = undefined,
   successCB = undefined,
   errorCB = undefined,
+  sToastDisabled = false,
+  eToastDisabled = false,
 }) {
   //Set the loading state of the parent form
   setLoading(true);
@@ -23,10 +25,10 @@ export default async function toastRequest({
 
   //Handle cases of success or error, and execute callbacks if provided
   if (response.ok) {
-    toastSuccess(success);
+    !sToastDisabled && toastSuccess(success);
     successCB && successCB(response.message);
   } else {
-    toastError(error || `Internal error: ${response.message}`);
+    !eToastDisabled && toastError(error || response.message);
     errorCB && errorCB(response.message);
   }
 

@@ -221,4 +221,84 @@ export class Validators {
       ),
     },
   };
+
+  static ProjectName = {
+    required: requiredMsg(DataFields.PROJECT_TITLE_LABEL),
+    minLength: {
+      value: DataFields.PROJECT_TITLE_MIN_LENGTH,
+      message: rangeError(
+        DataFields.PROJECT_TITLE_LABEL,
+        DataFields.PROJECT_TITLE_MIN_LENGTH,
+        DataFields.PROJECT_TITLE_MAX_LENGTH
+      ),
+    },
+    maxLength: {
+      value: DataFields.PROJECT_TITLE_MAX_LENGTH,
+      message: rangeError(
+        DataFields.PROJECT_TITLE_LABEL,
+        DataFields.PROJECT_TITLE_MIN_LENGTH,
+        DataFields.PROJECT_TITLE_MAX_LENGTH
+      ),
+    },
+  };
+
+  static ProjectType = {
+    required: requiredMsg(DataFields.PROJECT_TYPE_LABEL),
+    minLength: {
+      value: DataFields.PROJECT_TYPE_MIN_LENGTH,
+      message: rangeError(
+        DataFields.PROJECT_TYPE_LABEL,
+        DataFields.PROJECT_TYPE_MIN_LENGTH,
+        DataFields.PROJECT_TYPE_MAX_LENGTH
+      ),
+    },
+    maxLength: {
+      value: DataFields.PROJECT_TYPE_MAX_LENGTH,
+      message: rangeError(
+        DataFields.PROJECT_TYPE_LABEL,
+        DataFields.PROJECT_TYPE_MIN_LENGTH,
+        DataFields.PROJECT_TYPE_MAX_LENGTH
+      ),
+    },
+  };
+
+  static Budget = {
+    required: requiredMsg(DataFields.BUDGET_LABEL),
+    minLength: {
+      value: DataFields.BUDGET_MIN,
+      message: rangeError(
+        DataFields.BUDGET_LABEL,
+        DataFields.BUDGET_MIN,
+        DataFields.BUDGET_MAX
+      ),
+    },
+    maxLength: {
+      value: DataFields.BUDGET_MAX,
+      message: rangeError(
+        DataFields.BUDGET_LABEL,
+        DataFields.BUDGET_MIN,
+        DataFields.BUDGET_MAX
+      ),
+    },
+  };
+
+  static Manager = {
+    required: requiredMsg(DataFields.FULL_NAME_LABEL),
+    minLength: {
+      value: DataFields.FULL_NAME_MIN_LENGTH,
+      message: rangeError(
+        DataFields.FULL_NAME_LABEL,
+        DataFields.FULL_NAME_MIN_LENGTH,
+        DataFields.FULL_NAME_MAX_LENGTH
+      ),
+    },
+    maxLength: {
+      value: DataFields.FULL_NAME_MAX_LENGTH,
+      message: rangeError(
+        DataFields.FULL_NAME_LABEL,
+        DataFields.FULL_NAME_MIN_LENGTH,
+        DataFields.FULL_NAME_MAX_LENGTH
+      ),
+    },
+  };
 }

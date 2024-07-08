@@ -11,6 +11,7 @@ export default function FormField({
   register,
   type = "text",
   size = "ff-small",
+  placeHolder,
 }) {
   return (
     <div className={`field ${size} mb-1`}>
@@ -21,6 +22,7 @@ export default function FormField({
           type={type}
           {...register(field, validations)}
           disabled={loading}
+          placeholder={placeHolder ? placeHolder : ""}
         />
         {error && (
           <span className="icon is-small is-right">

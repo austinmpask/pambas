@@ -19,7 +19,10 @@ export default function SubmitAlt({
       </div>
       <div className="control">
         <button
-          onClick={altAction}
+          onClick={(e) => {
+            e.preventDefault();
+            altAction();
+          }}
           className="button is-light"
           disabled={loading}
         >

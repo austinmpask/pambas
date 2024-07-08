@@ -14,6 +14,8 @@ import {
 import updateLineItem from "src/utils/updateLineItem";
 import TextBoxHelpers from "src/components/TextBoxHelpers";
 import PendingItemList from "src/components/projectpage/PendingItemList";
+import { AwesomeButton } from "react-awesome-button";
+import "react-awesome-button/dist/styles.css";
 
 // Individual line item for the project grid
 export default function LineItem({ lineItemData }) {
@@ -159,20 +161,23 @@ export default function LineItem({ lineItemData }) {
               className="cell line-item-cell centered-cell cell-rb click-cell"
               onClick={handleCheckBoxClick}
             >
-              {Boolean(checkBox) && (
-                <span className="icon">
-                  <FontAwesomeIcon
-                    icon={(() => {
-                      switch (checkBox) {
-                        case 1:
-                          return faCheck;
-                        case 2:
-                          return faQuestion;
-                      }
-                    })()}
-                  />
-                </span>
-              )}
+              <AwesomeButton className="cb-button" type="primary">
+                {(Boolean(checkBox) && (
+                  <span className="icon">
+                    <FontAwesomeIcon
+                      icon={(() => {
+                        switch (checkBox) {
+                          case 1:
+                            return faCheck;
+                          case 2:
+                            return faQuestion;
+                        }
+                      })()}
+                    />
+                  </span>
+                )) ||
+                  " "}
+              </AwesomeButton>
             </div>
           );
         })}

@@ -1,5 +1,5 @@
 //React
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,72 +10,54 @@ import { UserContext } from "src/context/UserContext";
 
 //Toasts
 import { ToastContainer } from "react-toastify";
-import { toastSuccess, toastError } from "src/styles/toasts";
+
+//Form
+import { useForm } from "react-hook-form";
+import FormField from "src/components/forms/components/FormField";
+import SubmitAlt from "src/components/forms/components/SubmitAlt";
 
 //Utils
-import handleFormChange from "src/utils/handleFormChange";
-import updateUserInfo from "src/utils/updateUserInfo";
+import toastRequest from "../../utils/toastRequest";
+import { Validators, DataFields } from "../../utils/validations";
 
 //Form for changing user info && viewing login credentials
 export default function SettingsForm() {
+  //Subscribe to user context
   const { userData, setUserData } = useContext(UserContext);
 
   //Loading state for visuals
   const [loading, setLoading] = useState(false);
 
-  //Track state of form data
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-  });
+  //Form setup
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
 
-  //Formatted form names for error messages
-  const prettyNames = {
-    firstName: "First Name",
-    lastName: "Last Name",
-  };
+  //Whenever user data is updated, reset the form
+  useEffect(() => {
+    reset();
+  }, [userData]);
 
-  //Wrap generic form helper to include state func
-  function handleChange(event) {
-    return handleFormChange(event, setFormData);
-  }
-
-  //Reset the form helper
-  function clearForm() {
-    setFormData({ firstName: "", lastName: "" });
-  }
-
-  //Reset form if user chooses so
-  function handleDiscard(event) {
-    event.preventDefault();
-    clearForm();
-  }
-
-  //Submit form and update user info
-  async function handleSubmit(event) {
-    event.preventDefault();
-    setLoading(true);
-
-    //Attempt to update the user's information
-    const response = await updateUserInfo(formData, prettyNames);
-
-    //Check for error, forward status to user
-    if (!response.ok) {
-      response.errors.forEach((error) => {
-        toastError(error);
-      });
-    } else {
-      //Update context based on response
-      setUserData((previous) => ({
-        ...previous,
-        firstName: response.firstName || previous.firstName,
-        lastName: response.lastName || previous.lastName,
-      }));
-      //Reset the form so that they can see the change and provide feedback to user
-      clearForm();
-      toastSuccess("Name successfully updated!");
-    }
-    setLoading(false);
+  //Make request to update user information
+  async function updateData(data) {
+    await toastRequest({
+      method: "PUT",
+      route: "/userdata",
+      data: { first_name: data.firstName, last_name: data.lastName },
+      setLoading,
+      success: "Profile updated!",
+      successCB: (message) => {
+        //If successful, update user context
+        setUserData((prev) => ({
+          ...prev,
+          firstName: message.first_name,
+          lastName: message.last_name,
+        }));
+      },
+    });
   }
 
   return (
@@ -83,8 +65,8 @@ export default function SettingsForm() {
       <ToastContainer />
       <h2 className="subtitle">Account Options</h2>
 
-      <section className="section application-form">
-        <form onSubmit={handleSubmit}>
+      <section className="section">
+        <form onSubmit={handleSubmit((data) => updateData(data))}>
           <div className="block mb-2">
             <span className="icon-text">
               <span className="icon">
@@ -101,56 +83,36 @@ export default function SettingsForm() {
               <span>{userData.email}</span>
             </span>
           </div>
-
-          <div className="field mb-3">
-            <label className="label">First Name</label>
-            <div className="control">
-              <input
-                className="input"
-                type="text"
-                name="firstName"
-                placeholder={userData.firstName}
-                value={formData.firstName}
-                onChange={handleChange}
-                disabled={loading}
-              ></input>
+          <div className="inline">
+            <div className="mr-6">
+              <FormField
+                field="firstName"
+                error={errors.firstName?.message}
+                label={DataFields.FIRST_NAME_LABEL}
+                validations={Validators.FirstName}
+                placeHolder={userData.firstName}
+                loading={loading}
+                register={register}
+              />
             </div>
+
+            <FormField
+              field="lastName"
+              error={errors.lastName?.message}
+              label={DataFields.LAST_NAME_LABEL}
+              validations={Validators.LastName}
+              placeHolder={userData.lastName}
+              loading={loading}
+              register={register}
+            />
           </div>
 
-          <div className="field">
-            <label className="label">Last Name</label>
-            <div className="control">
-              <input
-                className="input"
-                type="text"
-                name="lastName"
-                placeholder={userData.lastName}
-                value={formData.lastName}
-                onChange={handleChange}
-                disabled={loading}
-              ></input>
-            </div>
-          </div>
-          <div className="block mt-3">
-            <button
-              className={`mr-3 button ${
-                !formData.firstName && !formData.lastName
-                  ? "is-dark"
-                  : "is-link"
-              } ${loading && "is-loading"}`}
-              type="submit"
-              disabled={(!formData.firstName && !formData.lastName) || loading}
-            >
-              Save Changes
-            </button>
-            <button
-              className="button"
-              onClick={handleDiscard}
-              disabled={(!formData.firstName && !formData.lastName) || loading}
-            >
-              Discard
-            </button>
-          </div>
+          <SubmitAlt
+            submitLabel="Save Changes"
+            altLabel="Discard"
+            altAction={reset}
+            loading={loading}
+          />
         </form>
       </section>
     </>

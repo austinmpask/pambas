@@ -19,15 +19,17 @@ export default function ProjectHeader({ contextSlice }) {
 
   return (
     contextSlice && (
-      <div className="m-5 page-wrapper">
-        <div className="card has-background-dark title-card">
-          <ProjectEditableField
-            initialContent={contextSlice.title}
-            objKey="title"
-            onSubmit={updateContext}
-            title={true}
-          />
-          <div className="block mb-4 mt-2 ml-3 mr-3">
+      <div className="m-6 page-wrapper">
+        <div className="card title-card">
+          <div className="card-header p-4">
+            <ProjectEditableField
+              initialContent={contextSlice.title}
+              objKey="title"
+              onSubmit={updateContext}
+              title={true}
+            />
+          </div>
+          <div className="card-content">
             <ProgressBar
               height="3px"
               bgColor="#23db5e"
@@ -35,39 +37,34 @@ export default function ProjectHeader({ contextSlice }) {
               completed={contextSlice.billed}
               maxCompleted={contextSlice.budget}
             />
-            <div className="block">
+            <div className="block mt-2">
               <span>{`${
                 contextSlice.budget - contextSlice.billed
               } hours remaining`}</span>
-              <button
-                className="button"
-                onClick={() =>
-                  updateContext("billed", contextSlice.billed + Number(billing))
-                }
-              >
-                <span className="icon-text">
-                  <span className="icon">
-                    <FontAwesomeIcon icon={faReceipt} />
-                  </span>
-                  <span>Bill it</span>
-                </span>
-              </button>
-              <input
+
+              {/* <input
                 className="input"
                 type="number"
                 value={billing}
                 onChange={(e) => setBilling(e.target.value)}
-              />
-            </div>
-            <div className="block">
-              <ProjectEditableField
-                initialContent={contextSlice.projectManager}
-                objKey="projectManager"
-                onSubmit={updateContext}
-                title={false}
-              />
+              /> */}
             </div>
           </div>
+          <footer class="card-footer">
+            <button
+              className="card-footer-item"
+              onClick={() =>
+                updateContext("billed", contextSlice.billed + Number(billing))
+              }
+            >
+              <span className="icon-text">
+                <span className="icon">
+                  <FontAwesomeIcon icon={faReceipt} />
+                </span>
+                <span>Bill it</span>
+              </span>
+            </button>
+          </footer>
         </div>
       </div>
     )

@@ -34,7 +34,7 @@ export default function ProjectGrid({ contextSlice }) {
 
   return (
     projectDetails && (
-      <div className="container">
+      <div className="container grid-container">
         {projectDetails.sections.map((section, index) => {
           return (
             <ProjectSection

@@ -3,29 +3,37 @@ import { useEffect, useRef, useState } from "react";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheck,
-  faCircleExclamation,
-  faFile,
-  faQuestion,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleExclamation, faFile } from "@fortawesome/free-solid-svg-icons";
 
 //Utils
-import updateLineItem from "src/utils/updateLineItem";
-import TextBoxHelpers from "src/components/TextBoxHelpers";
+
+// import TextBoxHelpers from "src/components/TextBoxHelpers";
 import PendingItemList from "src/components/projectpage/PendingItemList";
-import { AwesomeButton } from "react-awesome-button";
 import "react-awesome-button/dist/styles.css";
 
+import toastRequest from "../../utils/toastRequest";
+import NoteBox from "./NoteBox";
+import CheckBoxButton from "./CheckBoxButton";
+
 // Individual line item for the project grid
-export default function LineItem({ lineItemData }) {
+export default function LineItem({ lineItemData, index, secLen }) {
+  //State to track if this line item is selected
+  const [active, setActive] = useState(false);
+
+  //Loading state for visuals
   const [loading, setLoading] = useState(false);
+
+  //Indication for if the note UI is being used
   const [writingNote, setWritingNote] = useState(false);
 
+  //Indication for if the open items menu has been opened
   const [menuOpen, setMenuOpen] = useState(false);
 
-  //Keep track of contents of note box for the item
-  const [noteState, setNoteState] = useState(lineItemData.notes || "");
+  //Ref for delay for setting line to active
+  const timeoutRef = useRef(null);
+
+  // //Keep track of contents of note box for the item
+  // const [noteState, setNoteState] = useState(lineItemData.notes || "");
 
   //State for the entire line for making updates
   const [lineState, setLineState] = useState({
@@ -35,111 +43,59 @@ export default function LineItem({ lineItemData }) {
     pendingItems: lineItemData.pendingItems || 0,
   });
 
-  //Ref for input box for focus
-  const noteRef = useRef(null);
+  //Prepare the states and setters to send to notebox child
+  const noteProps = {
+    writingNote,
+    setWritingNote,
+    lineState,
+    setLineState,
+    setLoading,
+  };
 
-  //Make request to update the line item upon a change
+  //When the linestate is updated, make a request to DB to update
   useEffect(() => {
     async function putData() {
-      const response = await updateLineItem(lineItemData.id, lineState);
-
-      //Successful response, update state to reflect (should not actually change anything)
-      if (response.ok) {
-        setLoading(false);
-        const newState = JSON.parse(response.data);
-
-        setLineState(newState);
-      } else {
-        //Error response
-        console.error(response.error);
-        setLoading(false);
-      }
+      await toastRequest({
+        method: "PUT",
+        route: `/lineitem/${lineItemData.id}`,
+        data: lineState,
+        setLoading,
+        sToastDisabled: true,
+        successCB: (message) => {
+          //Match the state to the api response, should not change
+          const newState = JSON.parse(message);
+          setLineState(newState);
+        },
+      });
     }
-
     //Only make api request when user made the change to state
     loading && putData();
   }, [lineState]);
 
-  //When no longer writing note, return note to normal zindex
-  useEffect(() => {
-    if (!writingNote) {
-      noteRef.current.classList.remove("top");
-    }
-  }, [writingNote]);
-
+  //Click flag: update state optimistically, trigger api request
   function handleFlagClick() {
     setLoading(true);
-
-    //Update state optimistically, trigger api request
     setLineState((previous) => {
       return { ...previous, flagMarker: !previous.flagMarker };
     });
   }
 
-  function handleCheckBoxClick(event) {
-    setLoading(true);
-
-    //Cycle through the checkbox options
-    const checkBoxes = [...lineState.checkBoxes];
-    const index = event.currentTarget.getAttribute("index");
-
-    checkBoxes[index] < 2 ? checkBoxes[index]++ : (checkBoxes[index] = 0);
-
-    //Optimistic update state, trigger api request
-    setLineState((previous) => {
-      return { ...previous, checkBoxes: [...checkBoxes] };
-    });
-  }
-
-  //Handle key shortcuts for saving/closing note box
-  function noteKeyDownHandler(event) {
-    //Ctrl enter = save and close
-    if (event.keyCode === 13 && event.ctrlKey) {
-      setLoading(true);
-      setLineState((previous) => {
-        return { ...previous, notes: noteState };
-      });
-      closeNote();
-      //Escape = close
-    } else if (event.keyCode === 27) {
-      setNoteState(lineState.notes);
-      closeNote();
-    }
-  }
-
-  function openNote() {
-    setWritingNote(true);
-    //Expand the row for visibility
-    noteRef.current.parentNode.classList.add("expanded");
-
-    //Bring note z index above any others
-    noteRef.current.classList.add("top");
-
-    //Focus the note
-    noteRef.current.focus();
-  }
-
-  function closeNote() {
-    //Collapse line item row, unfocus the note
-    noteRef.current.parentNode.classList.remove("expanded");
-    noteRef.current.blur();
-
-    //Remove the helper tags midway thru transition so it looks nice
-    setTimeout(() => {
-      setWritingNote(false);
-    }, 50);
-  }
-
-  //Open the note if it isnt already open
-  function handleNoteClick(event) {
-    event.preventDefault();
-    !writingNote && openNote();
-  }
-
   return (
     <>
-      <div className="grid">
-        <div
+      <div
+        className={`grid shadow`}
+        onMouseEnter={() => {
+          timeoutRef.current = setTimeout(
+            () => !active && setActive(true),
+            160
+          );
+        }}
+        onMouseLeave={() => {
+          clearTimeout(timeoutRef.current);
+          !writingNote && !menuOpen && setActive(false);
+        }}
+      >
+        {/* <div
           className="cell line-item-cell centered-cell click-cell"
           onClick={handleFlagClick}
         >
@@ -148,7 +104,7 @@ export default function LineItem({ lineItemData }) {
               <FontAwesomeIcon icon={faCircleExclamation} />
             </span>
           )}
-        </div>
+        </div> */}
 
         <div className="cell centered-cell control-cell">
           <label className="label">{lineItemData.controlNumber}</label>
@@ -157,41 +113,20 @@ export default function LineItem({ lineItemData }) {
           return (
             <div
               key={i}
-              index={i}
-              className="cell line-item-cell centered-cell cell-rb click-cell"
-              onClick={handleCheckBoxClick}
+              className="cell line-item-cell centered-cell click-cell"
             >
-              <AwesomeButton className="cb-button" type="primary">
-                {(Boolean(checkBox) && (
-                  <span className="icon">
-                    <FontAwesomeIcon
-                      icon={(() => {
-                        switch (checkBox) {
-                          case 1:
-                            return faCheck;
-                          case 2:
-                            return faQuestion;
-                        }
-                      })()}
-                    />
-                  </span>
-                )) ||
-                  " "}
-              </AwesomeButton>
+              <CheckBoxButton
+                index={i}
+                cbState={checkBox}
+                setLineState={setLineState}
+                setLoading={setLoading}
+                active={active}
+              />
             </div>
           );
         })}
         <div className="cell line-item-cell centered-cell cell-rb">
-          <input
-            className="input is-small notes-input"
-            type="text"
-            ref={noteRef}
-            onClick={handleNoteClick}
-            value={noteState}
-            onChange={(e) => setNoteState(e.target.value)}
-            onKeyDown={noteKeyDownHandler}
-          />
-          {writingNote && <TextBoxHelpers content={noteState} />}
+          <NoteBox {...noteProps} />
         </div>
         <div className="cell line-item-cell centered-cell item-cell">
           <button

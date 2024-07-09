@@ -20,47 +20,43 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
   }
 
   return (
-    <div className="box mb-5 section-box">
-      <div className="fixed-grid has-7-cols m-5">
+    <div className="card mb-6 section-card">
+      <div className="card-header">
+        <h2 className="title is-4 has-text-weight-bold m-4">{`Section ${sectionData.sectionNumber}`}</h2>
+      </div>
+      <div className="fixed-grid has-6-cols m-4">
         <div className="grid">
-          <div className="cell is-col-span-2 header-cell header-cell-centered mb-4">
-            <h2 className="title is-5">{`Section ${sectionData.sectionNumber}`}</h2>
-          </div>
-
-          {contextSlice.checkBoxHeaders.map((header, i) => {
-            return (
-              <div key={i} className="cell header-cell centered-cell mb-4">
-                {!index && (
-                  <ProjectEditableField
-                    initialContent={header.toUpperCase()}
-                    objKey={i}
-                    onSubmit={updateHeaders}
-                  />
-                )}
+          {!index && (
+            <>
+              <div className="cell header-cell header-cell-centered mb-2" />
+              {contextSlice.checkBoxHeaders.map((header, i) => {
+                return (
+                  <div key={i} className="cell header-cell centered-cell">
+                    {!index && (
+                      <ProjectEditableField
+                        initialContent={header.toUpperCase()}
+                        objKey={i}
+                        onSubmit={updateHeaders}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+              <div className="cell header-cell centered-cell">
+                <label className="section-header">NOTES</label>
               </div>
-            );
-          })}
-
-          <div className="cell header-cell centered-cell mb-4">
-            <label className="section-header">{!index && "NOTES"}</label>
-          </div>
-          <div className="cell header-cell mb-4 centered-cell">
-            <span className="icon">
-              <FontAwesomeIcon icon={faEllipsisVertical} />
-            </span>
-          </div>
+            </>
+          )}
         </div>
         {sectionData.lineItems.map((line, index) => {
           return (
-            <div
-              key={index}
-              className={`line-item-row${
-                index === sectionData.lineItems.length - 1
-                  ? " line-item-last"
-                  : ""
-              }`}
-            >
-              <LineItem lineItemData={line} />
+            <div key={index} className="line-item-row">
+              <LineItem
+                key={index}
+                index={index}
+                secLen={sectionData.lineItems.length}
+                lineItemData={line}
+              />
             </div>
           );
         })}

@@ -56,7 +56,11 @@ export default function ProjectEditableField({
       onClick={() => setEditing(true)}
     >
       {!editing && (
-        <span className={`edit-span ${title ? "title project-title" : ""}`}>
+        <span
+          className={`edit-span ${
+            title ? "title is-4 has-text-weight-bold" : ""
+          }`}
+        >
           {initialContent}
         </span>
       )}

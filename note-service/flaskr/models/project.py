@@ -76,7 +76,7 @@ class Project(Base):
 
     __table_args__ = (
         CheckConstraint(
-            f"length(title) >= {DataFields.PROJECT_TITLE_MIN_LENGTH} AND length(title) <= {DataFields.PROJECT_TITLE_MAX_LENGTH} AND title ~* '^[A-Za-z0-9]+$'",
+            f"length(title) >= {DataFields.PROJECT_TITLE_MIN_LENGTH} AND length(title) <= {DataFields.PROJECT_TITLE_MAX_LENGTH} AND title ~* '^[A-Za-z0-9 ]+$'",
             name="check_title",
         ),
         CheckConstraint(

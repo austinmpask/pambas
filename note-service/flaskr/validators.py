@@ -96,6 +96,13 @@ class Validators:
         return val
 
     @staticmethod
+    def validateTitleName(val, n):
+        splitStr = val.split(" ")
+        for word in splitStr:
+            Validators.validateAlphaNum(word, n)
+        return val
+
+    @staticmethod
     def validateUUID(val):
         try:
             val = uuid.UUID(val)
@@ -194,7 +201,7 @@ class Validators:
         # Tests
         Validators.validateExists(val, n)
         Validators.validateType(val, n, DataFields.PROJECT_TITLE_TYPE)
-        Validators.validateAlphaNum(val, n)
+        Validators.validateTitleName(val, n)
         Validators.validateLength(
             val,
             n,
@@ -207,8 +214,8 @@ class Validators:
     def budget(val) -> DataFields.BUDGET_TYPE:
         n = "Budget"
         # Tests
-        val = DataFields.BUDGET_TYPE(val)
         Validators.validateExists(val, n)
+        val = DataFields.BUDGET_TYPE(val)
         Validators.validateType(val, n, (int, DataFields.BUDGET_TYPE))
         Validators.validateRange(val, n, DataFields.BUDGET_MIN, DataFields.BUDGET_MAX)
         Validators.validateIncremental(val, n, DataFields.BUDGET_INCREMENTAL)
@@ -218,8 +225,8 @@ class Validators:
     def billed(val) -> DataFields.BILLED_TYPE:
         n = "Billed Hours"
         # Tests
-        val = DataFields.BILLED_TYPE(val)
         Validators.validateExists(val, n)
+        val = DataFields.BILLED_TYPE(val)
         Validators.validateType(val, n, (int, DataFields.BILLED_TYPE))
         Validators.validateRange(val, n, DataFields.BILLED_MIN, DataFields.BILLED_MAX)
         Validators.validateIncremental(val, n, DataFields.BILLED_INCREMENTAL)
@@ -269,7 +276,7 @@ class Validators:
         for item in val:
             Validators.validateExists(item, n)
             Validators.validateType(item, n, (int, DataFields.HEADER_TYPE))
-            Validators.validateAlphaNum(item, n)
+            Validators.validateTitleName(item, n)
             Validators.validateLength(
                 item, n, DataFields.HEADER_MIN_LENGTH, DataFields.HEADER_MAX_LENGTH
             )

@@ -11,7 +11,7 @@ import ProjectHeader from "src/components/projectpage/ProjectHeader";
 import ProjectGrid from "src/components/projectpage/ProjectGrid";
 
 //Utils
-import updateProjectDetail from "src/utils/updateProjectDetail";
+import toastRequest from "src/utils/toastRequest";
 
 //Context to pass updater function to children
 export const ProjectUpdaterContext = createContext(undefined);
@@ -37,7 +37,7 @@ export default function ProjectPage() {
   //State for project index with regard to position in list of this user's projects
   const [projectIndex, setProjectIndex] = useState(undefined);
 
-  //When the project context list is updated, the context slice is updated to reflect it
+  //When the project summary context list is updated, the context slice is updated to reflect it
   useEffect(() => {
     //Isolate the relevant project details from the context based on
     //the ID prop for current project
@@ -56,7 +56,7 @@ export default function ProjectPage() {
   }, [projectSummaryData]);
 
   //Updater function passed to child components inorder to trigger an api request along with context change
-  function updateContext(key, value) {
+  function updateProjectSummaryContext(key, value) {
     setLoading(true);
 
     //Update the slice with whatever the value the user changed
@@ -73,41 +73,24 @@ export default function ProjectPage() {
     setProjectSummaryData(newContext);
   }
 
-  //Whenever context slice is updated (by means of the whole context obj changing), make request to update project in DB (if user triggered an update (loading))
+  //Whenever context slice is updated (by means of the whole summary context obj changing), make request to update project in DB (if user triggered an update (loading))
   useEffect(() => {
     async function makeRequest() {
-      //Make request
+      await toastRequest({
+        method: "PUT",
+        route: `/project/${projectID}`,
+        data: contextSlice,
+        successCB: (data) => {
+          setProjectSummaryData((old) => {
+            const newContext = [...old];
 
-      console.log(contextSlice);
-
-      // const response = await makeRequest(
-      //   "GET",
-      //   `/project/${projectID}`,
-      //   contextSlice
-      // );
-
-      // console.log(response);
-
-      // const response = await updateProjectDetail(projectID, contextSlice);
-
-      if (response.ok) {
-        setLoading(false);
-
-        console.log(response);
-        //Update the context with what is returned by api. Should not truly change any values (context was previously optimistically updated)
-        const newState = response.data;
-
-        setProjectSummaryData((old) => {
-          const newContext = [...old];
-
-          newContext[projectIndex] = newState;
-          return newContext;
-        });
-      } else {
-        //Error response
-        console.error(response.error);
-        setLoading(false);
-      }
+            newContext[projectIndex] = data;
+            return newContext;
+          });
+        },
+        success: "Project Updated!",
+      });
+      setLoading(false);
     }
 
     //Only make api request if the user directly triggered the state update
@@ -116,13 +99,13 @@ export default function ProjectPage() {
 
   return (
     <>
-      <NavBar />
-      <ProjectUpdaterContext.Provider value={updateContext}>
-        <ProjectHeader contextSlice={contextSlice} />
-        <div className="m-6">
+      <div className="has-background-light">
+        <NavBar />
+        <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
+          <ProjectHeader contextSlice={contextSlice} />
           <ProjectGrid contextSlice={contextSlice} />
-        </div>
-      </ProjectUpdaterContext.Provider>
+        </ProjectUpdaterContext.Provider>
+      </div>
     </>
   );
 }

@@ -14,7 +14,7 @@
 }
 
 .page-wrapper {
-  margin-top: 100px !important;
+  margin-top: 3rem !important;
 }
 
 .hamburger-card {
@@ -65,6 +65,7 @@
 .control-cell {
   // border-right: 1px solid hsla(222, 14%, 71%, 0.3);
   // border-left: 1px solid hsla(222, 14%, 71%, 0.3);
+  border-right: 1px solid hsla(222, 14%, 71%, 0.3);
 }
 
 .click-cell {
@@ -80,18 +81,19 @@
   transition: min-height;
   transition-duration: 200ms;
   position: relative !important;
+  border-right: 1px solid hsla(222, 14%, 71%, 0.3);
 }
 
 .line-item-row {
 }
 
-.line-item-row:after {
-  content: "";
-  display: block;
-  margin: 0 auto;
-  width: 93%;
-  border-bottom: 1px solid hsla(222, 14%, 71%, 0.3);
-}
+// .line-item-row:after {
+//   content: "";
+//   display: block;
+//   margin: 0 auto;
+//   width: 93%;
+//   border-bottom: 1px solid hsla(222, 14%, 71%, 0.3);
+// }
 
 .line-item-last {
   border-bottom: 1px solid hsla(222, 14%, 71%, 0.3);
@@ -266,7 +268,7 @@
   --button-hover-pressure: 0;
   --button-default-border-radius: 0px;
 
-  width: 101% !important;
+  width: 100% !important;
   height: 100% !important;
   bottom: 0;
   clip-path: inset(0 0 0 0);
@@ -289,12 +291,23 @@
   width: 98% !important;
   height: 112% !important;
 }
-.shadow:hover {
-  box-shadow: 0px 5px 25px 0px rgba(114, 114, 114, 0.411),
+.shadow {
+  box-shadow: 0px 8px 25px 0px rgba(114, 114, 114, 0.288),
     0 0 0 1px rgb(214, 214, 214);
   position: relative !important;
   z-index: 1000;
-  border-radius: 6px;
+  border-radius: 7px;
+  transition: box-shadow 220ms, border-radius 220ms;
+}
+
+.hover:hover {
+  box-shadow: 0px 5px 25px 0px rgba(114, 114, 114, 0.11),
+    0 0 0 1px rgb(231, 231, 231);
+  position: relative !important;
+  z-index: 1000;
+  border-radius: 4px;
+  transition: box-shadow;
+  transition-duration: 20ms;
 }
 .check {
   --button-primary-color: #91ff85;

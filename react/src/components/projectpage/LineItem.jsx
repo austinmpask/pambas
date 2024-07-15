@@ -16,7 +16,7 @@ import NoteBox from "./NoteBox";
 import CheckBoxButton from "./CheckBoxButton";
 
 // Individual line item for the project grid
-export default function LineItem({ lineItemData, index, secLen }) {
+export default function LineItem({ lineItemData }) {
   //State to track if this line item is selected
   const [active, setActive] = useState(false);
 
@@ -29,12 +29,6 @@ export default function LineItem({ lineItemData, index, secLen }) {
   //Indication for if the open items menu has been opened
   const [menuOpen, setMenuOpen] = useState(false);
 
-  //Ref for delay for setting line to active
-  const timeoutRef = useRef(null);
-
-  // //Keep track of contents of note box for the item
-  // const [noteState, setNoteState] = useState(lineItemData.notes || "");
-
   //State for the entire line for making updates
   const [lineState, setLineState] = useState({
     checkBoxes: lineItemData.checkBoxes || [0, 0, 0],
@@ -42,6 +36,9 @@ export default function LineItem({ lineItemData, index, secLen }) {
     notes: lineItemData.notes || "",
     pendingItems: lineItemData.pendingItems || 0,
   });
+
+  //Ref for delay for acive css on lineitem
+  const timeoutRef = useRef(null);
 
   //Prepare the states and setters to send to notebox child
   const noteProps = {
@@ -51,6 +48,14 @@ export default function LineItem({ lineItemData, index, secLen }) {
     setLineState,
     setLoading,
   };
+
+  //Click flag: update state optimistically, trigger api request (Reimplement)
+  function handleFlagClick() {
+    setLoading(true);
+    setLineState((previous) => {
+      return { ...previous, flagMarker: !previous.flagMarker };
+    });
+  }
 
   //When the linestate is updated, make a request to DB to update
   useEffect(() => {
@@ -72,18 +77,10 @@ export default function LineItem({ lineItemData, index, secLen }) {
     loading && putData();
   }, [lineState]);
 
-  //Click flag: update state optimistically, trigger api request
-  function handleFlagClick() {
-    setLoading(true);
-    setLineState((previous) => {
-      return { ...previous, flagMarker: !previous.flagMarker };
-    });
-  }
-
   return (
     <>
       <div
-        className={`grid shadow`}
+        className={`grid ${active && "shadow"} ${!active && "hover"}`}
         onMouseEnter={() => {
           timeoutRef.current = setTimeout(
             () => !active && setActive(true),

@@ -135,6 +135,7 @@ def getAllProjects(userUUID):
 def postProject(userUUID):
 
     reqBody = request.get_json()
+    print(reqBody)
     # Validate the incoming data
     try:
         sectionsList = Validators.sectionsList(reqBody.get("sections"))

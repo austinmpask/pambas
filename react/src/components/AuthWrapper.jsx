@@ -10,7 +10,7 @@ import { ProjectSummaryProvider } from "src/context/ProjectSummaryContext";
 import { ToastContainer } from "react-toastify";
 
 //Utils
-import toastRequest from "../utils/toastRequest";
+import toastRequest from "src/utils/toastRequest";
 
 //Determine if user is authenticated, update user state if so, if not, redirect to login
 export default function AuthWrapper({ children }) {
@@ -32,7 +32,7 @@ export default function AuthWrapper({ children }) {
   useEffect(() => {
     async function getResponse() {
       //Lookup user data
-      const response = await toastRequest({
+      await toastRequest({
         method: "GET",
         route: "/userdata",
         successCB: (data) => {

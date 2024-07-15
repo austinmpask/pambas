@@ -19,8 +19,8 @@ export default function ProjectHeader({ contextSlice }) {
 
   return (
     contextSlice && (
-      <div className="m-6 page-wrapper">
-        <div className="card title-card">
+      <div className="m-6">
+        <div className="card title-card page-wrapper">
           <div className="card-header p-4">
             <ProjectEditableField
               initialContent={contextSlice.title}
@@ -50,7 +50,7 @@ export default function ProjectHeader({ contextSlice }) {
               /> */}
             </div>
           </div>
-          <footer class="card-footer">
+          <footer className="card-footer">
             <button
               className="card-footer-item"
               onClick={() =>

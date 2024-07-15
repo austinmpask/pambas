@@ -13,7 +13,7 @@ export default function ProjectGrid({ contextSlice }) {
   const navigate = useNavigate();
 
   //State for all the grid details about the project to populate components
-  const [projectDetails, setProjectDetails] = useState(undefined);
+  const [projectDetails, setProjectDetails] = useState();
 
   //If context has loaded, fetch the bulk project details from api
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function ProjectGrid({ contextSlice }) {
 
   return (
     projectDetails && (
-      <div className="container grid-container">
+      <div className="container grid-container pb-6">
         {projectDetails.sections.map((section, index) => {
           return (
             <ProjectSection

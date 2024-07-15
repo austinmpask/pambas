@@ -1,8 +1,8 @@
 """create tables
 
-Revision ID: 8e70bf78480f
+Revision ID: 4002158d30ce
 Revises: 
-Create Date: 2024-07-01 05:22:15.133848
+Create Date: 2024-07-15 21:14:16.374025
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '8e70bf78480f'
+revision = '4002158d30ce'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -29,7 +29,7 @@ def upgrade():
     sa.Column('checkbox_headers', sa.ARRAY(sa.String(length=15)), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.CheckConstraint("length(project_manager) >= 2 AND length(project_manager) <= 50 AND project_manager ~* '^[A-Za-z ]+$'", name='check_project_manager'),
-    sa.CheckConstraint("length(title) >= 2 AND length(title) <= 30 AND title ~* '^[A-Za-z0-9]+$'", name='check_title'),
+    sa.CheckConstraint("length(title) >= 2 AND length(title) <= 30 AND title ~* '^[A-Za-z0-9 ]+$'", name='check_title'),
     sa.CheckConstraint('0 <= billed AND billed <= 200', name='check_billed'),
     sa.CheckConstraint('0 <= budget AND budget <= 200', name='check_budget'),
     sa.CheckConstraint('array_length(checkbox_headers, 1) = 3', name='check_checkbox_headers'),

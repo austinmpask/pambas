@@ -1,26 +1,27 @@
+//React
+import { useContext } from "react";
+
+//Contexts
+import { ProjectUpdaterContext } from "src/pages/ProjectPage";
+
 //Children
 import LineItem from "src/components/projectpage/LineItem";
 import ProjectEditableField from "src/components/projectpage/ProjectEditableField";
 
-//Icons
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
-import { useContext } from "react";
-import { ProjectUpdaterContext } from "../../pages/ProjectPage";
-
 //Individual section within the project grid
 export default function ProjectSection({ contextSlice, sectionData, index }) {
-  const updateContext = useContext(ProjectUpdaterContext);
+  const updateProjectSummaryContext = useContext(ProjectUpdaterContext);
   //Apply a change to whatever index of the header array the user edited, then update context with that
   function updateHeaders(i, value) {
     const newHeaders = [...contextSlice.checkBoxHeaders];
     newHeaders[i] = value;
 
-    updateContext("checkBoxHeaders", newHeaders);
+    //Update the object k/v in the project summary context list
+    updateProjectSummaryContext("checkBoxHeaders", newHeaders);
   }
 
   return (
-    <div className="card mb-6 section-card">
+    <div className="card mt-6 section-card">
       <div className="card-header">
         <h2 className="title is-4 has-text-weight-bold m-4">{`Section ${sectionData.sectionNumber}`}</h2>
       </div>

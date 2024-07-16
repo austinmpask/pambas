@@ -1,5 +1,5 @@
 //React
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,7 +16,7 @@ import NoteBox from "./NoteBox";
 import CheckBoxButton from "./CheckBoxButton";
 
 // Individual line item for the project grid
-export default function LineItem({ lineItemData }) {
+export default function LineItem({ lineItemData, setHeaderStats }) {
   //State to track if this line item is selected
   const [active, setActive] = useState(false);
 
@@ -70,6 +70,10 @@ export default function LineItem({ lineItemData }) {
           //Match the state to the api response, should not change
           const newState = JSON.parse(message);
           setLineState(newState);
+          setHeaderStats({
+            total: newState.projectTotal,
+            completed: newState.projectCompletion,
+          });
         },
       });
     }

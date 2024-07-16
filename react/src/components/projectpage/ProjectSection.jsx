@@ -9,7 +9,12 @@ import LineItem from "src/components/projectpage/LineItem";
 import ProjectEditableField from "src/components/projectpage/ProjectEditableField";
 
 //Individual section within the project grid
-export default function ProjectSection({ contextSlice, sectionData, index }) {
+export default function ProjectSection({
+  contextSlice,
+  sectionData,
+  setHeaderStats,
+  index,
+}) {
   const updateProjectSummaryContext = useContext(ProjectUpdaterContext);
   //Apply a change to whatever index of the header array the user edited, then update context with that
   function updateHeaders(i, value) {
@@ -22,10 +27,10 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
 
   return (
     <div className="card mt-6 section-card">
-      <div className="card-header">
+      <div className="card-header sec-header">
         <h2 className="title is-4 has-text-weight-bold m-4">{`Section ${sectionData.sectionNumber}`}</h2>
       </div>
-      <div className="fixed-grid has-6-cols m-4">
+      <div className="fixed-grid has-6-cols m-2 mt-3">
         <div className="grid">
           {!index && (
             <>
@@ -54,8 +59,9 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
             <div key={index} className="line-item-row">
               <LineItem
                 key={index}
-                index={index}
-                secLen={sectionData.lineItems.length}
+                // index={index}
+                // secLen={sectionData.lineItems.length}
+                setHeaderStats={setHeaderStats}
                 lineItemData={line}
               />
             </div>

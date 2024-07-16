@@ -1,6 +1,6 @@
 //React
 import { useEffect, useContext, useState, createContext } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 //Contexts
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
@@ -16,8 +16,11 @@ import toastRequest from "src/utils/toastRequest";
 //Context to pass updater function to children
 export const ProjectUpdaterContext = createContext(undefined);
 
+//Context to hold calculated stats about project based on the line item data
+
 //User project main interactable page. Isolates a slice of state for the current project which is passed as prop to children
 export default function ProjectPage() {
+  const navigate = useNavigate();
   //Get the current project ID
   const routeParams = useParams();
   const projectID = Number(routeParams.id);
@@ -26,6 +29,9 @@ export default function ProjectPage() {
   const { projectSummaryData, setProjectSummaryData } = useContext(
     ProjectSummaryContext
   );
+
+  //State for all the grid details about the project to populate components
+  const [projectDetails, setProjectDetails] = useState();
 
   //Indicator if the user directly triggered a state update
   const [loading, setLoading] = useState(false);
@@ -36,6 +42,12 @@ export default function ProjectPage() {
 
   //State for project index with regard to position in list of this user's projects
   const [projectIndex, setProjectIndex] = useState(undefined);
+
+  //State for header stats that originally come from the project summary call, but are indirectly affected by line item updates
+  const [headerStats, setHeaderStats] = useState({
+    completed: 1,
+    total: 1,
+  });
 
   //When the project summary context list is updated, the context slice is updated to reflect it
   useEffect(() => {
@@ -95,6 +107,26 @@ export default function ProjectPage() {
 
     //Only make api request if the user directly triggered the state update
     loading && makeRequest();
+
+    //If context has loaded, fetch the bulk project details from api
+    async function fetchProject() {
+      await toastRequest({
+        method: "GET",
+        route: `/project/${contextSlice.id}`,
+        sToastDisabled: true,
+        eToastDisabled: true,
+        successCB: (data) => setProjectDetails(data),
+        errorCB: () => navigate("/dashboard"),
+      });
+    }
+
+    contextSlice && fetchProject();
+
+    contextSlice &&
+      setHeaderStats({
+        completed: contextSlice.completed,
+        total: contextSlice.total,
+      });
   }, [contextSlice]);
 
   return (
@@ -102,8 +134,17 @@ export default function ProjectPage() {
       <div className="has-background-light">
         <NavBar />
         <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
-          <ProjectHeader contextSlice={contextSlice} />
-          <ProjectGrid contextSlice={contextSlice} />
+          <ProjectHeader
+            contextSlice={contextSlice}
+            projectDetails={projectDetails}
+            headerStats={headerStats}
+            setProjectDetails={setProjectDetails}
+          />
+          <ProjectGrid
+            contextSlice={contextSlice}
+            projectDetails={projectDetails}
+            setHeaderStats={setHeaderStats}
+          />
         </ProjectUpdaterContext.Provider>
       </div>
     </>

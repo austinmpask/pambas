@@ -76,6 +76,9 @@ class LineItem(Base):
 
     # Return a dict of section details
     def toDict(self):
+
+        parentProject = self.section.project.toSummaryDict()
+
         return {
             "id": self.id,
             "flagMarker": self.flag_marker,
@@ -84,7 +87,20 @@ class LineItem(Base):
             "notes": self.notes,
             "sectionID": self.section_id,
             "pendingItems": len(self.pending_items),
+            "projectCompletion": parentProject["completed"],
+            "projectTotal": parentProject["total"],
         }
+
+    # Return an indication of total checkbox "points" vs what has been done
+    def progress(self):
+
+        # Calculate a completion "score"
+        completed = 0
+        for box in self.check_boxes:
+            completed += 2 if box == 1 else max(box - 1, 0)
+
+        # Checkbox has value of at most 2
+        return (completed, len(self.check_boxes) * 2)
 
     # Return a dict of PendingItem objects associated with this line item
     def getPendingItems(self):

@@ -111,6 +111,17 @@ class Project(Base):
 
     # Return dictionary of project summary details
     def toSummaryDict(self):
+
+        # Calculate a total completion score based on all line items
+        completed = 0
+        total = 0
+
+        for section in self.sections:
+            for line in section.line_items:
+                (cAdd, tAdd) = line.progress()
+                completed += cAdd
+                total += tAdd
+
         return {
             "id": self.id,
             "title": self.title,
@@ -119,4 +130,6 @@ class Project(Base):
             "projectManager": self.project_manager,
             "projectType": self.project_type,
             "checkBoxHeaders": self.checkbox_headers,
+            "completed": completed,
+            "total": total,
         }

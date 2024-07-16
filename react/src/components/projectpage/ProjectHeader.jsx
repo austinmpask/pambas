@@ -1,69 +1,59 @@
 //React
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faReceipt } from "@fortawesome/free-solid-svg-icons";
 
 //Children
-import ProgressBar from "@ramonak/react-progress-bar";
+
 import ProjectEditableField from "src/components/projectpage/ProjectEditableField";
 import { ProjectUpdaterContext } from "src/pages/ProjectPage";
+import MeterButton from "./MeterButton";
+import CircleMeter from "./CircleMeter";
 
 //Header containing editable project info. Uses slice of context provided by page wrapper parent
-export default function ProjectHeader({ contextSlice }) {
-  //State of the billing input field (temprarily here)
-  const [billing, setBilling] = useState("");
-
+export default function ProjectHeader({ contextSlice, headerStats }) {
   const updateContext = useContext(ProjectUpdaterContext);
 
   return (
     contextSlice && (
       <div className="m-6">
         <div className="card title-card page-wrapper">
-          <div className="card-header p-4">
+          <div className="card-header proj-header">
             <ProjectEditableField
               initialContent={contextSlice.title}
               objKey="title"
               onSubmit={updateContext}
               title={true}
             />
-          </div>
-          <div className="card-content">
-            <ProgressBar
-              height="3px"
-              bgColor="#23db5e"
-              isLabelVisible={false}
-              completed={contextSlice.billed}
-              maxCompleted={contextSlice.budget}
+            <CircleMeter
+              val={Math.round(
+                (headerStats.completed / headerStats.total) * 100
+              )}
+              max={100}
+              percentage={true}
+              size={42}
+              color="green"
             />
-            <div className="block mt-2">
-              <span>{`${
-                contextSlice.budget - contextSlice.billed
-              } hours remaining`}</span>
-
-              {/* <input
-                className="input"
-                type="number"
-                value={billing}
-                onChange={(e) => setBilling(e.target.value)}
-              /> */}
-            </div>
           </div>
+          <div className="header-content">
+            <MeterButton
+              val={contextSlice.billed}
+              displayVal={contextSlice.budget - contextSlice.billed}
+              max={contextSlice.budget}
+              color="blue"
+              label="Budget Hours Remaining"
+            />
+
+            <MeterButton val={2} max={1} color="red" label="Open Items" />
+          </div>
+
           <footer className="card-footer">
-            <button
-              className="card-footer-item"
-              onClick={() =>
-                updateContext("billed", contextSlice.billed + Number(billing))
-              }
-            >
-              <span className="icon-text">
-                <span className="icon">
-                  <FontAwesomeIcon icon={faReceipt} />
-                </span>
-                <span>Bill it</span>
-              </span>
-            </button>
+            <div className="proj-footer has-text-grey-light">
+              <span>{contextSlice.projectType}</span>
+              <span>{contextSlice.projectManager}</span>
+            </div>
           </footer>
         </div>
       </div>

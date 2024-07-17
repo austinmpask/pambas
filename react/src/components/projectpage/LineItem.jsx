@@ -9,7 +9,6 @@ import { faCircleExclamation, faFile } from "@fortawesome/free-solid-svg-icons";
 
 // import TextBoxHelpers from "src/components/TextBoxHelpers";
 import PendingItemList from "src/components/projectpage/PendingItemList";
-import "react-awesome-button/dist/styles.css";
 
 import toastRequest from "../../utils/toastRequest";
 import NoteBox from "./NoteBox";

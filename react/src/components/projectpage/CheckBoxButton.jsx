@@ -2,6 +2,7 @@ import { AwesomeButton } from "react-awesome-button";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import "react-awesome-button/dist/styles.css";
 
 export default function CheckBoxButton({
   index,

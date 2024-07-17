@@ -256,6 +256,8 @@
   --button-primary-border: 1px solid #dadada00;
   --button-primary-color-dark: #cfcfcf00;
   --button-hover-pressure: 0;
+  --button-default-border-radius-top: 0px;
+  --button-default-border-radius-bottom: 0px;
   --button-default-border-radius: 0px;
 
   width: 101% !important;
@@ -268,20 +270,37 @@
 }
 
 .raise {
-  // --button-raise-level: 5px;
   --button-primary-color: #fcfcfc;
   --button-primary-color-hover: #f3f3f3;
   --button-primary-color-active: #91ff85;
   --button-primary-color-dark: #e7e7e7;
   --button-primary-border: 1px solid rgb(231, 231, 231);
-  --button-default-border-radius: 4px;
+  --button-default-border-radius-top: 10px;
   --button-shadow-color: #ffffff00;
   width: 98% !important;
   height: 112% !important;
+  -webkit-filter: box-shadow(0px 2px 3px rgba(255, 0, 0, 0.986));
+  filter: box-shadow(0px 2px 3px rgba(255, 0, 0, 0.986));
+  // -ms-filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=2, Color='#444')";
+  // filter: "progid:DXImageTransform.Microsoft.Dropshadow(OffX=0, OffY=2, Color='#444')";
+}
+.raise::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50px; /* Adjust as needed */
+  z-index: 1000;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 80%,
+    rgba(255, 255, 255, 0.473) 100%
+  );
 }
 .shadow {
   box-shadow: 0 0.5em 1em -0.125em hsla(221deg, 14%, 4%, 0.1),
-    0 0 0 1px rgb(231, 231, 231);
+    0 0 0 1px rgba(231, 231, 231, 0.692);
   position: relative !important;
   z-index: 1000;
   border-radius: 9px;

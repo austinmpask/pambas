@@ -5,8 +5,8 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./react:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./react/src:/usr/src/app/src
+      # - /usr/src/app/node_modules
     command: ["npm", "run", "dev"]
 
   api-gateway:

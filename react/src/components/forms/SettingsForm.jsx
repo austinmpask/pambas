@@ -33,6 +33,7 @@ export default function SettingsForm() {
     register,
     handleSubmit,
     reset,
+    clearErrors,
     formState: { errors },
   } = useForm();
 
@@ -110,7 +111,10 @@ export default function SettingsForm() {
           <SubmitAlt
             submitLabel="Save Changes"
             altLabel="Discard"
-            altAction={reset}
+            altAction={() => {
+              reset();
+              clearErrors();
+            }}
             loading={loading}
           />
         </form>

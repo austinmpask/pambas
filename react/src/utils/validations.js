@@ -51,6 +51,8 @@ export class DataFields {
   static FULL_NAME_MIN_LENGTH = 2;
   static FULL_NAME_MAX_LENGTH = 50;
 
+  static CONTROL_OWNER_NAME_LABEL = "Control Owner";
+
   static PROJECT_TYPE_LABEL = "Project Type";
   static PROJECT_TYPE_MIN_LENGTH = 2;
   static PROJECT_TYPE_MAX_LENGTH = 15;
@@ -91,7 +93,7 @@ export class DataFields {
 
   static NUM_CHECKBOX = 3;
 
-  static PENDING_ITEM_NAME_LABEL = "Pending Item Name";
+  static PENDING_ITEM_NAME_LABEL = "Item Name";
   static PENDING_ITEM_NAME_MIN_LENGTH = 2;
   static PENDING_ITEM_NAME_MAX_LENGTH = 40;
 
@@ -298,6 +300,64 @@ export class Validators {
         DataFields.FULL_NAME_LABEL,
         DataFields.FULL_NAME_MIN_LENGTH,
         DataFields.FULL_NAME_MAX_LENGTH
+      ),
+    },
+  };
+
+  static PendingItemName = {
+    required: requiredMsg(DataFields.PENDING_ITEM_NAME_LABEL),
+    minLength: {
+      value: DataFields.PENDING_ITEM_NAME_MIN_LENGTH,
+      message: rangeError(
+        DataFields.PENDING_ITEM_NAME_LABEL,
+        DataFields.PENDING_ITEM_NAME_MIN_LENGTH,
+        DataFields.PENDING_ITEM_NAME_MAX_LENGTH
+      ),
+    },
+    maxLength: {
+      value: DataFields.PENDING_ITEM_NAME_LABEL,
+      message: rangeError(
+        DataFields.PENDING_ITEM_NAME_LABEL,
+        DataFields.PENDING_ITEM_NAME_MIN_LENGTH,
+        DataFields.PENDING_ITEM_NAME_MAX_LENGTH
+      ),
+    },
+  };
+
+  static ControlOwnerName = {
+    minLength: {
+      value: DataFields.FULL_NAME_MIN_LENGTH,
+      message: rangeError(
+        DataFields.CONTROL_OWNER_NAME_LABEL,
+        DataFields.FULL_NAME_MIN_LENGTH,
+        DataFields.FULL_NAME_MAX_LENGTH
+      ),
+    },
+    maxLength: {
+      value: DataFields.FULL_NAME_MAX_LENGTH,
+      message: rangeError(
+        DataFields.CONTROL_OWNER_NAME_LABEL,
+        DataFields.FULL_NAME_MIN_LENGTH,
+        DataFields.FULL_NAME_MAX_LENGTH
+      ),
+    },
+  };
+
+  static PendingItemDesc = {
+    minLength: {
+      value: DataFields.PENDING_ITEM_DESC_MIN_LENGTH,
+      message: rangeError(
+        DataFields.PENDING_ITEM_DESC_LABEL,
+        DataFields.PENDING_ITEM_DESC_MIN_LENGTH,
+        DataFields.PENDING_ITEM_DESC_MAX_LENGTH
+      ),
+    },
+    maxLength: {
+      value: DataFields.PENDING_ITEM_DESC_MAX_LENGTH,
+      message: rangeError(
+        DataFields.PENDING_ITEM_DESC_LABEL,
+        DataFields.PENDING_ITEM_DESC_MIN_LENGTH,
+        DataFields.PENDING_ITEM_DESC_MAX_LENGTH
       ),
     },
   };

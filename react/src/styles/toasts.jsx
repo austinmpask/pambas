@@ -12,7 +12,7 @@ const defaultDark = {
   pauseOnFocusLoss: true,
   draggable: true,
   pauseOnHover: true,
-  theme: "dark",
+  theme: "colored",
 };
 
 export function toastSuccess(message) {

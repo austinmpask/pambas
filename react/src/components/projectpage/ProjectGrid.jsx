@@ -9,19 +9,23 @@ export default function ProjectGrid({
 }) {
   return (
     projectDetails && (
-      <div className="grid-container pb-6">
-        {projectDetails.sections.map((section, index) => {
-          return (
-            <ProjectSection
-              contextSlice={contextSlice}
-              sectionData={section}
-              setHeaderStats={setHeaderStats}
-              index={index}
-              key={index}
-            />
-          );
-        })}
-      </div>
+      <>
+        <div className="grid-container has-background-light" />
+
+        <div className="project-content">
+          {projectDetails.sections.map((section, index) => {
+            return (
+              <ProjectSection
+                contextSlice={contextSlice}
+                sectionData={section}
+                setHeaderStats={setHeaderStats}
+                index={index}
+                key={index}
+              />
+            );
+          })}
+        </div>
+      </>
     )
   );
 }

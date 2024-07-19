@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation, faFile } from "@fortawesome/free-solid-svg-icons";
 
 //Utils
+import { CSSTransition } from "react-transition-group";
 
 // import TextBoxHelpers from "src/components/TextBoxHelpers";
 import PendingItemList from "src/components/projectpage/PendingItemList";
@@ -69,10 +70,13 @@ export default function LineItem({ lineItemData, setHeaderStats }) {
           //Match the state to the api response, should not change
           const newState = JSON.parse(message);
           setLineState(newState);
-          setHeaderStats({
+
+          //Update the header stats with the new project completion percentage
+          setHeaderStats((prev) => ({
+            ...prev,
             total: newState.projectTotal,
             completed: newState.projectCompletion,
-          });
+          }));
         },
       });
     }
@@ -140,13 +144,20 @@ export default function LineItem({ lineItemData, setHeaderStats }) {
               <span>{lineState.pendingItems}</span>
             </span>
           </button>
-          {menuOpen && (
+
+          <CSSTransition
+            in={menuOpen}
+            unmountOnExit
+            timeout={65}
+            classNames="item-card"
+          >
             <PendingItemList
               lineID={lineItemData.id}
               numPending={lineState.pendingItems}
               setLineState={setLineState}
+              setHeaderStats={setHeaderStats}
             />
-          )}
+          </CSSTransition>
         </div>
       </div>
     </>

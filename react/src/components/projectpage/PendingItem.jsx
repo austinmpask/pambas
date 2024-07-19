@@ -21,7 +21,7 @@ import shortDate from "src/utils/shortDate";
 import ItemModal from "src/components/forms/ItemModal";
 
 //Component to summarize details of a given pending/open item
-export default function PendingItem({ data, setLineState }) {
+export default function PendingItem({ data, setLineState, setHeaderStats }) {
   //State for the item data
   const [itemData, setItemData] = useState({ ...data });
 
@@ -42,9 +42,15 @@ export default function PendingItem({ data, setLineState }) {
       method: "DELETE",
       route: `/openitem/${itemData.id}`,
       successCB: () => {
+        //Update the lending item counts for entire project and individual line state
         setLineState((prev) => ({
           ...prev,
           pendingItems: prev.pendingItems - 1,
+        }));
+
+        setHeaderStats((prev) => ({
+          ...prev,
+          openItems: prev.openItems - 1,
         }));
       },
       success: "Item removed!",
@@ -67,17 +73,17 @@ export default function PendingItem({ data, setLineState }) {
 
   return (
     <>
-      <ItemModal
-        lineID={itemData.lineItemID}
-        open={editing}
-        setOpen={setEditing}
-        setLineState={setLineState}
-        editing={true}
-        itemID={itemData.id}
-        itemData={itemData}
-        setItemData={setItemData}
-      />
-      <article className="message mb-4 pending-item-card">
+      <div className="message mb-4 pending-item-card">
+        <ItemModal
+          lineID={itemData.lineItemID}
+          open={editing}
+          setOpen={setEditing}
+          setLineState={setLineState}
+          editing={true}
+          itemID={itemData.id}
+          itemData={itemData}
+          setItemData={setItemData}
+        />
         <div className="message-header pending-item-header has-background-grey-dark has-text-white">
           <div
             className="pending-item-title"
@@ -153,7 +159,7 @@ export default function PendingItem({ data, setLineState }) {
         <div className="item-footer has-text-grey-light has-background-light">
           <p>{`${shortDate(itemData.createdAt)}`}</p>
         </div>
-      </article>
+      </div>
     </>
   );
 }

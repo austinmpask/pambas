@@ -11,10 +11,11 @@
   position: fixed;
   width: 100%;
   top: 0;
+  z-index: 100;
 }
 
 .page-wrapper {
-  margin-top: 3rem !important;
+  margin-top: 3rem;
 }
 
 .hamburger-card {
@@ -224,7 +225,7 @@
 }
 
 .pending-item-card {
-  // border: 1px solid rgb(68, 68, 68);
+  width: 100%;
   box-shadow: 0 0.5em 1em -0.125em hsla(221deg, 14%, 4%, 0.1),
     0 0 0 1px rgba(231, 231, 231, 0.692);
 }
@@ -463,7 +464,66 @@
 }
 
 .item-list-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   padding: 20px;
   max-height: 800vw;
+  min-height: 200px;
   overflow-y: auto;
+}
+
+//Animations
+.item-card-enter {
+  filter: opacity(0);
+  transform: translateX(-5%);
+}
+.item-card-enter-active {
+  filter: opacity(1);
+  transform: translateX(0%);
+  transition: all 65ms;
+}
+.side-card-exit {
+}
+.item-card-exit-active {
+  filter: opacity(0);
+  transform: translateX(-5%);
+  transition: all 65ms ease;
+}
+
+//Header card
+.header-card-enter {
+  filter: opacity(0);
+  transform: translateY(-5%);
+}
+.header-card-enter-active {
+  filter: opacity(1);
+  transform: translateY(0%);
+  transition: all 300ms ease-out 60ms;
+}
+.header-card-exit {
+}
+.header-card-exit-active {
+  filter: opacity(0);
+  transform: translateY(-5%);
+  transition: all 300ms ease-out;
+}
+
+//Project sections
+.section-enter {
+  filter: opacity(0);
+  transform: translateY(-2%);
+}
+.section-enter-active {
+  filter: opacity(1);
+  transform: translateY(0%);
+  transition: all 300ms ease-out 160ms;
+}
+.section-exit {
+}
+.section-exit-active {
+  filter: opacity(0);
+  transform: translateY(-2%);
+  transition: all 300ms ease-out;
 }

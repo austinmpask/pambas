@@ -21,6 +21,7 @@ export default function ItemModal({
   itemID,
   itemData,
   setItemData,
+  setHeaderStats,
 }) {
   //Form setup
   const {
@@ -46,9 +47,16 @@ export default function ItemModal({
         successCB: () => {
           //Update the linestate to reflect an additional open item.
           //This will trigger a refresh of the open item list from the db
-          setLineState((prev) => {
-            return { ...prev, pendingItems: prev.pendingItems + 1 };
-          });
+          setLineState((prev) => ({
+            ...prev,
+            pendingItems: prev.pendingItems + 1,
+          }));
+
+          //Populate the information to the summary stats
+          setHeaderStats((prev) => ({
+            ...prev,
+            openItems: prev.openItems + 1,
+          }));
         },
       });
       closeModal();

@@ -17,45 +17,46 @@ import { createPortal } from "react-dom";
 export default function ProjectHeader({ contextSlice, headerStats }) {
   const updateContext = useContext(ProjectUpdaterContext);
 
-  if (!contextSlice) return null;
-
   return createPortal(
-    <div className="m-6">
-      <div className="card proj-card side-card page-wrapper">
-        <div className="card-header proj-header">
-          <ProjectEditableField
-            initialContent={contextSlice.title}
-            objKey="title"
-            onSubmit={updateContext}
-            title={true}
-          />
-          <CircleMeter
-            val={Math.round((headerStats.completed / headerStats.total) * 100)}
-            max={100}
-            percentage={true}
-            size={42}
-            color="green"
-          />
-        </div>
-        <div className="header-content">
-          <MeterButton
-            val={contextSlice.billed}
-            displayVal={contextSlice.budget - contextSlice.billed}
-            max={contextSlice.budget}
-            color="blue"
-            label="Budget Hours Remaining"
-          />
-
-          <MeterButton val={2} max={1} color="red" label="Open Items" />
-        </div>
-
-        <footer className="card-footer">
-          <div className="proj-footer has-text-grey-light">
-            <span>{contextSlice.projectType}</span>
-            <span>{contextSlice.projectManager}</span>
-          </div>
-        </footer>
+    <div className="card proj-card side-card page-wrapper">
+      <div className="card-header proj-header">
+        <ProjectEditableField
+          initialContent={contextSlice.title}
+          objKey="title"
+          onSubmit={updateContext}
+          title={true}
+        />
+        <CircleMeter
+          val={Math.round((headerStats.completed / headerStats.total) * 100)}
+          max={100}
+          percentage={true}
+          size={42}
+          color="green"
+        />
       </div>
+      <div className="header-content">
+        <MeterButton
+          val={contextSlice.billed}
+          displayVal={contextSlice.budget - contextSlice.billed}
+          max={contextSlice.budget}
+          color="blue"
+          label="Budget Hours Remaining"
+        />
+
+        <MeterButton
+          val={headerStats.openItems}
+          max={1}
+          color="red"
+          label="Open Items"
+        />
+      </div>
+
+      <footer className="card-footer">
+        <div className="proj-footer has-text-grey-light">
+          <span>{contextSlice.projectType}</span>
+          <span>{contextSlice.projectManager}</span>
+        </div>
+      </footer>
     </div>,
     document.body
   );

@@ -12,6 +12,7 @@ import ProjectGrid from "src/components/projectpage/ProjectGrid";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
+import { CSSTransition } from "react-transition-group";
 
 //Context to pass updater function to children
 export const ProjectUpdaterContext = createContext(undefined);
@@ -47,6 +48,7 @@ export default function ProjectPage() {
   const [headerStats, setHeaderStats] = useState({
     completed: 1,
     total: 1,
+    openItems: 0,
   });
 
   //When the project summary context list is updated, the context slice is updated to reflect it
@@ -123,10 +125,12 @@ export default function ProjectPage() {
     contextSlice && fetchProject();
 
     contextSlice &&
-      setHeaderStats({
+      setHeaderStats((prev) => ({
+        ...prev,
+        openItems: contextSlice.openItems,
         completed: contextSlice.completed,
         total: contextSlice.total,
-      });
+      }));
   }, [contextSlice]);
 
   return (
@@ -134,12 +138,19 @@ export default function ProjectPage() {
       <div className="has-background-light">
         <NavBar />
         <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
-          <ProjectHeader
-            contextSlice={contextSlice}
-            projectDetails={projectDetails}
-            headerStats={headerStats}
-            setProjectDetails={setProjectDetails}
-          />
+          <CSSTransition
+            in={contextSlice}
+            unmountOnExit
+            timeout={360}
+            classNames={"header-card"}
+          >
+            <ProjectHeader
+              contextSlice={contextSlice}
+              projectDetails={projectDetails}
+              headerStats={headerStats}
+              setProjectDetails={setProjectDetails}
+            />
+          </CSSTransition>
           <ProjectGrid
             contextSlice={contextSlice}
             projectDetails={projectDetails}

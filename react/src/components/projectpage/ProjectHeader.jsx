@@ -41,6 +41,9 @@ export default function ProjectHeader({ contextSlice, headerStats }) {
           max={contextSlice.budget}
           color="blue"
           label="Budget Hours Remaining"
+          type="bill"
+          objKey="billed"
+          onSubmit={updateContext}
         />
 
         <MeterButton

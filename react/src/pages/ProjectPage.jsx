@@ -73,6 +73,11 @@ export default function ProjectPage() {
   function updateProjectSummaryContext(key, value) {
     setLoading(true);
 
+    //Make proper adjustment to add/subtract billing
+    if (key === "billed") {
+      value = contextSlice["billed"] + value;
+    }
+
     //Update the slice with whatever the value the user changed
     const newSlice = {
       ...contextSlice,
@@ -102,7 +107,6 @@ export default function ProjectPage() {
             return newContext;
           });
         },
-        success: "Project Updated!",
       });
       setLoading(false);
     }

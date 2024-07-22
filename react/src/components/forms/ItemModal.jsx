@@ -10,6 +10,7 @@ import { DataFields, Validators } from "src/utils/validations";
 import { useForm } from "react-hook-form";
 import FormField from "src/components/forms/components/FormField";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
+import { CSSTransition } from "react-transition-group";
 
 //Modal form which can be used to add a new pending item or edit an existing one
 export default function ItemModal({
@@ -58,6 +59,7 @@ export default function ItemModal({
             openItems: prev.openItems + 1,
           }));
         },
+        sToastDisabled: true,
       });
       closeModal();
     } else if (editing) {
@@ -102,62 +104,69 @@ export default function ItemModal({
     <>
       <div className={`modal${open ? " is-active" : ""}`}>
         <div className="modal-background"></div>
-        <div className="modal-card">
-          <header className="modal-card-head">
-            <p className="modal-card-title">{`${
-              editing ? "Edit " : "Add "
-            }Pending Item`}</p>
-            <button
-              className="delete"
-              aria-label="close"
-              disabled={loading}
-              onClick={closeModal}
-            ></button>
-          </header>
-          <form onSubmit={handleSubmit((data) => itemRequest(data))}>
-            <section className="modal-card-body">
-              <FormField
-                field="itemName"
-                error={errors.itemName?.message}
-                label={DataFields.PENDING_ITEM_NAME_LABEL}
-                validations={Validators.PendingItemName}
-                loading={loading}
-                size="ff-med"
-                register={register}
-              />
-
-              <FormField
-                field="controlOwner"
-                error={errors.controlOwner?.message}
-                label={DataFields.CONTROL_OWNER_NAME_LABEL}
-                validations={Validators.ControlOwnerName}
-                loading={loading}
-                size="ff-med"
-                register={register}
-              />
-
-              <div className="field mb-3">
+        <CSSTransition
+          in={open}
+          unmountOnExit
+          timeout={110}
+          classNames={"modal"}
+        >
+          <div className="modal-card">
+            <header className="modal-card-head">
+              <p className="modal-card-title">{`${
+                editing ? "Edit " : "Add "
+              }Pending Item`}</p>
+              <button
+                className="delete"
+                aria-label="close"
+                disabled={loading}
+                onClick={closeModal}
+              ></button>
+            </header>
+            <form onSubmit={handleSubmit((data) => itemRequest(data))}>
+              <section className="modal-card-body">
                 <FormField
-                  field="description"
-                  error={errors.description?.message}
-                  label={DataFields.PENDING_ITEM_DESC_LABEL}
-                  validations={Validators.PendingItemDesc}
+                  field="itemName"
+                  error={errors.itemName?.message}
+                  label={DataFields.PENDING_ITEM_NAME_LABEL}
+                  validations={Validators.PendingItemName}
                   loading={loading}
                   size="ff-med"
                   register={register}
                 />
-              </div>
-            </section>
-            <footer className="modal-card-foot">
-              <SubmitAlt
-                submitLabel="Add"
-                altLabel="Cancel"
-                altAction={closeModal}
-                loading={loading}
-              />
-            </footer>
-          </form>
-        </div>
+
+                <FormField
+                  field="controlOwner"
+                  error={errors.controlOwner?.message}
+                  label={DataFields.CONTROL_OWNER_NAME_LABEL}
+                  validations={Validators.ControlOwnerName}
+                  loading={loading}
+                  size="ff-med"
+                  register={register}
+                />
+
+                <div className="field mb-3">
+                  <FormField
+                    field="description"
+                    error={errors.description?.message}
+                    label={DataFields.PENDING_ITEM_DESC_LABEL}
+                    validations={Validators.PendingItemDesc}
+                    loading={loading}
+                    size="ff-med"
+                    register={register}
+                  />
+                </div>
+              </section>
+              <footer className="modal-card-foot">
+                <SubmitAlt
+                  submitLabel="Add"
+                  altLabel="Cancel"
+                  altAction={closeModal}
+                  loading={loading}
+                />
+              </footer>
+            </form>
+          </div>
+        </CSSTransition>
       </div>
     </>,
     document.body

@@ -7,14 +7,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFaceSmile,
   faFileCirclePlus,
+  faPaw,
 } from "@fortawesome/free-solid-svg-icons";
-
 //Children
 import PendingItem from "./PendingItem";
 import ItemModal from "src/components/forms/ItemModal";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
+import { CSSTransition } from "react-transition-group";
 
 export default function PendingItemList({
   lineID,
@@ -24,7 +25,8 @@ export default function PendingItemList({
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const [items, setItems] = useState([]);
+  //Track a list of open items, initially set to false to allow for conditional rendering w/o visual glitch with CSSTransition
+  const [items, setItems] = useState(false);
 
   useEffect(() => {
     async function getItems() {
@@ -62,26 +64,36 @@ export default function PendingItemList({
       </div>
 
       <div
-        className="message-body item-list-body"
+        className="item-list-body"
         style={
           items.length
             ? { justifyContent: "flex-start" }
             : { justifyContent: "center" }
         }
       >
-        {items.length ? (
-          items.map((item, index) => (
-            <PendingItem
-              data={item}
-              key={index}
-              setLineState={setLineState}
-              setHeaderStats={setHeaderStats}
-            />
-          ))
-        ) : (
+        <CSSTransition
+          in={items && items.length}
+          unmountOnExit
+          classNames={"item-list"}
+          timeout={300}
+        >
+          <div style={{ width: "100%" }}>
+            {items &&
+              items.map((item, index) => (
+                <PendingItem
+                  data={item}
+                  key={index}
+                  setLineState={setLineState}
+                  setHeaderStats={setHeaderStats}
+                />
+              ))}
+          </div>
+        </CSSTransition>
+
+        {items && !items.length && (
           <>
             <span className="icon mb-3 has-text-grey-light">
-              <FontAwesomeIcon size="xl" icon={faFaceSmile} />
+              <FontAwesomeIcon size="xl" icon={faPaw} />
             </span>
             <label className="has-text-weight-medium has-text-grey-light">
               Nothing here!

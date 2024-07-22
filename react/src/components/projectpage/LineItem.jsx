@@ -109,8 +109,22 @@ export default function LineItem({ lineItemData, setHeaderStats }) {
             </span>
           )}
         </div> */}
-
-        <div className="cell centered-cell control-cell">
+        <CSSTransition
+          in={lineState.flagMarker}
+          unmountOnExit
+          classNames={"fu-marker"}
+          timeout={5000}
+        >
+          <div className="fu-marker has-background-danger has-text-white">
+            <span className="icon fu-icon">
+              <FontAwesomeIcon icon={faCircleExclamation} />
+            </span>
+          </div>
+        </CSSTransition>
+        <div
+          className="cell centered-cell control-cell"
+          onClick={handleFlagClick}
+        >
           <label className="label">{lineItemData.controlNumber}</label>
         </div>
         {lineState.checkBoxes.map((checkBox, i) => {

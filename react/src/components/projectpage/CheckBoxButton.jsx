@@ -1,5 +1,5 @@
 import { AwesomeButton } from "react-awesome-button";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
@@ -16,7 +16,12 @@ export default function CheckBoxButton({
   setLineState,
   setLoading,
   active,
+  lineIndex,
+  up,
 }) {
+  const styleRef = useRef(null);
+
+  const indexedClass = `container-${lineIndex}`;
   //Click checkbox: cycle thru 0-2, update state optimistically, trigger api request
   function handleCheckBoxClick() {
     if (active) {
@@ -61,8 +66,37 @@ export default function CheckBoxButton({
     }
   }, [active]);
 
+  //Button shape change
+  useEffect(() => {
+    if (!styleRef.current) {
+      styleRef.current = document.createElement("style");
+      document.head.appendChild(styleRef.current);
+    }
+
+    styleRef.current.innerHTML = `
+    .${indexedClass} .aws-btn__content {
+      border-top-left-radius: ${active ? "6px" : "0px"} !important;
+      border-top-right-radius: ${active ? "6px" : "0px"} !important;
+      border-bottom-left-radius: ${active ? "8px" : "0px"} !important;
+      border-bottom-right-radius: ${active ? "8px" : "0px"} !important;
+      transition: all 150ms;
+    }
+  `;
+
+    return () => {
+      if (styleRef.current) {
+        document.head.removeChild(styleRef.current);
+        styleRef.current = null;
+      }
+    };
+  }, [active]);
+
   return (
-    <div onClick={handleCheckBoxClick} className="cb-container">
+    <div
+      onClick={handleCheckBoxClick}
+      className={`cb-container ${indexedClass}`}
+      style={up ? { zIndex: "20" } : { zIndex: "0" }}
+    >
       <AwesomeButton
         style={{
           "--button-raise-level": `${raiseLevel}px`,

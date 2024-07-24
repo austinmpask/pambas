@@ -3,7 +3,11 @@ import { useEffect, useRef, useState, useContext } from "react";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleExclamation, faFile } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleExclamation,
+  faFile,
+  faL,
+} from "@fortawesome/free-solid-svg-icons";
 
 //Utils
 import { CSSTransition } from "react-transition-group";
@@ -15,6 +19,7 @@ import toastRequest from "../../utils/toastRequest";
 import NoteBox from "./NoteBox";
 import CheckBoxButton from "./CheckBoxButton";
 import { LockoutContext } from "../../context/LockoutContext";
+import { set } from "react-hook-form";
 
 // Individual line item for the project grid
 export default function LineItem({ lineItemData, setHeaderStats, index }) {
@@ -39,6 +44,8 @@ export default function LineItem({ lineItemData, setHeaderStats, index }) {
   const [complete, setComplete] = useState(true);
 
   const [hangingFlag, setHangingFlag] = useState(false);
+
+  const [up, setUp] = useState(false);
 
   //State for the entire line for making updates
   const [lineState, setLineState] = useState({
@@ -112,13 +119,21 @@ export default function LineItem({ lineItemData, setHeaderStats, index }) {
     setLockout(active);
 
     //Handle the timing of the hanging flag transition for the animation
-    if (active && lineState.flagMarker) {
-      setHangingFlag(false);
-    } else if (!active && lineState.flagMarker) {
-      //Add delay for when row is deactivated
+    if (active) {
+      setUp(true);
+      if (lineState.flagMarker) {
+        setHangingFlag(false);
+      }
+    } else {
       setTimeout(() => {
-        setHangingFlag(true);
+        setUp(false);
       }, 260);
+      //Add delay for when row is deactivated
+      if (lineState.flagMarker) {
+        setTimeout(() => {
+          setHangingFlag(true);
+        }, 260);
+      }
     }
   }, [active]);
 
@@ -140,7 +155,9 @@ export default function LineItem({ lineItemData, setHeaderStats, index }) {
       <div
         className={`grid ${active && "shadow "} ${
           !active && lockout && index && " border-light"
-        } ${!lockout && index && " border"}  ${!active && !lockout && " hover"}
+        } ${!lockout && index ? " border" : " invis-border"}  ${
+          !active && !lockout && " hover"
+        }
         `}
         onMouseEnter={() => {
           //If the line is not already activated, prep it for activation after delay
@@ -214,6 +231,8 @@ export default function LineItem({ lineItemData, setHeaderStats, index }) {
                 setLineState={setLineState}
                 setLoading={setLoading}
                 active={active}
+                lineIndex={index}
+                up={up}
               />
             </div>
           );

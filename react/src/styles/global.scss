@@ -407,6 +407,7 @@
   --button-default-border-radius-top: 0px;
   --button-default-border-radius-bottom: 0px;
   --button-default-border-radius: 0px;
+  --button-shadow-color: #00000000;
   font-size: 1em;
 
   width: 101% !important;
@@ -418,14 +419,41 @@
   position: absolute;
 }
 
+// span.aws-btn__content {
+//   border-top-left-radius: 6px !important;
+//   border-top-right-radius: 6px !important;
+
+//   border-bottom-left-radius: 8px !important;
+//   border-bottom-right-radius: 8px !important;
+// }
+
+// span.aws-btn__content::after {
+// }
+
+//dark thing under the button
+span.aws-btn__wrapper::before {
+  border-top-left-radius: 6px !important;
+  border-top-right-radius: 6px !important;
+}
+
+//dark thing when flat
+button.aws-btn.aws-btn--primary.aws-btn--visible.false {
+  // background-color: #00000000 !important;
+}
+
+button.aws-btn.aws-btn--primary::before {
+  border-top-left-radius: 6px !important;
+  border-top-right-radius: 6px !important;
+}
+
 .raise {
-  --button-primary-color: #fcfcfc;
+  --button-primary-color: #fdfdfd;
   --button-primary-color-hover: #f3f3f3;
-  --button-primary-color-active: #91ff85;
-  --button-primary-color-dark: #e7e7e7;
-  --button-primary-border: 1px solid rgb(231, 231, 231);
+  --button-primary-color-active: #61ffb8;
+  --button-primary-color-dark: #e0e0e0;
+  --button-primary-border: 1px solid rgba(148, 148, 148, 0.418);
   --button-default-border-radius-top: 10px;
-  --button-shadow-color: #ffffff00;
+  --button-shadow-color: #00000000;
   width: 98% !important;
   height: 112% !important;
   -webkit-filter: box-shadow(0px 2px 3px rgba(255, 0, 0, 0.986));
@@ -442,11 +470,11 @@
   right: 0;
   height: 50px;
   z-index: 1000;
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0) 80%,
-    rgba(255, 255, 255, 0.473) 100%
-  );
+  // background: linear-gradient(
+  //   to bottom,
+  //   rgba(255, 255, 255, 0) 80%,
+  //   rgba(255, 255, 255, 0.473) 100%
+  // );
 }
 .shadow {
   box-shadow: 0 0.5em 1em -0.125em hsla(220, 14%, 4%, 0.26),
@@ -465,7 +493,8 @@
   position: relative;
   transition: box-shadow 220ms, border-radius 220ms, margin 220ms,
     background-color 220ms,
-    transform 150ms cubic-bezier(0.42, -0.16, 0.29, 1.03) 30ms;
+    transform 150ms cubic-bezier(0.42, -0.16, 0.29, 1.03) 30ms,
+    border-color 150ms;
 }
 
 .hover:hover::after {
@@ -503,6 +532,7 @@
   right: 0;
   height: 1px;
   background-color: rgba(53, 53, 53, 0.13);
+  transition: all 150ms ease;
 }
 
 .border {
@@ -517,6 +547,10 @@
   // transition: box-shadow, margin;
 
   // transition-duration: 12ms;
+}
+.border {
+  // border-top: 1px solid rgba(53, 53, 53, 0.13);
+  transition: all 150ms ease;
 }
 
 .border-light::before {
@@ -551,6 +585,7 @@
 
 .complete-cell {
   background-color: #61ffb8 !important;
+  color: #00884b !important;
   transition: all 200ms;
 }
 .min-text {
@@ -560,25 +595,25 @@
 .check {
   --button-primary-color: #61ffb8;
   --button-primary-color-hover: #61ffb8;
-  --button-primary-color-active: #fffd6a;
+  --button-primary-color-active: #f6ff79;
   --button-primary-color-light: #00884b;
 }
 
 .question {
   --button-primary-color: #f6ff79;
   --button-primary-color-hover: #f6ff79;
-  --button-primary-color-active: #f5f5f5;
+  --button-primary-color-active: #fdfdfd;
   --button-primary-color-light: #9e9519;
 }
 
 .check-raise {
-  --button-primary-border: 1px solid #60a059;
-  --button-primary-color-dark: #76d36c;
+  --button-primary-border: 1px solid #00884b80;
+  --button-primary-color-dark: #51df9f;
 }
 
 .question-raise {
-  --button-primary-border: 1px solid #cac02a;
-  --button-primary-color-dark: #e0d466;
+  --button-primary-border: 1px solid #9e951980;
+  --button-primary-color-dark: #e4e151;
 }
 
 .header-button-section {
@@ -599,6 +634,16 @@
   width: 40px;
   height: 64px;
   right: 100%;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.fu-cell {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   padding: 12px;

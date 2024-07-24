@@ -26,12 +26,22 @@ export default function TextBoxHelpers({ content }) {
 
   return (
     <div>
-      <div ref={tagRef1} className="has-background-dark note-helper note-tag-r">
-        <span className="tag">CTRL + Enter: Save</span>
+      <div
+        ref={tagRef1}
+        className="has-background-grey-dark note-helper note-tag-r"
+      >
+        <span className="tag has-background-grey-dark has-text-white">
+          Ctrl + Enter: Save
+        </span>
       </div>
 
-      <div ref={tagRef2} className="has-background-dark note-helper note-tag-l">
-        <span className="tag">ESC: Close</span>
+      <div
+        ref={tagRef2}
+        className="has-background-grey-dark note-helper note-tag-l"
+      >
+        <span className="tag has-background-grey-dark has-text-white">
+          Esc: Close
+        </span>
       </div>
     </div>
   );

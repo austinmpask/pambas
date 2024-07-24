@@ -1,7 +1,13 @@
 import { AwesomeButton } from "react-awesome-button";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faQuestion } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faFlag,
+  faQuestion,
+  faRotateLeft,
+  faSquareCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import "react-awesome-button/dist/styles.css";
 
 export default function CheckBoxButton({
@@ -13,18 +19,20 @@ export default function CheckBoxButton({
 }) {
   //Click checkbox: cycle thru 0-2, update state optimistically, trigger api request
   function handleCheckBoxClick() {
-    setLoading(true);
+    if (active) {
+      setLoading(true);
 
-    //Cycle through the checkbox options
-    //Checkbox can be 0, 1, 2
-    const newVal = cbState < 2 ? cbState + 1 : 0;
+      //Cycle through the checkbox options
+      //Checkbox can be 0, 1, 2
+      const newVal = cbState < 2 ? cbState + 1 : 0;
 
-    //Optimistic update state, trigger api request
-    setLineState((prev) => {
-      const cb = [...prev.checkBoxes];
-      cb[index] = newVal;
-      return { ...prev, checkBoxes: [...cb] };
-    });
+      //Optimistic update state, trigger api request
+      setLineState((prev) => {
+        const cb = [...prev.checkBoxes];
+        cb[index] = newVal;
+        return { ...prev, checkBoxes: [...cb] };
+      });
+    }
   }
 
   const [raiseLevel, setRaiseLevel] = useState(0);
@@ -74,7 +82,7 @@ export default function CheckBoxButton({
                   case 1:
                     return faCheck;
                   case 2:
-                    return faQuestion;
+                    return faRotateLeft;
                 }
               })()}
             />

@@ -22,8 +22,9 @@ export default function PendingItemList({
   numPending,
   setLineState,
   setHeaderStats,
+  controlNumber,
 }) {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   //Track a list of open items, initially set to false to allow for conditional rendering w/o visual glitch with CSSTransition
   const [items, setItems] = useState(false);
@@ -49,14 +50,14 @@ export default function PendingItemList({
     <div className="side-card card item-list page-wrapper">
       <ItemModal
         lineID={lineID}
-        open={menuOpen}
-        setOpen={setMenuOpen}
+        open={modalOpen}
+        setOpen={setModalOpen}
         setLineState={setLineState}
         setHeaderStats={setHeaderStats}
       />
-      <div className="card-header has-text-white item-list-header has-background-grey-dark">
-        <span className="has-text-weight-medium">{`Open Items`}</span>
-        <div className="click-cell" onClick={() => setMenuOpen(true)}>
+      <div className="card-header has-text-white item-list-header">
+        <span className="has-text-weight-medium">{controlNumber}</span>
+        <div className="click-cell" onClick={() => setModalOpen(true)}>
           <span className="icon">
             <FontAwesomeIcon icon={faFileCirclePlus} />
           </span>

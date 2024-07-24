@@ -56,13 +56,13 @@ export default function ProjectEditableField({
       onClick={() => setEditing(true)}
     >
       {!editing && (
-        <span
-          className={`edit-span ${
-            title ? "title is-4 has-text-weight-bold" : ""
+        <label
+          className={`section-header ${
+            title ? " title is-4 has-text-weight-bold" : " has-text-white"
           }`}
         >
           {initialContent}
-        </span>
+        </label>
       )}
       {editing && (
         <>

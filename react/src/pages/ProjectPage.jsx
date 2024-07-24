@@ -13,6 +13,7 @@ import ProjectGrid from "src/components/projectpage/ProjectGrid";
 //Utils
 import toastRequest from "src/utils/toastRequest";
 import { CSSTransition } from "react-transition-group";
+import { LockoutProvider } from "../context/LockoutContext";
 
 //Context to pass updater function to children
 export const ProjectUpdaterContext = createContext(undefined);
@@ -139,29 +140,31 @@ export default function ProjectPage() {
 
   return (
     <>
-      <div className="has-background-light">
-        <NavBar />
-        <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
-          <CSSTransition
-            in={contextSlice}
-            unmountOnExit
-            timeout={360}
-            classNames={"header-card"}
-          >
-            <ProjectHeader
+      <LockoutProvider>
+        <div className="has-background-light">
+          <NavBar />
+          <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
+            <CSSTransition
+              in={contextSlice}
+              unmountOnExit
+              timeout={360}
+              classNames={"header-card"}
+            >
+              <ProjectHeader
+                contextSlice={contextSlice}
+                projectDetails={projectDetails}
+                headerStats={headerStats}
+                setProjectDetails={setProjectDetails}
+              />
+            </CSSTransition>
+            <ProjectGrid
               contextSlice={contextSlice}
               projectDetails={projectDetails}
-              headerStats={headerStats}
-              setProjectDetails={setProjectDetails}
+              setHeaderStats={setHeaderStats}
             />
-          </CSSTransition>
-          <ProjectGrid
-            contextSlice={contextSlice}
-            projectDetails={projectDetails}
-            setHeaderStats={setHeaderStats}
-          />
-        </ProjectUpdaterContext.Provider>
-      </div>
+          </ProjectUpdaterContext.Provider>
+        </div>
+      </LockoutProvider>
     </>
   );
 }

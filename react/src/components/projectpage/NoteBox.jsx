@@ -7,9 +7,13 @@ export default function NoteBox({
   lineState,
   setLineState,
   setLoading,
+  active,
+  exit,
+  complete,
 }) {
   //Ref for input box for focus
   const noteRef = useRef(null);
+  const boxRef = useRef(null);
 
   //Keep track of contents of note box for the item
   const [noteState, setNoteState] = useState(lineState.notes || "");
@@ -24,7 +28,7 @@ export default function NoteBox({
   function openNote() {
     setWritingNote(true);
     //Expand the row for visibility
-    noteRef.current.parentNode.classList.add("expanded");
+    boxRef.current.parentNode.classList.add("expanded");
 
     //Bring note z index above any others
     noteRef.current.classList.add("top");
@@ -35,8 +39,10 @@ export default function NoteBox({
 
   function closeNote() {
     //Collapse line item row, unfocus the note
-    noteRef.current.parentNode.classList.remove("expanded");
+    boxRef.current.parentNode.classList.remove("expanded");
     noteRef.current.blur();
+    boxRef.current.blur();
+    exit();
 
     //Remove the helper tags midway thru transition so it looks nice
     setTimeout(() => {
@@ -61,17 +67,25 @@ export default function NoteBox({
   }
 
   return (
-    <>
-      <input
-        className="input is-small notes-input"
+    <div
+      className={`note-cell ${active && " note-cell-active "} ${
+        complete && !active && " complete-cell"
+      }`}
+      ref={boxRef}
+    >
+      <textarea
+        className={`input is-small notes-input has-text-grey ${
+          active && "active-text"
+        } ${complete && !active && " complete-cell min-text"}`}
         type="text"
+        onClick={() => active && !writingNote && openNote()}
         ref={noteRef}
-        onClick={() => !writingNote && openNote()}
         value={noteState}
         onChange={(e) => setNoteState(e.target.value)}
         onKeyDown={noteKeyDownHandler}
+        disabled={!active}
       />
       {writingNote && <TextBoxHelpers content={noteState} />}
-    </>
+    </div>
   );
 }

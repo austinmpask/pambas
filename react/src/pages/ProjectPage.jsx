@@ -76,7 +76,8 @@ export default function ProjectPage() {
 
     //Make proper adjustment to add/subtract billing
     if (key === "billed") {
-      value = contextSlice["billed"] + value;
+      //TODO: make a validator for this
+      value = Math.min(200, Math.max(0, contextSlice["billed"] + value));
     }
 
     //Update the slice with whatever the value the user changed

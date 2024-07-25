@@ -6,6 +6,7 @@ export default function CircleMeter({
   displayVal,
   max,
   color = "blue",
+  fill = "#f0f0f0",
   percentage = false,
   size = 50,
 }) {
@@ -22,15 +23,13 @@ export default function CircleMeter({
       <CircularProgressbar
         value={val}
         maxValue={max}
-        text={`${displayVal ? String(displayVal) : String(val)}${
-          percentage ? "%" : ""
-        }`}
+        text={`${displayVal ? displayVal : val}${percentage ? "%" : ""}`}
         strokeWidth={10}
         styles={buildStyles({
           textSize: percentage ? "1.8em" : "2em",
-          textColor: "#2E333D",
+          textColor: fill === "white" ? "#ffffff" : "#2E333D",
           pathColor: colors[color],
-          trailColor: "#f0f0f0",
+          trailColor: fill,
         })}
       />
     </div>

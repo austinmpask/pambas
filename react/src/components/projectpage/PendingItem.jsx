@@ -84,7 +84,7 @@ export default function PendingItem({ data, setLineState, setHeaderStats }) {
           itemData={itemData}
           setItemData={setItemData}
         />
-        <div className="message-header pending-item-header has-background-grey-dark has-text-white">
+        <div className="message-header pending-item-header default-header-color has-text-white">
           <div
             className="pending-item-title"
             onClick={() => setEditing(true)}

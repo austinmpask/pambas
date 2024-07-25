@@ -57,7 +57,7 @@ export default function ProjectEditableField({
     >
       {!editing && (
         <label
-          className={`section-header ${
+          className={`section-header has-text-white ${
             title ? " title is-4 has-text-weight-bold" : " has-text-white"
           }`}
         >

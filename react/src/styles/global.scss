@@ -1,6 +1,12 @@
 //Bulma
 @import "bulma/sass";
 
+:root {
+  --toastify-color-success: #61ffb8;
+  --toastify-text-color-success: #00884b;
+  --toastify-color-error: #ff6685;
+}
+
 //Show navbar burger on all devices
 .navbar-burger {
   display: block !important;
@@ -39,7 +45,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  background-color: hsl(221, 23%, 43%);
+  // background-color: hsl(221, 23%, 43%);
 
   padding-left: 20px;
   padding-right: 20px;
@@ -125,6 +131,10 @@
   height: 100%;
   width: 99%;
   transition: all 200ms;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .note-cell-active {
@@ -222,12 +232,45 @@
 .notes-input {
   height: 100% !important;
   border: none !important;
-  transition: all;
-  transition-duration: 200ms;
+  transition: all 200ms ease, background-color 0ms;
   position: relative;
   z-index: 20;
   overflow-y: hidden;
   resize: none !important;
+  background-color: #00000000;
+}
+
+.note-wrapper {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  transition: all 150ms ease;
+}
+
+.shrink {
+  width: 97% !important;
+  height: 84% !important;
+  transition: all 150ms ease;
+}
+
+.active-text {
+  overflow-y: auto !important;
+  background-color: hsl(0, 0%, 96%) !important;
+  color: rgb(44, 44, 46) !important;
+  transition: width 200ms ease, height 100ms ease;
+  // width: 99% !important;
+  position: absolute;
+}
+
+.active-text:focus {
+  // height: 100% !important;
+  transition: width 200ms ease, height 100ms ease;
+  outline: 3px solid rgba(56, 139, 255, 0.76);
+  position: relative;
 }
 
 .section-card {
@@ -248,16 +291,17 @@
 
 .note-helper {
   position: absolute !important;
-  z-index: 10;
+  filter: opacity(0);
   top: 0px;
-  transition: top;
-  transition-duration: 300ms;
+  transition: top 300ms ease, filter 20ms ease;
+  // transition-duration: 300ms;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 }
 
 .note-scoot {
   top: 100% !important;
+  filter: opacity(1);
 }
 
 .note-tag-r {
@@ -397,9 +441,9 @@
 }
 
 .aws-btn {
-  --button-primary-color: #ffffff;
+  --button-primary-color: #ffffff00;
   --button-primary-color-light: hsl(0, 0%, 29%);
-  --button-primary-color-hover: #ffffff;
+  --button-primary-color-hover: #ffffff00;
   --button-primary-color-active: #b3b3b3;
   --button-primary-border: 1px solid #dadada00;
   --button-primary-color-dark: #cfcfcf00;
@@ -476,9 +520,13 @@ button.aws-btn.aws-btn--primary::before {
   //   rgba(255, 255, 255, 0.473) 100%
   // );
 }
+
+//Adjust for themeing
 .shadow {
+  // box-shadow: 0 0.5em 1em -0.125em hsla(220, 14%, 4%, 0.26),
+  //   0 0 0 2px rgb(221, 221, 221);
   box-shadow: 0 0.5em 1em -0.125em hsla(220, 14%, 4%, 0.26),
-    0 0 0 2px rgb(221, 221, 221);
+    0 0 0 2px rgba(196, 210, 229, 0.76);
   position: relative !important;
   z-index: 100 !important;
   border-radius: 9px;
@@ -661,14 +709,23 @@ button.aws-btn.aws-btn--primary::before {
   justify-content: flex-start;
   align-items: center;
   box-shadow: none;
-  transition: box-shadow 65ms linear, margin 160ms ease-in-out,
-    transform 130ms ease-in-out,
+  transition: background-color 180ms, box-shadow 65ms linear,
+    margin 160ms ease-in-out, transform 130ms ease-in-out,
     min-height 250ms cubic-bezier(0.12, 0.415, 0.36, 0.995);
   margin: 0 0 10px 0;
   padding: 0 12px;
+  background-color: #00000000;
 
   user-select: none;
   -webkit-user-select: none;
+}
+
+.default-page-background {
+  // background: linear-gradient(
+  //   170deg,
+  //   hsl(0, 0%, 88%) 33%,
+  //   hsl(0, 0%, 77%) 100%
+  // ) !important;
 }
 
 .header-button:hover {
@@ -676,6 +733,7 @@ button.aws-btn.aws-btn--primary::before {
   transform: translateY(-3px);
   position: relative;
   margin: 0 0 13px 0;
+  background-color: hsl(221, 14%, 100%);
 }
 
 .header-button-menu-open {
@@ -732,6 +790,23 @@ button.aws-btn.aws-btn--primary::before {
   background-color: hsl(221, 23%, 43%);
   transition: box-shadow 200ms;
   display: grid !important;
+}
+
+.default-header-color {
+  background-color: none !important;
+  background: linear-gradient(
+    72deg,
+    hsl(216, 45%, 43%) 0%,
+    hsl(241, 33%, 36%) 100%
+  ) !important;
+}
+
+.default-body-background {
+  background: linear-gradient(
+    155deg,
+    hsl(221, 14%, 100%) 45%,
+    hsl(180, 100%, 98%) 100%
+  ) !important;
 }
 
 .modal-background {

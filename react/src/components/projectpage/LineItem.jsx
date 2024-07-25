@@ -153,6 +153,7 @@ export default function LineItem({ lineItemData, setHeaderStats, index }) {
   return (
     <>
       <div
+        style={up ? { zIndex: "20" } : { zIndex: "0" }}
         className={`grid ${active && "shadow "} ${
           !active && lockout && index && " border-light"
         } ${!lockout && index ? " border" : " invis-border"}  ${
@@ -250,7 +251,7 @@ export default function LineItem({ lineItemData, setHeaderStats, index }) {
           }`}
         >
           <div
-            className={active && "click-cell"}
+            className={active && "click-cell p-5"}
             onClick={() => {
               if (active) {
                 setMenuOpen((prev) => !prev);

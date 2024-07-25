@@ -29,7 +29,7 @@ export default function MeterButton({
 
   function billClient() {
     //Make request if there was an amount entered
-    if (amountToBill !== 0) onSubmit(objKey, amountToBill);
+    if (amountToBill !== 0) onSubmit(objKey, Number(amountToBill));
     setMenuOpen(false);
   }
 
@@ -64,12 +64,12 @@ export default function MeterButton({
               className="input bill-input"
               type="number"
               value={amountToBill}
-              onChange={(e) => setAmountToBill(e.target.value)}
+              onChange={(e) => setAmountToBill(Number(e.target.value))}
             ></input>
 
             <button
               className="button bill-button"
-              onClick={() => setAmountToBill((prev) => prev - 1)}
+              onClick={() => setAmountToBill((prev) => Number(prev) - 1)}
             >
               <span className="icon">
                 <FontAwesomeIcon icon={faMinus} />
@@ -77,7 +77,7 @@ export default function MeterButton({
             </button>
             <button
               className="button bill-button is-dark"
-              onClick={() => setAmountToBill((prev) => prev + 1)}
+              onClick={() => setAmountToBill((prev) => Number(prev) + 1)}
             >
               <span className="icon">
                 <FontAwesomeIcon icon={faPlus} />

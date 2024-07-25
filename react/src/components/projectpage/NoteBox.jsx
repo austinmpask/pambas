@@ -73,19 +73,21 @@ export default function NoteBox({
       }`}
       ref={boxRef}
     >
-      <textarea
-        className={`input is-small notes-input has-text-grey ${
-          active && "active-text"
-        } ${complete && !active && " complete-cell min-text"}`}
-        type="text"
-        onClick={() => active && !writingNote && openNote()}
-        ref={noteRef}
-        value={noteState}
-        onChange={(e) => setNoteState(e.target.value)}
-        onKeyDown={noteKeyDownHandler}
-        disabled={!active}
-      />
-      {writingNote && <TextBoxHelpers content={noteState} />}
+      <div className={`note-wrapper ${writingNote && " shrink"}`}>
+        <textarea
+          className={`input is-small notes-input has-text-grey ${
+            active && "active-text"
+          } ${complete && !active && " complete-cell min-text"}`}
+          type="text"
+          onClick={() => active && !writingNote && openNote()}
+          ref={noteRef}
+          value={noteState}
+          onChange={(e) => setNoteState(e.target.value)}
+          onKeyDown={noteKeyDownHandler}
+          disabled={!active}
+        />
+        {writingNote && <TextBoxHelpers content={noteState} />}
+      </div>
     </div>
   );
 }

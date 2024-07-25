@@ -28,9 +28,9 @@ export default function ProjectSection({
   }
 
   return (
-    <div className="card mt-6 section-card">
+    <div className="card mt-6 section-card default-body-background">
       <div
-        className="card-header sec-header"
+        className="card-header sec-header default-header-color"
         style={lockout ? { boxShadow: "none" } : {}}
       >
         <div className="fixed-grid has-6-cols">

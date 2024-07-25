@@ -40,7 +40,7 @@ export default function TextBoxHelpers({ content }) {
         className="has-background-grey-dark note-helper note-tag-l"
       >
         <span className="tag has-background-grey-dark has-text-white">
-          Esc: Close
+          Esc: Cancel
         </span>
       </div>
     </div>

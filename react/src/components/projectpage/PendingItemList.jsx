@@ -47,7 +47,7 @@ export default function PendingItemList({
   }, [numPending]);
 
   return createPortal(
-    <div className="side-card card item-list page-wrapper">
+    <div className="side-card card item-list page-wrapper default-body-background">
       <ItemModal
         lineID={lineID}
         open={modalOpen}
@@ -55,7 +55,7 @@ export default function PendingItemList({
         setLineState={setLineState}
         setHeaderStats={setHeaderStats}
       />
-      <div className="card-header has-text-white item-list-header">
+      <div className="card-header has-text-white item-list-header default-header-color">
         <span className="has-text-weight-medium">{controlNumber}</span>
         <div className="click-cell" onClick={() => setModalOpen(true)}>
           <span className="icon">

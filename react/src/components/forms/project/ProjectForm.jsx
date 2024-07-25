@@ -12,10 +12,10 @@ import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
-import { Validators, DataFields } from "src/utils/validations";
+import { Validators, DataFields } from "../../../utils/validations";
 
 //Form
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import FormField from "src/components/forms/components/FormField";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
 
@@ -24,6 +24,7 @@ import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
 
 //Children
 import FormProjectSection from "src/components/forms/project/FormProjectSection";
+// import ReactSelect from "react-select";
 
 //Form for setting up a new project
 export default function ProjectForm() {
@@ -39,6 +40,7 @@ export default function ProjectForm() {
     register,
     handleSubmit,
     formState: { errors },
+    control,
   } = useForm();
 
   //Child components for dynamic "sections"/righthand section of form
@@ -108,8 +110,8 @@ export default function ProjectForm() {
 
   //Create a new project via note api for user
   async function createProject(data) {
-    const payload = { ...data, sections: childrenState };
-    console.log(payload);
+    const payload = { ...data, type: data.type.value, sections: childrenState };
+    // console.log(payload);
     await toastRequest({
       method: "POST",
       route: "/project",
@@ -164,11 +166,13 @@ export default function ProjectForm() {
 
                 <FormField
                   field="type"
+                  type="dropdown"
                   error={errors.type?.message}
                   label={DataFields.PROJECT_TYPE_LABEL}
-                  validations={Validators.ProjectType}
                   loading={loading}
-                  register={register}
+                  control={control}
+                  defaultValue={DataFields.DEFAULT_PROJ_TYPE}
+                  options={DataFields.PROJECT_TYPES}
                 />
 
                 <FormField

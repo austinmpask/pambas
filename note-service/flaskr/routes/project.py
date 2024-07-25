@@ -141,7 +141,7 @@ def postProject(userUUID):
         sectionsList = Validators.sectionsList(reqBody.get("sections"))
         title = Validators.projectTitle(reqBody.get("name"))
         projectManager = Validators.projectManager(reqBody.get("manager"))
-        type = Validators.projectType("Other")
+        type = Validators.projectType(reqBody.get("type"))
         budget = Validators.budget(reqBody.get("budget"))
 
     # Catch validation errors

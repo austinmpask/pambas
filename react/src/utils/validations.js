@@ -57,13 +57,31 @@ export class DataFields {
   static PROJECT_TYPE_MIN_LENGTH = 2;
   static PROJECT_TYPE_MAX_LENGTH = 15;
 
+  //Options for react-select
+  static S1T1_NAME = "SOC 1 Type 1";
+  static S1T1_SELECT = { value: this.S1T1_NAME, label: this.S1T1_NAME };
+
+  static S1T2_NAME = "SOC 1 Type 2";
+  static S1T2_SELECT = { value: this.S1T2_NAME, label: this.S1T2_NAME };
+
+  static S2T1_NAME = "SOC 2 Type 1";
+  static S2T1_SELECT = { value: this.S2T1_NAME, label: this.S2T1_NAME };
+
+  static S2T2_NAME = "SOC 2 Type 2";
+  static S2T2_SELECT = { value: this.S2T2_NAME, label: this.S2T2_NAME };
+
+  static OTHER_NAME = "Other";
+  static OTHER_SELECT = { value: this.OTHER_NAME, label: this.OTHER_NAME };
+
   static PROJECT_TYPES = [
-    "SOC 1 Type 1",
-    "SOC 1 Type 2",
-    "SOC 2 Type 1",
-    "SOC 2 Type 2",
-    "Other",
+    this.S1T1_SELECT,
+    this.S1T2_SELECT,
+    this.S2T1_SELECT,
+    this.S2T2_SELECT,
+    this.OTHER_SELECT,
   ];
+
+  static DEFAULT_PROJ_TYPE = this.S2T2_SELECT;
 
   static HEADER_LABEL = "Column Header";
   static HEADER_MIN_LENGTH = 0;

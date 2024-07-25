@@ -232,11 +232,12 @@
 .notes-input {
   height: 100% !important;
   border: none !important;
-  transition: all 200ms ease, background-color 0ms;
+  transition: all 200ms ease, background-color 0ms !important;
   position: relative;
   z-index: 20;
   overflow-y: hidden;
   resize: none !important;
+  outline: 3px solid #00000000;
   background-color: #00000000;
 }
 
@@ -261,7 +262,8 @@
   overflow-y: auto !important;
   background-color: hsl(0, 0%, 96%) !important;
   color: rgb(44, 44, 46) !important;
-  transition: width 200ms ease, height 100ms ease;
+  transition: width 200ms ease, height 100ms ease, outline 150ms ease 200ms;
+  outline: 3px solid rgba(0, 255, 13, 0);
   // width: 99% !important;
   position: absolute;
 }
@@ -269,8 +271,14 @@
 .active-text:focus {
   // height: 100% !important;
   transition: width 200ms ease, height 100ms ease;
-  outline: 3px solid rgba(56, 139, 255, 0.76);
   position: relative;
+}
+
+.input-attention {
+  outline: 3px solid rgba(255, 56, 56, 0.87);
+}
+.input-attention:focus {
+  outline: 3px solid rgb(0, 162, 255);
 }
 
 .section-card {
@@ -291,7 +299,7 @@
 
 .note-helper {
   position: absolute !important;
-  filter: opacity(0);
+  // filter: opacity(0);
   top: 0px;
   transition: top 300ms ease, filter 20ms ease;
   // transition-duration: 300ms;
@@ -301,15 +309,22 @@
 
 .note-scoot {
   top: 100% !important;
-  filter: opacity(1);
+  // filter: opacity(1);
 }
 
 .note-tag-r {
   right: 4px;
+  background-color: #13b36b;
+  z-index: 120;
+}
+
+.tag {
+  background-color: #00000000 !important;
 }
 
 .note-tag-l {
   left: 4px;
+  background-color: #c7304e;
 }
 
 .project-title {
@@ -328,10 +343,30 @@
   display: flex !important;
   flex-direction: row;
   align-items: center;
+  // height: auto !important
+  // margin-right: 20px;
 }
 
 .edit-input {
+  position: absolute;
+}
+
+.title-input {
+  // outline: 3px solid rgba(56, 139, 255, 0.76);
+  height: 36px !important;
+  width: 100%;
+  background-color: hsl(0, 0%, 96%);
+}
+
+.small-input {
   position: relative !important;
+  margin: 0 12px;
+}
+.small-field-input {
+  // height: 12px !important;
+  background-color: hsl(0, 0%, 96%);
+  height: 26px;
+  font-size: 0.75em;
 }
 
 .edit-span {

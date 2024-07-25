@@ -54,6 +54,7 @@ export default function ProjectSection({
                         initialContent={header}
                         objKey={i}
                         onSubmit={updateHeaders}
+                        mini={true}
                       />
                     )}
                   </div>

@@ -1,7 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBan,
+  faFloppyDisk,
+  faRectangleXmark,
+  faTurnDown,
+} from "@fortawesome/free-solid-svg-icons";
+
 //Popups that fall below input field to display keyboard commands for closing/saving
-export default function TextBoxHelpers({ content }) {
+export default function TextBoxHelpers({ content, mini = false }) {
   const tagRef1 = useRef(null);
   const tagRef2 = useRef(null);
 
@@ -27,20 +35,28 @@ export default function TextBoxHelpers({ content }) {
   return (
     <div>
       <div
+        style={mini ? { left: "4px" } : {}}
         ref={tagRef1}
-        className="has-background-grey-dark note-helper note-tag-r"
+        className="note-helper note-tag-r"
       >
-        <span className="tag has-background-grey-dark has-text-white">
-          Ctrl + Enter: Save
+        <span className="tag has-text-white has-text-weight-semibold">
+          Ctrl + Enter:&nbsp;
+          <span className="icon-text">
+            <span className="icon" style={{ paddingTop: "2px" }}>
+              <FontAwesomeIcon icon={faFloppyDisk} />
+            </span>
+          </span>
         </span>
       </div>
 
-      <div
-        ref={tagRef2}
-        className="has-background-grey-dark note-helper note-tag-l"
-      >
-        <span className="tag has-background-grey-dark has-text-white">
-          Esc: Cancel
+      <div ref={tagRef2} className="note-helper note-tag-l">
+        <span className="tag has-text-white has-text-weight-semibold">
+          Esc:&nbsp;
+          <span className="icon-text">
+            <span className="icon" style={{ paddingTop: "2px" }}>
+              <FontAwesomeIcon icon={faBan} />
+            </span>
+          </span>
         </span>
       </div>
     </div>

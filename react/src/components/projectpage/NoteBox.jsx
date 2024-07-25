@@ -73,11 +73,13 @@ export default function NoteBox({
       }`}
       ref={boxRef}
     >
-      <div className={`note-wrapper ${writingNote && " shrink"}`}>
+      <div className={`note-wrapper ${writingNote && "shrink"}`}>
         <textarea
           className={`input is-small notes-input has-text-grey ${
             active && "active-text"
-          } ${complete && !active && " complete-cell min-text"}`}
+          } ${writingNote && " input-attention"} ${
+            complete && !active && " complete-cell min-text"
+          }`}
           type="text"
           onClick={() => active && !writingNote && openNote()}
           ref={noteRef}

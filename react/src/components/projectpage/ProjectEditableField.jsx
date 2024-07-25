@@ -12,6 +12,7 @@ export default function ProjectEditableField({
   objKey,
   onSubmit,
   title,
+  mini,
 }) {
   const [editing, setEditing] = useState(false);
   const [hovering, setHovering] = useState(false);
@@ -66,9 +67,11 @@ export default function ProjectEditableField({
       )}
       {editing && (
         <>
-          <div className="edit-input">
+          <div className={`edit-input ${!title && " small-input"}`}>
             <input
-              className={`input top ${title ? "is-medium" : "is-small"}`}
+              className={`input top input-attention ${
+                title ? "title-input" : "small-field-input"
+              }`}
               type="text"
               placeholder={initialContent}
               value={inputState}
@@ -76,12 +79,12 @@ export default function ProjectEditableField({
               onKeyDown={handleKeys}
               ref={inputRef}
             />
-            <TextBoxHelpers content={inputState} />
+            <TextBoxHelpers content={inputState} mini={mini} />
           </div>
         </>
       )}
-      {(hovering || editing) && (
-        <span className="icon">
+      {hovering && !editing && (
+        <span className="icon has-text-white">
           <FontAwesomeIcon icon={faSquarePen} />
         </span>
       )}

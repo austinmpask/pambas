@@ -58,7 +58,7 @@ class PendingItem(Base):
             name="check_description",
         ),
         CheckConstraint(
-            f"length(control_owner) >= {DataFields.FULL_NAME_MIN_LENGTH} AND length(control_owner) <= {DataFields.FULL_NAME_MAX_LENGTH} AND control_owner ~* '^[A-Za-z ]+$'",
+            f"length(control_owner) >= {DataFields.CONTROL_OWNER_NAME_MIN_LENGTH} AND length(control_owner) <= {DataFields.FULL_NAME_MAX_LENGTH} AND control_owner ~* '^([A-Za-z ]*)$'",
             name="check_control_owner",
         ),
     )

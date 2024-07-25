@@ -142,6 +142,7 @@ export default function ItemModal({
                   loading={loading}
                   size="ff-med"
                   register={register}
+                  required={false}
                 />
 
                 <div className="field mb-3">
@@ -153,6 +154,7 @@ export default function ItemModal({
                     loading={loading}
                     size="ff-med"
                     register={register}
+                    required={false}
                   />
                 </div>
               </section>

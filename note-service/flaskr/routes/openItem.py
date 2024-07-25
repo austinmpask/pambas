@@ -126,8 +126,8 @@ def postOpenItem(userUUID):
     # Line item valid and owned by UUID, get rest of data
     try:
         itemName = Validators.itemName(reqBody.get("itemName"))
-        controlOwner = Validators.controlOwner(reqBody.get("controlOwner"))
-        description = Validators.description(reqBody.get("description"))
+        controlOwner = Validators.controlOwner(reqBody.get("controlOwner") or "")
+        description = Validators.description(reqBody.get("description") or "")
 
         newItem = PendingItem(
             item_name=itemName,

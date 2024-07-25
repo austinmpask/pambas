@@ -1,8 +1,8 @@
 """create tables
 
-Revision ID: 4002158d30ce
+Revision ID: 1bc03b1eadac
 Revises: 
-Create Date: 2024-07-15 21:14:16.374025
+Create Date: 2024-07-25 19:10:35.887923
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '4002158d30ce'
+revision = '1bc03b1eadac'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -65,7 +65,7 @@ def upgrade():
     sa.Column('last_contact_date', sa.DateTime(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=False),
     sa.Column('line_item_id', sa.Integer(), nullable=False),
-    sa.CheckConstraint("length(control_owner) >= 2 AND length(control_owner) <= 50 AND control_owner ~* '^[A-Za-z ]+$'", name='check_control_owner'),
+    sa.CheckConstraint("length(control_owner) >= 0 AND length(control_owner) <= 50 AND control_owner ~* '^([A-Za-z ]*)$'", name='check_control_owner'),
     sa.CheckConstraint("length(item_name) >= 2 AND length(item_name) <= 40 AND item_name ~* '^[A-Za-z0-9 ]+$'", name='check_item_name'),
     sa.CheckConstraint('length(description) >= 0 AND length(description) <= 200', name='check_description'),
     sa.ForeignKeyConstraint(['line_item_id'], ['line_items.id'], ),

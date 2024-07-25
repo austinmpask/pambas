@@ -66,13 +66,13 @@ class Validators:
 
     @staticmethod
     def validateAlphaNum(val, prettyName):
-        if not val.isalnum():
+        if val and not val.isalnum():
             raise ValueError(alphaNumError(prettyName))
         return val
 
     @staticmethod
     def validateAlpha(val, prettyName):
-        if not val.isalpha():
+        if val and not val.isalpha():
             raise ValueError(alphaError(prettyName))
         return val
 
@@ -399,7 +399,7 @@ class Validators:
             DataFields.PENDING_ITEM_NAME_MIN_LENGTH,
             DataFields.PENDING_ITEM_NAME_MAX_LENGTH,
         )
-        Validators.validateAlphaNum(val, n)
+        Validators.validateFullName(val, n)
 
         return str(val).strip().title()
 
@@ -425,7 +425,10 @@ class Validators:
         Validators.validateExists(val, n)
         Validators.validateType(val, n, DataFields.FULL_NAME_TYPE)
         Validators.validateLength(
-            val, n, DataFields.FULL_NAME_MIN_LENGTH, DataFields.FULL_NAME_MAX_LENGTH
+            val,
+            n,
+            DataFields.CONTROL_OWNER_NAME_MIN_LENGTH,
+            DataFields.FULL_NAME_MAX_LENGTH,
         )
         Validators.validateFullName(val, n)
 

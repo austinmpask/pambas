@@ -18,7 +18,7 @@ export default function MeterButton({
   color,
   percentage = false,
   label,
-  type = "bill",
+  type,
   objKey,
   onSubmit,
 }) {
@@ -43,7 +43,9 @@ export default function MeterButton({
     >
       <div
         className="header-button-section click-cell"
-        onClick={() => setMenuOpen((prev) => !prev)}
+        onClick={() => {
+          type === "bill" && setMenuOpen((prev) => !prev);
+        }}
       >
         <div className="mr-4">
           <CircleMeter

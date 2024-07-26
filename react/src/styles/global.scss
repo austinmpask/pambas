@@ -111,6 +111,7 @@
   border-right: 1px solid rgba(53, 53, 53, 0.13);
   width: 99%;
   transition: all 150ms;
+
   // border-right: 1px solid hsla(222, 14%, 71%, 0.3);
   // border-left: 1px solid hsla(222, 14%, 71%, 0.3);
   // border-right: 1px solid hsla(222, 14%, 71%, 0.3);
@@ -153,6 +154,19 @@
   position: relative;
 
   // transition: all 2000ms;
+}
+
+.field-icon {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  transition: all 150ms;
+}
+
+.field-icon-cont {
+  width: 40px !important;
+  height: 40px !important;
 }
 
 .control-cell-danger::after {
@@ -290,7 +304,7 @@
   min-width: 50vw;
   max-width: 90vw;
   z-index: 1 !important;
-  overflow-x: hidden;
+  // overflow-x: hidden;
 }
 
 .expanded {
@@ -866,7 +880,40 @@ button.aws-btn.aws-btn--primary::before {
 }
 
 .modal-background {
-  background-color: rgba(0, 0, 0, 0.397) !important;
+  background-color: rgba(0, 0, 0, 0.336) !important;
+}
+
+.area-input {
+  resize: none;
+
+  height: 95px;
+}
+
+.modal-card-foot {
+  padding: 20px 16px;
+}
+
+.modal-card-head {
+  height: 40px;
+  padding: 30px 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.modal-card-body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px 30px;
+  padding-bottom: 10px;
+}
+
+.modal-card {
+  width: auto;
 }
 
 .on-top {
@@ -981,14 +1028,24 @@ button.aws-btn.aws-btn--primary::before {
 }
 
 //modal
-.modal-enter {
-  filter: opacity(0);
+.modal-enter .modal-card {
+  // filter: opacity(0);
   transform: scale(95%);
 }
-.modal-enter-active {
-  filter: opacity(1);
+
+.modal-enter .modal-background {
+  filter: opacity(0);
+}
+.modal-enter-active .modal-card {
+  // filter: opacity(1);
   transform: scale(100%);
-  transition: all 100ms ease-out 10ms;
+  transition: all 200ms cubic-bezier(0.43, 1.59, 0.25, 1.01);
+}
+
+.modal-enter-active .modal-background {
+  filter: opacity(1);
+  // transform: scale(100%);
+  transition: all 200ms ease-out 10ms;
 }
 .modal-exit {
 }

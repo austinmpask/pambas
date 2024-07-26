@@ -1,5 +1,5 @@
 //React
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 //Utils
@@ -11,6 +11,14 @@ import { useForm } from "react-hook-form";
 import FormField from "src/components/forms/components/FormField";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
 import { CSSTransition } from "react-transition-group";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBarsStaggered,
+  faFile,
+  faFish,
+  faRectangleXmark,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 //Modal form which can be used to add a new pending item or edit an existing one
 export default function ItemModal({
@@ -30,6 +38,7 @@ export default function ItemModal({
     handleSubmit,
     reset,
     clearErrors,
+    watch,
     formState: { errors },
   } = useForm();
 
@@ -102,50 +111,87 @@ export default function ItemModal({
   //Modal to appear ontop of entire DOM
   return createPortal(
     <>
-      <div className={`modal${open ? " is-active" : ""}`}>
-        <div className="modal-background"></div>
-        <CSSTransition
-          in={open}
-          unmountOnExit
-          timeout={110}
-          classNames={"modal"}
-        >
+      <CSSTransition
+        in={open}
+        unmountOnExit
+        timeout={1000}
+        classNames={"modal"}
+      >
+        <div className={`modal${open ? " is-active" : ""}`}>
+          <div className="modal-background"></div>
           <div className="modal-card">
-            <header className="modal-card-head">
-              <p className="modal-card-title">{`${
+            <div className="modal-card-head default-sub-header-color">
+              <h2 className="title is-5 has-text-weight-medium has-text-white">{`${
                 editing ? "Edit " : "Add "
-              }Pending Item`}</p>
+              }Open Item`}</h2>
               <button
-                className="delete"
+                className="has-text-danger"
                 aria-label="close"
                 disabled={loading}
                 onClick={closeModal}
-              ></button>
-            </header>
+              >
+                <FontAwesomeIcon size="lg" icon={faRectangleXmark} />
+              </button>
+            </div>
             <form onSubmit={handleSubmit((data) => itemRequest(data))}>
               <section className="modal-card-body">
-                <FormField
-                  field="itemName"
-                  error={errors.itemName?.message}
-                  label={DataFields.PENDING_ITEM_NAME_LABEL}
-                  validations={Validators.PendingItemName}
-                  loading={loading}
-                  size="ff-med"
-                  register={register}
-                />
+                <div className="field-icon">
+                  <div
+                    className={`mr-3 field-icon-cont ${
+                      watch("itemName")
+                        ? "has-text-success"
+                        : "has-text-grey-light"
+                    }`}
+                  >
+                    <FontAwesomeIcon size="2x" icon={faFile} />
+                  </div>
+                  <FormField
+                    field="itemName"
+                    error={errors.itemName?.message}
+                    label={DataFields.PENDING_ITEM_NAME_LABEL}
+                    validations={Validators.PendingItemName}
+                    loading={loading}
+                    size="ff-med"
+                    register={register}
+                  />
+                </div>
 
-                <FormField
-                  field="controlOwner"
-                  error={errors.controlOwner?.message}
-                  label={DataFields.CONTROL_OWNER_NAME_LABEL}
-                  validations={Validators.ControlOwnerName}
-                  loading={loading}
-                  size="ff-med"
-                  register={register}
-                  required={false}
-                />
+                <div className="field-icon">
+                  <div
+                    className={`mr-3 field-icon-cont ${
+                      watch("controlOwner")
+                        ? "has-text-success"
+                        : "has-text-grey-light"
+                    }`}
+                  >
+                    {watch("controlOwner") ? (
+                      <FontAwesomeIcon size="2x" icon={faFish} />
+                    ) : (
+                      <FontAwesomeIcon size="2x" icon={faUser} />
+                    )}
+                  </div>
+                  <FormField
+                    field="controlOwner"
+                    error={errors.controlOwner?.message}
+                    label={DataFields.CONTROL_OWNER_NAME_LABEL}
+                    validations={Validators.ControlOwnerName}
+                    loading={loading}
+                    size="ff-med"
+                    register={register}
+                    required={false}
+                  />
+                </div>
 
-                <div className="field mb-3">
+                <div className="field-icon">
+                  <div
+                    className={`mr-3 field-icon-cont ${
+                      watch("description")
+                        ? "has-text-success"
+                        : "has-text-grey-light"
+                    }`}
+                  >
+                    <FontAwesomeIcon size="2x" icon={faBarsStaggered} />
+                  </div>
                   <FormField
                     field="description"
                     error={errors.description?.message}
@@ -155,6 +201,7 @@ export default function ItemModal({
                     size="ff-med"
                     register={register}
                     required={false}
+                    type="textarea"
                   />
                 </div>
               </section>
@@ -168,8 +215,8 @@ export default function ItemModal({
               </footer>
             </form>
           </div>
-        </CSSTransition>
-      </div>
+        </div>
+      </CSSTransition>
     </>,
     document.body
   );

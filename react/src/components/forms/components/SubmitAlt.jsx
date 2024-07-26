@@ -11,7 +11,7 @@ export default function SubmitAlt({
       <div className="control">
         <button
           type="submit"
-          className={`button is-link ${loading && " is-loading"}`}
+          className={`button is-dark ${loading && " is-loading"}`}
           disabled={loading}
         >
           {submitLabel}
@@ -23,7 +23,7 @@ export default function SubmitAlt({
             e.preventDefault();
             altAction();
           }}
-          className="button is-light"
+          className="button"
           disabled={loading}
         >
           {altLabel}

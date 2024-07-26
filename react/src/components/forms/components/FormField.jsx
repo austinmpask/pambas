@@ -30,6 +30,14 @@ export default function FormField({
             defaultValue={defaultValue}
             render={({ field }) => <Select {...field} options={options} />}
           />
+        ) : type === "textarea" ? (
+          <textarea
+            className={`input area-input ${error ? "is-danger" : ""}`}
+            type={type}
+            {...register(field, validations)}
+            disabled={loading}
+            placeholder={placeHolder ? placeHolder : ""}
+          />
         ) : (
           <input
             className={`input ${error ? "is-danger" : ""}`}

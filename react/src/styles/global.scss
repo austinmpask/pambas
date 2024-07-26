@@ -51,10 +51,6 @@
   padding-right: 20px;
 }
 
-.fixed-grid {
-  // margin-bottom: 2px;
-}
-
 .hamburger-div {
   display: grid !important;
 }
@@ -199,6 +195,10 @@
   height: 54px;
 }
 
+// .message-body-item {
+//   height: auto;
+// }
+
 .line-item-cell {
   min-height: 64px;
   transition: min-height 200ms, background-color 200ms;
@@ -280,6 +280,9 @@
 .input-attention:focus {
   outline: 3px solid rgb(0, 162, 255);
 }
+.input-outline {
+  outline: 3px solid rgb(0, 162, 255);
+}
 
 .section-card {
   position: relative !important;
@@ -287,6 +290,7 @@
   min-width: 50vw;
   max-width: 90vw;
   z-index: 1 !important;
+  overflow-x: hidden;
 }
 
 .expanded {
@@ -299,26 +303,27 @@
 
 .note-helper {
   position: absolute !important;
-  // filter: opacity(0);
+  filter: opacity(0);
   top: 0px;
-  transition: top 300ms ease, filter 20ms ease;
-  // transition-duration: 300ms;
+  transition: top 300ms ease, filter 10ms ease;
+  transition-duration: 300ms;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 }
 
 .note-scoot {
   top: 100% !important;
-  // filter: opacity(1);
+  filter: opacity(1);
+  transition-duration: filter 60ms;
 }
 
 .note-tag-r {
   right: 4px;
-  background-color: #13b36b;
-  z-index: 120;
+  background-color: #17c476;
+  z-index: 2;
 }
 
-.tag {
+.note-helper .tag {
   background-color: #00000000 !important;
 }
 
@@ -367,6 +372,7 @@
   background-color: hsl(0, 0%, 96%);
   height: 26px;
   font-size: 0.75em;
+  border-radius: 3px;
 }
 
 .edit-span {
@@ -396,12 +402,11 @@
 }
 
 .pending-item-header {
-  height: 18px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding-left: 6px !important;
-  padding-right: 6px !important;
+  padding: 8px 10px !important;
+  font-size: 1.1em;
 }
 
 .pending-item-card {
@@ -423,10 +428,10 @@
 .description-box {
   border-radius: 6px;
   padding: 0.5rem;
-  padding-bottom: 1.2rem;
+  padding-bottom: 1rem;
   width: 100%;
   background-color: rgba(64, 70, 84, 0.075);
-  margin-bottom: 1.8rem;
+  margin-bottom: 0.8rem;
 }
 
 .contact-card {
@@ -435,11 +440,18 @@
 }
 .tag-button {
   cursor: pointer;
+  background-color: rgba(64, 70, 84, 0.075);
+  border: 1px solid rgba(64, 70, 84, 0.137);
+}
+
+.tag-button:hover {
+  border: 1px solid rgba(64, 70, 84, 0.274);
+  background-color: rgba(64, 70, 84, 0.11);
 }
 
 .pending-item-title {
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.84em;
 }
 
 .field-error {
@@ -803,7 +815,7 @@ button.aws-btn.aws-btn--primary::before {
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
-  padding: 6px 8px;
+  padding: 4px 0;
   width: 100%;
   font-size: 0.7em;
 }
@@ -836,6 +848,15 @@ button.aws-btn.aws-btn--primary::before {
   ) !important;
 }
 
+.default-sub-header-color {
+  background-color: none !important;
+  background: linear-gradient(
+    72deg,
+    hsl(240, 11%, 22%) 0%,
+    hsl(213, 27%, 26%) 100%
+  ) !important;
+}
+
 .default-body-background {
   background: linear-gradient(
     155deg,
@@ -853,6 +874,7 @@ button.aws-btn.aws-btn--primary::before {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  transition: all 200ms;
 }
 
 .stacked {
@@ -865,8 +887,11 @@ button.aws-btn.aws-btn--primary::before {
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  margin: 2px !important;
-  min-height: 100px;
+  margin: 2px;
+  margin-bottom: 7px;
+}
+.item-card-body {
+  padding: 10px;
 }
 
 .item-list-body {
@@ -874,22 +899,25 @@ button.aws-btn.aws-btn--primary::before {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 20px;
+  padding: 15px;
   max-height: 80vh;
-  min-height: 200px;
-  // overflow-y: auto;
+  min-height: 100px;
+  overflow-y: auto;
 }
 
 .bill-input {
   width: 40%;
+  border-radius: 8px;
 }
 
 .bill-button {
-  width: 30px;
-  height: 30px;
-  border-radius: 4px;
-  margin-left: 10px;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  margin-left: 8px;
   padding: 0 !important;
+  color: white;
+  transition: all 50ms !important;
 }
 
 .bill-form {

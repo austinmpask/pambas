@@ -2,7 +2,7 @@
 export default function toTitle(str, firstOnly = false) {
   //Option for only capitalizing the first word of sentence
   if (firstOnly) {
-    capitalize(str);
+    return capitalize(str);
   } else {
     //Capitalize every word
     const splitString = str.split(" ");

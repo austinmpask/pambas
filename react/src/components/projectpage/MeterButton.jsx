@@ -3,7 +3,11 @@ import CircleMeter from "./CircleMeter";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleDollarToSlot,
+  faMinus,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { CSSTransition } from "react-transition-group";
 
 //Two types: "bill", and "modal". Bill will open the bill interface within the component, modal will open a list of pending items
@@ -61,14 +65,14 @@ export default function MeterButton({
         <div className="header-button-section">
           <div className="bill-form">
             <input
-              className="input bill-input"
+              className="input bill-input input-outline"
               type="number"
               value={amountToBill}
               onChange={(e) => setAmountToBill(Number(e.target.value))}
             ></input>
 
             <button
-              className="button bill-button"
+              className="button bill-button is-danger"
               onClick={() => setAmountToBill((prev) => Number(prev) - 1)}
             >
               <span className="icon">
@@ -76,7 +80,7 @@ export default function MeterButton({
               </span>
             </button>
             <button
-              className="button bill-button is-dark"
+              className="button bill-button is-success"
               onClick={() => setAmountToBill((prev) => Number(prev) + 1)}
             >
               <span className="icon">
@@ -86,10 +90,21 @@ export default function MeterButton({
           </div>
 
           <button
-            className="button is-success has-text-white"
+            className={`button ${
+              amountToBill !== 0 ? "is-dark" : "has-background-light"
+            }`}
             onClick={billClient}
+            style={{ transitionDuration: "150ms" }}
           >
-            Bill it!
+            <span className="icon-text">
+              <span
+                className="icon mr-1"
+                style={{ transitionDuration: "150ms" }}
+              >
+                <FontAwesomeIcon icon={faCircleDollarToSlot} />
+              </span>
+            </span>
+            <span>Bill</span>
           </button>
         </div>
       </CSSTransition>

@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFaceSmile,
   faFileCirclePlus,
+  faFish,
   faPaw,
 } from "@fortawesome/free-solid-svg-icons";
 //Children
@@ -56,7 +57,10 @@ export default function PendingItemList({
         setHeaderStats={setHeaderStats}
       />
       <div className="card-header has-text-white item-list-header default-header-color">
-        <span className="has-text-weight-medium">{controlNumber}</span>
+        <div>
+          <span className="has-text-weight-medium ">{controlNumber}</span>
+          <span className="has-text-weight-medium">&nbsp;&nbsp;Open Items</span>
+        </div>
         <div className="click-cell" onClick={() => setModalOpen(true)}>
           <span className="icon">
             <FontAwesomeIcon icon={faFileCirclePlus} />
@@ -69,7 +73,7 @@ export default function PendingItemList({
         style={
           items.length
             ? { justifyContent: "flex-start" }
-            : { justifyContent: "center" }
+            : { justifyContent: "center", minHeight: "200px" }
         }
       >
         <CSSTransition
@@ -94,7 +98,7 @@ export default function PendingItemList({
         {items && !items.length && (
           <>
             <span className="icon mb-3 has-text-grey-light">
-              <FontAwesomeIcon size="xl" icon={faPaw} />
+              <FontAwesomeIcon size="xl" icon={faFish} />
             </span>
             <label className="has-text-weight-medium has-text-grey-light">
               Nothing here!

@@ -118,6 +118,28 @@ export class DataFields {
   static PENDING_ITEM_DESC_LABEL = "Pending Item Description";
   static PENDING_ITEM_DESC_MIN_LENGTH = 0;
   static PENDING_ITEM_DESC_MAX_LENGTH = 200;
+
+  static QUERY_KEYWORDS = ["query", "sql", "generated"];
+  static POPULATION_KEYWORDS = ["pop", "population", "all"];
+  static SAMPLE_KEYWORDS = [
+    "sample",
+    "sampled",
+    "selected",
+    "each",
+    "randomly",
+    "random",
+    "person",
+    "chosen",
+  ];
+  static LOG_KEYWORDS = ["log", "list", "export", "listing"];
+  static IMAGE_KEYWORDS = [
+    "image",
+    "screenshot",
+    "picture",
+    "screen",
+    "shot",
+    "capture",
+  ];
 }
 
 //React hook form validators for use in forms

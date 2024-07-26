@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleExclamation,
   faFile,
-  faL,
+  faFileCirclePlus,
 } from "@fortawesome/free-solid-svg-icons";
 
 //Utils
@@ -258,15 +258,21 @@ export default function LineItem({ lineItemData, setHeaderStats, index }) {
               }
             }}
           >
-            {active ? (
+            {up ? (
               <div className="stacked">
                 <span
                   className={`icon on-top ${
-                    !lineState.pendingItems && "has-text-grey-light"
+                    !lineState.pendingItems && "has-text-grey"
                   }`}
-                  style={{ fontSize: "1.3em" }}
+                  style={
+                    active && !lineState.pendingItems
+                      ? { fontSize: "1.3em", opacity: "1" }
+                      : { fontSize: "1.3em", opacity: lineState.pendingItems }
+                  }
                 >
-                  <FontAwesomeIcon icon={faFile} />
+                  <FontAwesomeIcon
+                    icon={lineState.pendingItems ? faFile : faFileCirclePlus}
+                  />
                 </span>
                 {lineState.pendingItems !== 0 && (
                   <span
@@ -278,25 +284,22 @@ export default function LineItem({ lineItemData, setHeaderStats, index }) {
                 )}
               </div>
             ) : (
-              <div className="stacked">
-                <span
-                  className={`icon on-top ${
-                    lineState.pendingItems ? "has-text-grey" : "invis"
-                  }`}
-                  style={{ fontSize: "1.3em" }}
-                >
-                  <FontAwesomeIcon icon={faFile} />
-                </span>
-
-                {lineState.pendingItems !== 0 && (
+              lineState.pendingItems !== 0 && (
+                <div className="stacked">
+                  <span
+                    className={`icon on-top has-text-grey`}
+                    style={{ fontSize: "1.3em" }}
+                  >
+                    <FontAwesomeIcon icon={faFile} />
+                  </span>
                   <span
                     className="on-top has-text-white"
                     style={{ fontSize: ".8em" }}
                   >
                     {lineState.pendingItems}
                   </span>
-                )}
-              </div>
+                </div>
+              )
             )}
           </div>
 

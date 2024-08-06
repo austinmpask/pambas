@@ -3,23 +3,28 @@ import { useContext } from "react";
 
 //Contexts
 import { ProjectUpdaterContext } from "src/pages/ProjectPage";
+import { LockoutContext } from "src/context/LockoutContext";
 
 //Children
 import LineItem from "src/components/projectpage/LineItem";
 import ProjectEditableField from "src/components/projectpage/ProjectEditableField";
-import { LockoutContext } from "../../context/LockoutContext";
 
-//Individual section within the project grid
+//Individual project section within the project grid
 export default function ProjectSection({
   contextSlice,
   sectionData,
   setHeaderStats,
   index,
 }) {
+  //Updates project summary context slice with specific key/value
   const updateProjectSummaryContext = useContext(ProjectUpdaterContext);
+
+  //Tracks if user is interacting with a cell currently
   const { lockout } = useContext(LockoutContext);
-  //Apply a change to whatever index of the header array the user edited, then update context with that
+
+  //Apply a change to whatever index of the header array the user edited, then use context updater
   function updateHeaders(i, value) {
+    //Copy header array & insert new value at correct index
     const newHeaders = [...contextSlice.checkBoxHeaders];
     newHeaders[i] = value;
 
@@ -29,16 +34,20 @@ export default function ProjectSection({
 
   return (
     <div className="card mt-6 section-card default-body-background">
+      {/* Header for section card */}
       <div
         className="card-header sec-header default-header-color"
         style={lockout ? { boxShadow: "none" } : {}}
       >
         <div className="fixed-grid has-6-cols">
+          {/* Column headers shown on only on first card (index === 0) */}
           {index ? (
+            // Rest of cards headers
             <div className="title-cell">
               <h2 className="title is-5 has-text-weight-medium has-text-white">{`Section ${sectionData.sectionNumber}`}</h2>
             </div>
           ) : (
+            // First card header
             <div className="grid">
               <div className="title-cell">
                 <h2
@@ -68,6 +77,7 @@ export default function ProjectSection({
         </div>
       </div>
 
+      {/* Section card content (line items) */}
       <div className="fixed-grid has-6-cols">
         {sectionData.lineItems.map((line, index) => {
           return (
@@ -75,7 +85,6 @@ export default function ProjectSection({
               <LineItem
                 key={index}
                 index={index}
-                // secLen={sectionData.lineItems.length}
                 setHeaderStats={setHeaderStats}
                 lineItemData={line}
               />

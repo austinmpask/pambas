@@ -1,24 +1,23 @@
 //React
-import { useContext, useEffect, useState } from "react";
-
-//Icons
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faReceipt } from "@fortawesome/free-solid-svg-icons";
-
-//Children
-
-import ProjectEditableField from "src/components/projectpage/ProjectEditableField";
-import { ProjectUpdaterContext } from "src/pages/ProjectPage";
-import MeterButton from "./MeterButton";
-import CircleMeter from "./CircleMeter";
+import { useContext } from "react";
 import { createPortal } from "react-dom";
 
-//Header containing editable project info. Uses slice of context provided by page wrapper parent
+//Contexts
+import { ProjectUpdaterContext } from "src/pages/ProjectPage";
+
+//Children
+import ProjectEditableField from "./ProjectEditableField";
+import MeterButton from "./MeterButton";
+import CircleMeter from "./CircleMeter";
+
+// Project stats header containing editable project info. Uses slice of context provided by page wrapper parent
 export default function ProjectHeader({ contextSlice, headerStats }) {
+  //Upate project summary context via key/val pair
   const updateContext = useContext(ProjectUpdaterContext);
 
   return createPortal(
     <div className="card proj-card side-card default-body-background page-wrapper">
+      {/* Card header */}
       <div className="card-header proj-header default-header-color">
         <ProjectEditableField
           initialContent={contextSlice.title}
@@ -36,6 +35,7 @@ export default function ProjectHeader({ contextSlice, headerStats }) {
         />
       </div>
       <div className="header-content">
+        {/* Card content */}
         <MeterButton
           val={contextSlice.billed}
           displayVal={contextSlice.budget - contextSlice.billed}
@@ -56,12 +56,14 @@ export default function ProjectHeader({ contextSlice, headerStats }) {
       </div>
 
       <footer className="card-footer">
+        {/* Card footer */}
         <div className="proj-footer has-text-grey-light">
           <span>{contextSlice.projectType}</span>
           <span>{contextSlice.projectManager}</span>
         </div>
       </footer>
     </div>,
+    // Attach portal to top level
     document.body
   );
 }

@@ -1,9 +1,11 @@
 //React
 import { useEffect, useContext, useState, createContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { CSSTransition } from "react-transition-group";
 
 //Contexts
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
+import { LockoutProvider } from "src/context/LockoutContext";
 
 //Children
 import NavBar from "src/components/navbar/Navbar";
@@ -12,17 +14,14 @@ import ProjectGrid from "src/components/projectpage/ProjectGrid";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
-import { CSSTransition } from "react-transition-group";
-import { LockoutProvider } from "../context/LockoutContext";
 
 //Context to pass updater function to children
 export const ProjectUpdaterContext = createContext(undefined);
 
-//Context to hold calculated stats about project based on the line item data
-
 //User project main interactable page. Isolates a slice of state for the current project which is passed as prop to children
 export default function ProjectPage() {
   const navigate = useNavigate();
+
   //Get the current project ID
   const routeParams = useParams();
   const projectID = Number(routeParams.id);
@@ -45,7 +44,7 @@ export default function ProjectPage() {
   //State for project index with regard to position in list of this user's projects
   const [projectIndex, setProjectIndex] = useState(undefined);
 
-  //State for header stats that originally come from the project summary call, but are indirectly affected by line item updates
+  //State for header stats that originally come from the project summary call, but are affected by line item side effects
   const [headerStats, setHeaderStats] = useState({
     completed: 1,
     total: 1,
@@ -70,33 +69,35 @@ export default function ProjectPage() {
     );
   }, [projectSummaryData]);
 
-  //Updater function passed to child components inorder to trigger an api request along with context change
-  function updateProjectSummaryContext(key, value) {
-    setLoading(true);
-
-    //Make proper adjustment to add/subtract billing
-    if (key === "billed") {
-      //TODO: make a validator for this
-      value = Math.min(200, Math.max(0, contextSlice["billed"] + value));
+  //If context has loaded, fetch the detailed project information from api, and save to state
+  useEffect(() => {
+    async function fetchProject() {
+      await toastRequest({
+        method: "GET",
+        route: `/project/${contextSlice.id}`,
+        sToastDisabled: true,
+        eToastDisabled: true,
+        successCB: (data) => setProjectDetails(data),
+        errorCB: () => navigate("/dashboard"),
+      });
     }
 
-    //Update the slice with whatever the value the user changed
-    const newSlice = {
-      ...contextSlice,
-      [key]: value,
-    };
+    //Fetch the project details from DB if summary context slice is not undefined
+    contextSlice && fetchProject();
 
-    const newContext = [...projectSummaryData];
-    //Replace with new slice
-    newContext[projectIndex] = newSlice;
+    //Update the header stats which will be affected by line item side effects
+    contextSlice &&
+      setHeaderStats((prev) => ({
+        ...prev,
+        openItems: contextSlice.openItems,
+        completed: contextSlice.completed,
+        total: contextSlice.total,
+      }));
+  }, [contextSlice]);
 
-    //Update context (optimistic update)
-    setProjectSummaryData(newContext);
-  }
-
-  //Whenever context slice is updated (by means of the whole summary context obj changing), make request to update project in DB (if user triggered an update (loading))
+  //Whenever context slice is updated, make request to update project in DB **IF** user triggered the update (loading)
   useEffect(() => {
-    async function makeRequest() {
+    async function updateProject() {
       await toastRequest({
         method: "PUT",
         route: `/project/${projectID}`,
@@ -113,58 +114,59 @@ export default function ProjectPage() {
       setLoading(false);
     }
 
-    //Only make api request if the user directly triggered the state update
-    loading && makeRequest();
+    //Only make api request to update the project if the user directly triggered the state update
+    loading && updateProject();
+  }, [contextSlice]);
 
-    //If context has loaded, fetch the bulk project details from api
-    async function fetchProject() {
-      await toastRequest({
-        method: "GET",
-        route: `/project/${contextSlice.id}`,
-        sToastDisabled: true,
-        eToastDisabled: true,
-        successCB: (data) => setProjectDetails(data),
-        errorCB: () => navigate("/dashboard"),
-      });
+  //Updater function passed to child components inorder to trigger an api request taking key/val pair
+  function updateProjectSummaryContext(key, value) {
+    setLoading(true);
+
+    //Make proper adjustment to add/subtract billing
+    if (key === "billed") {
+      value = Math.min(200, Math.max(0, contextSlice["billed"] + value));
     }
 
-    contextSlice && fetchProject();
+    //Update the slice with whatever the value the user changed
+    const newSlice = {
+      ...contextSlice,
+      [key]: value,
+    };
 
-    contextSlice &&
-      setHeaderStats((prev) => ({
-        ...prev,
-        openItems: contextSlice.openItems,
-        completed: contextSlice.completed,
-        total: contextSlice.total,
-      }));
-  }, [contextSlice]);
+    //Copy context array and replace the slice
+    const newContext = [...projectSummaryData];
+    newContext[projectIndex] = newSlice;
+
+    //Update context (optimistic update)
+    setProjectSummaryData(newContext);
+  }
 
   return (
     <>
       <LockoutProvider>
-        <div className="has-background-light">
-          <NavBar />
-          <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
-            <CSSTransition
-              in={contextSlice}
-              unmountOnExit
-              timeout={360}
-              classNames={"header-card"}
-            >
-              <ProjectHeader
-                contextSlice={contextSlice}
-                projectDetails={projectDetails}
-                headerStats={headerStats}
-                setProjectDetails={setProjectDetails}
-              />
-            </CSSTransition>
-            <ProjectGrid
+        <div className="project-page-background" />
+        <NavBar />
+        <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
+          {/* Slide in project detail header from top */}
+          <CSSTransition
+            in={contextSlice}
+            unmountOnExit
+            timeout={360}
+            classNames={"header-card"}
+          >
+            <ProjectHeader
               contextSlice={contextSlice}
               projectDetails={projectDetails}
-              setHeaderStats={setHeaderStats}
+              headerStats={headerStats}
+              setProjectDetails={setProjectDetails}
             />
-          </ProjectUpdaterContext.Provider>
-        </div>
+          </CSSTransition>
+          <ProjectGrid
+            contextSlice={contextSlice}
+            projectDetails={projectDetails}
+            setHeaderStats={setHeaderStats}
+          />
+        </ProjectUpdaterContext.Provider>
       </LockoutProvider>
     </>
   );

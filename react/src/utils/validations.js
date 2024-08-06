@@ -119,26 +119,54 @@ export class DataFields {
   static PENDING_ITEM_DESC_MIN_LENGTH = 0;
   static PENDING_ITEM_DESC_MAX_LENGTH = 200;
 
-  static QUERY_KEYWORDS = ["query", "sql", "generated"];
-  static POPULATION_KEYWORDS = ["pop", "population", "all"];
+  static QUERY_KEYWORDS = [
+    "query",
+    "queries",
+    "pulled",
+    "filter",
+    "filtered",
+    "sql",
+    "generated",
+    "generate",
+  ];
+  static POPULATION_KEYWORDS = ["pop", "population", "populations", "all"];
   static SAMPLE_KEYWORDS = [
     "sample",
     "sampled",
     "selected",
+    "selection",
     "each",
+    "every",
     "randomly",
     "random",
     "person",
     "chosen",
   ];
-  static LOG_KEYWORDS = ["log", "list", "export", "listing"];
+  static LOG_KEYWORDS = ["log", "list", "export", "listing", "csv"];
   static IMAGE_KEYWORDS = [
     "image",
+    "images",
     "screenshot",
+    "screenshots",
+    "showing",
+    "shows",
     "picture",
+    "pictures",
     "screen",
     "shot",
     "capture",
+  ];
+  static POLICY_KEYWORDS = [
+    "policy",
+    "policies",
+    "plan",
+    "procedure",
+    "procedures",
+    "test",
+    "drp",
+    "isp",
+    "handbook",
+    "copy",
   ];
 }
 

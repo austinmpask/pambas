@@ -39,7 +39,9 @@ export default function MeterButton({
 
   return (
     <div
-      className={`box header-button ${menuOpen && "header-button-menu-open"}`}
+      className={`box ${type === "bill" ? "header-button" : "header-label"} ${
+        menuOpen && "header-button-menu-open"
+      }`}
     >
       <div
         className="header-button-section click-cell"
@@ -74,19 +76,19 @@ export default function MeterButton({
             ></input>
 
             <button
-              className="button bill-button is-danger"
-              onClick={() => setAmountToBill((prev) => Number(prev) - 1)}
-            >
-              <span className="icon">
-                <FontAwesomeIcon icon={faMinus} />
-              </span>
-            </button>
-            <button
               className="button bill-button is-success"
               onClick={() => setAmountToBill((prev) => Number(prev) + 1)}
             >
               <span className="icon">
                 <FontAwesomeIcon icon={faPlus} />
+              </span>
+            </button>
+            <button
+              className="button bill-button is-danger"
+              onClick={() => setAmountToBill((prev) => Number(prev) - 1)}
+            >
+              <span className="icon">
+                <FontAwesomeIcon icon={faMinus} />
               </span>
             </button>
           </div>

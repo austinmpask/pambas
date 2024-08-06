@@ -10,6 +10,7 @@ import {
   faClipboardList,
   faEnvelope,
   faFile,
+  faFileSignature,
   faFish,
   faImage,
   faMagnifyingGlass,
@@ -69,6 +70,7 @@ export default function PendingItem({ data, setLineState, setHeaderStats }) {
       [DataFields.SAMPLE_KEYWORDS, faPuzzlePiece],
       [DataFields.POPULATION_KEYWORDS, faUsers],
       [DataFields.QUERY_KEYWORDS, faBinoculars],
+      [DataFields.POLICY_KEYWORDS, faFileSignature],
     ];
 
     //Traverse the lists in order of reverse specificity (not as quick but makes for easy logic in this context)

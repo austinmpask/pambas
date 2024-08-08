@@ -1,32 +1,23 @@
 import { AwesomeButton } from "react-awesome-button";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheck,
-  faFlag,
-  faQuestion,
-  faRotateLeft,
-  faSquareCheck,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faRotateLeft } from "@fortawesome/free-solid-svg-icons";
 import "react-awesome-button/dist/styles.css";
+import { LineStateContext } from "./LineItemWrapper";
 
-export default function CheckBoxButton({
-  index,
-  cbState,
-  setLineState,
-  setLoading,
-  active,
-  lineIndex,
-  up,
-}) {
+export default function CheckBoxButton({ i, cbState }) {
+  const { lineState, lineUIState, setLineState, setLoading } =
+    useContext(LineStateContext);
   const styleRef = useRef(null);
+  const indexedClass = `container-${lineState.controlNumber
+    .split(".")
+    .join("")}`;
 
-  const indexedClass = `container-${lineIndex}`;
+  // const indexedClass = `container-${lineState.controlNumber}`;
   //Click checkbox: cycle thru 0-2, update state optimistically, trigger api request
   function handleCheckBoxClick() {
-    if (active) {
+    if (lineUIState.active) {
       setLoading(true);
-
       //Cycle through the checkbox options
       //Checkbox can be 0, 1, 2
       const newVal = cbState < 2 ? cbState + 1 : 0;
@@ -34,7 +25,7 @@ export default function CheckBoxButton({
       //Optimistic update state, trigger api request
       setLineState((prev) => {
         const cb = [...prev.checkBoxes];
-        cb[index] = newVal;
+        cb[i] = newVal;
         return { ...prev, checkBoxes: [...cb] };
       });
     }
@@ -59,12 +50,12 @@ export default function CheckBoxButton({
         requestAnimationFrame(() => togButton(up));
       }
     }
-    if (active) {
+    if (lineUIState.active) {
       requestAnimationFrame(() => togButton(true));
     } else {
       requestAnimationFrame(() => togButton(false));
     }
-  }, [active]);
+  }, [lineUIState.active]);
 
   //Button shape change
   useEffect(() => {
@@ -75,10 +66,14 @@ export default function CheckBoxButton({
 
     styleRef.current.innerHTML = `
     .${indexedClass} .aws-btn__content {
-      border-top-left-radius: ${active ? "6px" : "0px"} !important;
-      border-top-right-radius: ${active ? "6px" : "0px"} !important;
-      border-bottom-left-radius: ${active ? "8px" : "0px"} !important;
-      border-bottom-right-radius: ${active ? "8px" : "0px"} !important;
+      border-top-left-radius: ${lineUIState.active ? "6px" : "0px"} !important;
+      border-top-right-radius: ${lineUIState.active ? "6px" : "0px"} !important;
+      border-bottom-left-radius: ${
+        lineUIState.active ? "8px" : "0px"
+      } !important;
+      border-bottom-right-radius: ${
+        lineUIState.active ? "8px" : "0px"
+      } !important;
       transition: all 150ms;
     }
   `;
@@ -89,23 +84,23 @@ export default function CheckBoxButton({
         styleRef.current = null;
       }
     };
-  }, [active]);
+  }, [lineUIState.active]);
 
   return (
     <div
       onClick={handleCheckBoxClick}
       className={`cb-container ${indexedClass}`}
-      style={up ? { zIndex: "20" } : { zIndex: "0" }}
+      style={lineUIState.up ? { zIndex: "20" } : { zIndex: "0" }}
     >
       <AwesomeButton
         style={{
           "--button-raise-level": `${raiseLevel}px`,
         }}
-        className={`${active && "raise"} ${cbState === 1 && " check"} ${
-          cbState === 2 && " question"
-        } ${active && cbState === 1 && " check-raise"} ${
-          active && cbState === 2 && " question-raise"
-        }`}
+        className={`${lineUIState.active && "raise"} ${
+          cbState === 1 && " check"
+        } ${cbState === 2 && " question"} ${
+          lineUIState.active && cbState === 1 && " check-raise"
+        } ${lineUIState.active && cbState === 2 && " question-raise"}`}
         type="primary"
       >
         {(Boolean(cbState) && (

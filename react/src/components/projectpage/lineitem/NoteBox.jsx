@@ -1,16 +1,10 @@
 import TextBoxHelpers from "src/components/TextBoxHelpers";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
+import { LineStateContext } from "./LineItemWrapper";
 
-export default function NoteBox({
-  writingNote,
-  setWritingNote,
-  lineState,
-  setLineState,
-  setLoading,
-  active,
-  exit,
-  complete,
-}) {
+export default function NoteBox({ exit }) {
+  const { lineState, lineUIState, setLineState, setLineUIState, setLoading } =
+    useContext(LineStateContext);
   //Ref for input box for focus
   const noteRef = useRef(null);
   const boxRef = useRef(null);
@@ -18,15 +12,19 @@ export default function NoteBox({
   //Keep track of contents of note box for the item
   const [noteState, setNoteState] = useState(lineState.notes || "");
 
+  useEffect(() => {
+    setNoteState(lineState.notes);
+  }, [lineState.notes]);
+
   //When no longer writing note, return note to normal zindex
   useEffect(() => {
-    if (!writingNote) {
+    if (!lineUIState.writingNote) {
       noteRef.current.classList.remove("top");
     }
-  }, [writingNote]);
+  }, [lineUIState.writingNote]);
 
   function openNote() {
-    setWritingNote(true);
+    setLineUIState((prev) => ({ ...prev, writingNote: true }));
     //Expand the row for visibility
     boxRef.current.parentNode.classList.add("expanded");
 
@@ -46,7 +44,7 @@ export default function NoteBox({
 
     //Remove the helper tags midway thru transition so it looks nice
     setTimeout(() => {
-      setWritingNote(false);
+      setLineUIState((prev) => ({ ...prev, writingNote: false }));
     }, 50);
   }
 
@@ -68,27 +66,31 @@ export default function NoteBox({
 
   return (
     <div
-      className={`note-cell ${active && " note-cell-active "} ${
-        complete && !active && " complete-cell"
+      className={`note-cell ${lineUIState.active && " note-cell-active "} ${
+        lineUIState.complete && !lineUIState.active && " complete-cell"
       }`}
       ref={boxRef}
     >
-      <div className={`note-wrapper ${writingNote && "shrink"}`}>
+      <div className={`note-wrapper ${lineUIState.writingNote && "shrink"}`}>
         <textarea
           className={`input is-small notes-input has-text-grey ${
-            active && "active-text"
-          } ${writingNote && " input-attention"} ${
-            complete && !active && " complete-cell min-text"
+            lineUIState.active && "active-text"
+          } ${lineUIState.writingNote && " input-attention"} ${
+            lineUIState.complete &&
+            !lineUIState.active &&
+            " complete-cell min-text"
           }`}
           type="text"
-          onClick={() => active && !writingNote && openNote()}
+          onClick={() =>
+            lineUIState.active && !lineUIState.writingNote && openNote()
+          }
           ref={noteRef}
           value={noteState}
           onChange={(e) => setNoteState(e.target.value)}
           onKeyDown={noteKeyDownHandler}
-          disabled={!active}
+          disabled={!lineUIState.active}
         />
-        {writingNote && <TextBoxHelpers content={noteState} />}
+        {lineUIState.writingNote && <TextBoxHelpers content={noteState} />}
       </div>
     </div>
   );

@@ -170,6 +170,12 @@ export class DataFields {
   ];
 }
 
+export class UIVars {
+  static LINE_ANIM_WAIT_MS = 260;
+  static LINE_HOVER_DELAY_MS = 150;
+  static HANGING_FLAG_ANIM_MS = 330;
+}
+
 //React hook form validators for use in forms
 export class Validators {
   static LoginCredential = {

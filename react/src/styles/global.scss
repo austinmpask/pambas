@@ -598,7 +598,7 @@ button.aws-btn.aws-btn--primary::before {
 }
 
 //Adjust for themeing
-.shadow {
+.line-raised {
   // box-shadow: 0 0.5em 1em -0.125em hsla(220, 14%, 4%, 0.26),
   //   0 0 0 2px rgb(221, 221, 221);
   box-shadow: 0 0.5em 1em -0.125em hsla(220, 14%, 4%, 0.26),
@@ -613,7 +613,7 @@ button.aws-btn.aws-btn--primary::before {
   background-color: hsl(0, 0%, 96%);
 }
 
-.hover {
+.hoverable-line {
   position: relative;
   transition: box-shadow 220ms, border-radius 220ms, margin 220ms,
     background-color 220ms,
@@ -621,7 +621,7 @@ button.aws-btn.aws-btn--primary::before {
     border-color 150ms;
 }
 
-.hover:hover::after {
+.hoverable-line:hover::after {
   // box-shadow: 0 0.5em 1em -0.125em hsla(220, 14%, 4%, 0.041),
   //   0 0 0 1px rgba(122, 122, 122, 0.253);
   // position: relative !important;

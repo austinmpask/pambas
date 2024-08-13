@@ -1,17 +1,28 @@
-import TextBoxHelpers from "src/components/TextBoxHelpers";
+//React
 import { useRef, useState, useEffect, useContext } from "react";
+
+//Children
+import TextBoxHelpers from "src/components/TextBoxHelpers";
+
+//Utils
+import { UIVars } from "src/utils/validations";
+
+//Contexts
 import { LineStateContext } from "./LineItemWrapper";
 
+//Text area component for quick notes associated with a line item
 export default function NoteBox({ exit }) {
+  //Access unique line item context
   const { lineState, lineUIState, setLineState, setLineUIState, setLoading } =
     useContext(LineStateContext);
+
   //Ref for input box for focus
   const noteRef = useRef(null);
-  const boxRef = useRef(null);
 
-  //Keep track of contents of note box for the item
+  //Temporary state for the text input, will reflect line state by default unless user is changing it
   const [noteState, setNoteState] = useState(lineState.notes || "");
 
+  //Copy/update the existing notes into the temporary note state
   useEffect(() => {
     setNoteState(lineState.notes);
   }, [lineState.notes]);
@@ -23,10 +34,10 @@ export default function NoteBox({ exit }) {
     }
   }, [lineUIState.writingNote]);
 
+  //Handle clicking into the note box
   function openNote() {
+    //Reflect in parent line state
     setLineUIState((prev) => ({ ...prev, writingNote: true }));
-    //Expand the row for visibility
-    boxRef.current.parentNode.classList.add("expanded");
 
     //Bring note z index above any others
     noteRef.current.classList.add("top");
@@ -36,16 +47,16 @@ export default function NoteBox({ exit }) {
   }
 
   function closeNote() {
-    //Collapse line item row, unfocus the note
-    boxRef.current.parentNode.classList.remove("expanded");
+    //Unfocus the note
     noteRef.current.blur();
-    boxRef.current.blur();
+
+    //Exit the line
     exit();
 
     //Remove the helper tags midway thru transition so it looks nice
     setTimeout(() => {
       setLineUIState((prev) => ({ ...prev, writingNote: false }));
-    }, 50);
+    }, UIVars.NOTE_HELPER_DELAY_MS);
   }
 
   //Handle key shortcuts for saving/closing note box
@@ -69,9 +80,17 @@ export default function NoteBox({ exit }) {
       className={`note-cell ${lineUIState.active && " note-cell-active "} ${
         lineUIState.complete && !lineUIState.active && " complete-cell"
       }`}
-      ref={boxRef}
+      // Adjust height based on if the note is active or not
+      style={
+        lineUIState.writingNote
+          ? { minHeight: `${UIVars.NOTE_EXPANDED_HEIGHT_PX}px` }
+          : { minHeight: `${UIVars.NOTE_COLLAPSED_HEIGHT_PX}px` }
+      }
     >
-      <div className={`note-wrapper ${lineUIState.writingNote && "shrink"}`}>
+      <div
+        // Shrink the conatiner slightly from the edges when it is in use
+        className={`note-wrapper ${lineUIState.writingNote && "shrink"}`}
+      >
         <textarea
           className={`input is-small notes-input has-text-grey ${
             lineUIState.active && "active-text"
@@ -81,15 +100,20 @@ export default function NoteBox({ exit }) {
             " complete-cell min-text"
           }`}
           type="text"
+          // Open the note if it is not being used and the line is active
           onClick={() =>
             lineUIState.active && !lineUIState.writingNote && openNote()
           }
           ref={noteRef}
+          //Hold temporary note state
           value={noteState}
           onChange={(e) => setNoteState(e.target.value)}
+          //Hotkeys for exiting or saving
           onKeyDown={noteKeyDownHandler}
           disabled={!lineUIState.active}
         />
+
+        {/* Append helpers to show how to discard or save */}
         {lineUIState.writingNote && <TextBoxHelpers content={noteState} />}
       </div>
     </div>

@@ -174,6 +174,25 @@ export class UIVars {
   static LINE_ANIM_WAIT_MS = 260;
   static LINE_HOVER_DELAY_MS = 150;
   static HANGING_FLAG_ANIM_MS = 330;
+  static PENDING_MENU_OPEN_ANIM_MS = 65;
+  static PENDING_ITEM_IN_ANIM_MS = 300;
+
+  static HEADER_MENU_IN_ANIM_MS = 360;
+  static PROJ_GRID_IN_ANIM_MS = 460;
+
+  static BUTTON_RAISE_ANIM_MS = 150;
+  static BUTTON_RAISE_HEIGHT_PX = 5;
+  static BUTTON_RAISE_RADIUS_TOP_PX = 6;
+  static BUTTON_RAISE_RADIUS_BOTTOM_PX = 8;
+  static BUTTON_BORDER_TRANSITION_MS = 150;
+
+  static BUTTON_ACTIVE_ZINDEX = 0;
+  static BUTTON_INACTIVE_ZINDEX = 0;
+
+  static NOTE_EXPANDED_HEIGHT_PX = 100;
+  static NOTE_COLLAPSED_HEIGHT_PX = 56;
+
+  static NOTE_HELPER_DELAY_MS = 50;
 }
 
 //React hook form validators for use in forms

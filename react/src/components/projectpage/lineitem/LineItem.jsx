@@ -1,13 +1,14 @@
 //React
-import { useEffect, useRef, useState, useContext, createContext } from "react";
+import { useEffect, useRef, useContext } from "react";
 
 //Contexts
-import { LockoutContext } from "../../../context/LockoutContext";
+import { LockoutContext } from "src/context/LockoutContext";
 import { LineStateContext } from "./LineItemWrapper";
+import { HeaderStatsContext } from "src/pages/ProjectPage";
 
 //Utils
-import toastRequest from "../../../utils/toastRequest";
-import { UIVars } from "../../../utils/validations";
+import toastRequest from "src/utils/toastRequest";
+import { UIVars } from "src/utils/validations";
 
 //Children
 import PendingItemCell from "./PendingItemCell";
@@ -17,10 +18,14 @@ import NoteBoxCell from "./NoteBoxCell";
 import CheckBoxCell from "./CheckBoxCell";
 
 // Individual line item for the project grid
-export default function LineItem({ lineItemData, setHeaderStats }) {
+export default function LineItem({ lineItemData }) {
   //Lock out UI elements if user is interacting with one already
   const { lockout, setLockout } = useContext(LockoutContext);
 
+  //Setter for project summary info which is affected by line item components
+  const { setHeaderStats } = useContext(HeaderStatsContext);
+
+  //Access the particular line context
   const {
     lineState,
     setLineState,
@@ -30,8 +35,8 @@ export default function LineItem({ lineItemData, setHeaderStats }) {
     setLoading,
   } = useContext(LineStateContext);
 
-  //Activate the line if hovered on and there is no lockout.
-  //Check lockout && hovering due to timing of state updates
+  //Activate the line for use if hovered on and there is no lockout.
+  //Check lockout && hoveringHeld due to timing of state updates
   useEffect(() => {
     if (lineUIState.hoveringHeld && !lockout) {
       setLineUIState((prev) => ({
@@ -51,6 +56,7 @@ export default function LineItem({ lineItemData, setHeaderStats }) {
         notes: lineItemData.notes || "",
         pendingItems: lineItemData.pendingItems || 0,
         controlNumber: lineItemData.controlNumber || "",
+        id: lineItemData.id,
       }));
   }, [lineItemData]);
 
@@ -142,8 +148,7 @@ export default function LineItem({ lineItemData, setHeaderStats }) {
   const timeoutRef = useRef(null);
 
   return (
-    // Line item div container
-
+    // Line item container div
     <div
       //Raise z-index after the animation completes to avoid clipping issues
       style={lineUIState.up ? { zIndex: "20" } : { zIndex: "0" }}
@@ -174,7 +179,7 @@ export default function LineItem({ lineItemData, setHeaderStats }) {
     >
       {/* Hanging flag marker, animated with CSSTransition */}
       <HangingFlag />
-
+      {/* lINE ITEM CELLS (CONTROL #, CHECKBOXES, NOTES, PENDING ITEMS) */}
       <ControlNumberCell handleClick={handleFlagClick} />
 
       {/* Checkbox Cells */}
@@ -183,18 +188,7 @@ export default function LineItem({ lineItemData, setHeaderStats }) {
       })}
 
       <NoteBoxCell exit={exitLine} />
-
-      {/* Pending Item cell */}
-      {/* TODO USE THE CONTEXT FOR THIS NO PROPS */}
-      <PendingItemCell
-        lineUIState={lineUIState}
-        setLineUIState={setLineUIState}
-        lineState={lineState}
-        setLineState={setLineState}
-        setHeaderStats={setHeaderStats}
-        lineID={lineItemData.id}
-        controlNumber={lineItemData.controlNumber}
-      />
+      <PendingItemCell />
     </div>
   );
 }

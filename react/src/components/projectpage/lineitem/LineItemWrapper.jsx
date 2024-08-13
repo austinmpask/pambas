@@ -6,15 +6,16 @@ import LineItem from "src/components/projectpage/lineitem/LineItem";
 //Create unique context for each individual line, and wrap the line in it
 export const LineStateContext = createContext();
 
-export default function LineItemWrapper({ line, index, setHeaderStats }) {
+//Attach unique context to each line item so that deep children have access to state of that specific line item
+export default function LineItemWrapper({ line, index }) {
   //State for the data held by line item
   const [lineState, setLineState] = useState({
-    checkBoxes: [0, 0, 0],
-    flagMarker: false,
-    notes: "",
-    pendingItems: 0,
-    index,
-    controlNumber: "",
+    checkBoxes: [0, 0, 0], //Value of the checkboxes (0,1,2)
+    flagMarker: false, //If a line item is marked as important
+    notes: "", //Quick notes column
+    pendingItems: 0, //Count of pending items associated with the line item
+    index, //Index of line item relative to it's section
+    controlNumber: "", //String representation of the control the line item is for
   });
 
   //State for line's UI related info, not table data
@@ -44,7 +45,7 @@ export default function LineItemWrapper({ line, index, setHeaderStats }) {
         setLoading,
       }}
     >
-      <LineItem setHeaderStats={setHeaderStats} lineItemData={line} />
+      <LineItem lineItemData={line} />
     </LineStateContext.Provider>
   );
 }

@@ -14,9 +14,13 @@ import ProjectGrid from "src/components/projectpage/ProjectGrid";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
+import { UIVars } from "src/utils/validations";
 
 //Context to pass updater function to children
-export const ProjectUpdaterContext = createContext(undefined);
+export const ProjectUpdaterContext = createContext();
+
+//Store stats shown by the project header, affected by line item component children
+export const HeaderStatsContext = createContext();
 
 //User project main interactable page. Isolates a slice of state for the current project which is passed as prop to children
 export default function ProjectPage() {
@@ -146,27 +150,28 @@ export default function ProjectPage() {
       <LockoutProvider>
         <div className="project-page-background" />
         <NavBar />
-        <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
-          {/* Slide in project detail header from top */}
-          <CSSTransition
-            in={contextSlice}
-            unmountOnExit
-            timeout={360}
-            classNames={"header-card"}
-          >
-            <ProjectHeader
+        <HeaderStatsContext.Provider value={{ headerStats, setHeaderStats }}>
+          <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
+            {/* Slide in project detail header from top */}
+            <CSSTransition
+              in={contextSlice}
+              unmountOnExit
+              timeout={UIVars.HEADER_MENU_IN_ANIM_MS}
+              classNames={"header-card"}
+            >
+              <ProjectHeader
+                contextSlice={contextSlice}
+                projectDetails={projectDetails}
+                setProjectDetails={setProjectDetails}
+              />
+            </CSSTransition>
+            {/* Component for project sections */}
+            <ProjectGrid
               contextSlice={contextSlice}
               projectDetails={projectDetails}
-              headerStats={headerStats}
-              setProjectDetails={setProjectDetails}
             />
-          </CSSTransition>
-          <ProjectGrid
-            contextSlice={contextSlice}
-            projectDetails={projectDetails}
-            setHeaderStats={setHeaderStats}
-          />
-        </ProjectUpdaterContext.Provider>
+          </ProjectUpdaterContext.Provider>
+        </HeaderStatsContext.Provider>
       </LockoutProvider>
     </>
   );

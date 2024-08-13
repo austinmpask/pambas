@@ -1,5 +1,5 @@
 //React
-import { useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { createPortal } from "react-dom";
 
 //Utils
@@ -19,19 +19,21 @@ import {
   faRectangleXmark,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { LineStateContext } from "src/components/projectpage/lineitem/LineItemWrapper";
+import { HeaderStatsContext } from "src/pages/ProjectPage";
 
 //Modal form which can be used to add a new pending item or edit an existing one
 export default function ItemModal({
-  lineID,
   open,
   setOpen,
-  setLineState,
   editing = false,
   itemID,
   itemData,
   setItemData,
-  setHeaderStats,
 }) {
+  const { lineState, setLineState } = useContext(LineStateContext);
+
+  const { setHeaderStats } = useContext(HeaderStatsContext);
   //Form setup
   const {
     register,
@@ -52,7 +54,7 @@ export default function ItemModal({
       await toastRequest({
         method: "POST",
         route: "/openitem",
-        data: { ...data, lineID },
+        data: { ...data, lineID: lineState.id },
         setLoading,
         successCB: () => {
           //Update the linestate to reflect an additional open item.

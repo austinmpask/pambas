@@ -1,28 +1,15 @@
 //React
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 //Icons
 import {
-  faBinoculars,
-  faBook,
   faCircleUser,
-  faCircleXmark,
-  faClipboardList,
-  faEnvelope,
   faFile,
-  faFileSignature,
   faFish,
-  faImage,
-  faMagnifyingGlass,
-  faPaperPlane,
   faPenToSquare,
-  faPuzzlePiece,
-  faQuestion,
   faRectangleXmark,
   faReply,
   faSquarePen,
-  faUser,
-  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -30,24 +17,34 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import toastRequest from "src/utils/toastRequest";
 import toTitle from "src/utils/toTitle";
 import shortDate from "src/utils/shortDate";
-import { DataFields } from "../../utils/validations";
+import pendingItemIcon from "src/utils/pendingItemIcon";
 
 //Children
 import ItemModal from "src/components/forms/ItemModal";
 
+//Contexts
+import { LineStateContext } from "./lineitem/LineItemWrapper";
+import { HeaderStatsContext } from "src/pages/ProjectPage";
+
 //Component to summarize details of a given pending/open item
-export default function PendingItem({ data, setLineState, setHeaderStats }) {
+export default function PendingItem({ data }) {
+  //Consume line context
+  const { setLineState } = useContext(LineStateContext);
+
+  //Setter for project summary stats in the header
+  const { setHeaderStats } = useContext(HeaderStatsContext);
+
   //State for the item data
   const [itemData, setItemData] = useState({ ...data });
 
   //Hovering state for title to indicate editing
   const [hovering, setHovering] = useState(false);
 
-  //State to control the visibility of modal
+  //State to control the visibility of editing modal
   const [editing, setEditing] = useState(false);
 
+  //Icons for the item card
   const [icon, setIcon] = useState(faFile);
-
   const [contactIcon, setContactIcon] = useState(faPenToSquare);
 
   //Reflect any updates from db in item state
@@ -55,33 +52,12 @@ export default function PendingItem({ data, setLineState, setHeaderStats }) {
     setItemData({ ...data });
   }, [data]);
 
+  //Assign appropriate icons for the type of request/contact date
   useEffect(() => {
-    //Assign an appropriate file icon for the type of request
+    //Item icon
+    setIcon(() => pendingItemIcon(itemData.itemName));
 
-    //Standardize title words
-    const title = itemData.itemName
-      .split(" ")
-      .map((word) => word.toLowerCase());
-
-    //Order lists in reverse specificity
-    const comparisonLists = [
-      [DataFields.IMAGE_KEYWORDS, faImage],
-      [DataFields.LOG_KEYWORDS, faBook],
-      [DataFields.SAMPLE_KEYWORDS, faPuzzlePiece],
-      [DataFields.POPULATION_KEYWORDS, faUsers],
-      [DataFields.QUERY_KEYWORDS, faBinoculars],
-      [DataFields.POLICY_KEYWORDS, faFileSignature],
-    ];
-
-    //Traverse the lists in order of reverse specificity (not as quick but makes for easy logic in this context)
-    comparisonLists.forEach(([list, icon]) => {
-      title.forEach((word) => {
-        if (list.includes(word)) {
-          setIcon(icon);
-        }
-      });
-    });
-
+    //Contact icon
     itemData.lastContactDate
       ? setContactIcon(faReply)
       : setContactIcon(faPenToSquare);
@@ -124,17 +100,19 @@ export default function PendingItem({ data, setLineState, setHeaderStats }) {
 
   return (
     <>
+      {/* Modal for editing an open item */}
+      <ItemModal
+        open={editing}
+        setOpen={setEditing}
+        editing={true}
+        itemID={itemData.id}
+        itemData={itemData}
+        setItemData={setItemData}
+      />
+
+      {/* Item card */}
       <div className="message mb-4 pending-item-card">
-        <ItemModal
-          lineID={itemData.lineItemID}
-          open={editing}
-          setOpen={setEditing}
-          setLineState={setLineState}
-          editing={true}
-          itemID={itemData.id}
-          itemData={itemData}
-          setItemData={setItemData}
-        />
+        {/* HEADER */}
         <div className="message-header pending-item-header default-sub-header-color has-text-white">
           <div
             className="pending-item-title"
@@ -164,6 +142,7 @@ export default function PendingItem({ data, setLineState, setHeaderStats }) {
           </span>
         </div>
 
+        {/* BODY */}
         <div className="message-body item-card-body">
           <div className="content is-small mb-4 item-body">
             {itemData.description && (
@@ -207,6 +186,7 @@ export default function PendingItem({ data, setLineState, setHeaderStats }) {
               </div>
             </div>
           </div>
+          {/* FOOTER */}
           <div className="item-footer has-text-grey-light has-background-light">
             <p>{`${shortDate(itemData.createdAt)}`}</p>
           </div>

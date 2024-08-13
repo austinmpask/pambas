@@ -3,7 +3,10 @@ import { useContext } from "react";
 import { createPortal } from "react-dom";
 
 //Contexts
-import { ProjectUpdaterContext } from "src/pages/ProjectPage";
+import {
+  ProjectUpdaterContext,
+  HeaderStatsContext,
+} from "src/pages/ProjectPage";
 
 //Children
 import ProjectEditableField from "./ProjectEditableField";
@@ -11,9 +14,11 @@ import MeterButton from "./MeterButton";
 import CircleMeter from "./CircleMeter";
 
 // Project stats header containing editable project info. Uses slice of context provided by page wrapper parent
-export default function ProjectHeader({ contextSlice, headerStats }) {
+export default function ProjectHeader({ contextSlice }) {
   //Upate project summary context via key/val pair
   const updateContext = useContext(ProjectUpdaterContext);
+
+  const { headerStats } = useContext(HeaderStatsContext);
 
   return createPortal(
     <div className="card proj-card side-card default-body-background page-wrapper">

@@ -1,22 +1,16 @@
 //React
-import { useContext, createContext, useState } from "react";
+import { useContext } from "react";
 
 //Contexts
 import { ProjectUpdaterContext } from "src/pages/ProjectPage";
 import { LockoutContext } from "src/context/LockoutContext";
 
 //Children
-import LineItem from "src/components/projectpage/lineitem/LineItem";
 import ProjectEditableField from "src/components/projectpage/ProjectEditableField";
 import LineItemWrapper from "./lineitem/LineItemWrapper";
 
 //Individual project section within the project grid
-export default function ProjectSection({
-  contextSlice,
-  sectionData,
-  setHeaderStats,
-  index,
-}) {
+export default function ProjectSection({ contextSlice, sectionData, index }) {
   //Updates project summary context slice with specific key/value
   const updateProjectSummaryContext = useContext(ProjectUpdaterContext);
 
@@ -82,11 +76,7 @@ export default function ProjectSection({
       <div className="fixed-grid has-6-cols">
         {sectionData.lineItems.map((line, index) => (
           <div key={index} className="line-item-row">
-            <LineItemWrapper
-              line={line}
-              setHeaderStats={setHeaderStats}
-              index={index}
-            />
+            <LineItemWrapper line={line} index={index} />
           </div>
         ))}
       </div>

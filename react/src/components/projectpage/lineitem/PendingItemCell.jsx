@@ -1,94 +1,52 @@
-import PendingItemList from "src/components/projectpage/PendingItemList";
-
+//React
+import { useContext } from "react";
 import { CSSTransition } from "react-transition-group";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleExclamation,
-  faFile,
-  faFileCirclePlus,
-} from "@fortawesome/free-solid-svg-icons";
-export default function PendingItemCell({
-  lineUIState,
-  setLineUIState,
-  lineState,
-  setLineState,
-  setHeaderStats,
-  lineID,
-  controlNumber,
-}) {
+//Contexts
+import { LineStateContext } from "./LineItemWrapper";
+
+//Children
+import PendingItemList from "src/components/projectpage/PendingItemList";
+import PendingItemIcon from "./PendingItemIcon";
+
+//Utils
+import { UIVars } from "src/utils/validations";
+
+//Cell showing the number of associated pending items if != 0, functions as button to add an item
+export default function PendingItemCell() {
+  //Line item data and setters
+  const { lineUIState, setLineUIState } = useContext(LineStateContext);
+
   return (
     <div
+      // Change background color to green if !active && line is complete
       className={`cell line-item-cell centered-cell item-cell  ${
         lineUIState.complete && !lineUIState.active && " complete-cell"
       }`}
     >
       <div
+        // Adjust cursor for line being active
         className={lineUIState.active && "click-cell p-5"}
+        // Toggle the menu when clicking
         onClick={() => {
           if (lineUIState.active) {
             setLineUIState((prev) => ({ ...prev, menuOpen: !prev.menuOpen }));
           }
         }}
       >
-        {lineUIState.up ? (
-          <div className="stacked">
-            <span
-              className={`icon on-top ${
-                !lineState.pendingItems && "has-text-grey"
-              }`}
-              style={
-                lineUIState.active && !lineState.pendingItems
-                  ? { fontSize: "1.3em", opacity: "1" }
-                  : { fontSize: "1.3em", opacity: lineState.pendingItems }
-              }
-            >
-              <FontAwesomeIcon
-                icon={lineState.pendingItems ? faFile : faFileCirclePlus}
-              />
-            </span>
-            {lineState.pendingItems !== 0 && (
-              <span
-                className="on-top has-text-white"
-                style={{ fontSize: ".8em" }}
-              >
-                {lineState.pendingItems}
-              </span>
-            )}
-          </div>
-        ) : (
-          lineState.pendingItems !== 0 && (
-            <div className="stacked">
-              <span
-                className={`icon on-top has-text-grey`}
-                style={{ fontSize: "1.3em" }}
-              >
-                <FontAwesomeIcon icon={faFile} />
-              </span>
-              <span
-                className="on-top has-text-white"
-                style={{ fontSize: ".8em" }}
-              >
-                {lineState.pendingItems}
-              </span>
-            </div>
-          )
-        )}
+        {/* Dynamic color/type of icon depending on line state and items */}
+        <PendingItemIcon />
       </div>
 
+      {/* Transition handled here b/c gets messy with PendingItemList returning createPortal */}
       <CSSTransition
         in={lineUIState.menuOpen}
         unmountOnExit
-        timeout={65}
+        timeout={UIVars.PENDING_MENU_OPEN_ANIM_MS}
         classNames="item-card"
       >
-        <PendingItemList
-          lineID={lineID}
-          numPending={lineState.pendingItems}
-          setLineState={setLineState}
-          setHeaderStats={setHeaderStats}
-          controlNumber={controlNumber}
-        />
+        {/* Side menu for pending/open items */}
+        <PendingItemList />
       </CSSTransition>
     </div>
   );

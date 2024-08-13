@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons";
 
 //Utils
-import { UIVars } from "../../../utils/validations";
+import { UIVars } from "src/utils/validations";
 
 //Contexts
 import { LineStateContext } from "./LineItemWrapper";

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSquarePen } from "@fortawesome/free-solid-svg-icons";
-import TextBoxHelpers from "../TextBoxHelpers";
+import TextBoxHelpers from "src/components/TextBoxHelpers";
 
 //Generic field where by default the value is displayed, but if clicked it is changed to a text box which can be submitted
 export default function ProjectEditableField({

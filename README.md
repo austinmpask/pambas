@@ -1,6 +1,6 @@
 # Pamba
 
-## A purpose built, customizable and fun to use organization tool for SOC Auditors
+## A purpose built, easy to use organization tool for SOC Auditors. The organizer graveyard ends here!!!
 
 Pamba lets you effortlessly track every element of your concurrent engagements in high detail without becoming unorganized. (But, like... **actually**.)
 

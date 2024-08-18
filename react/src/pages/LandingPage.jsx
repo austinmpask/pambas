@@ -6,7 +6,7 @@ export default function LandingPage() {
     <>
       <h1>Welcome to SOC Panda</h1>
       <Link to="/login">
-        <button>Login</button>
+        <button>Login test</button>
       </Link>
       <Link to="/register">
         <button>Register</button>

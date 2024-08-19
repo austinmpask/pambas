@@ -13,7 +13,7 @@ export default function ProjectList() {
     <div className="navbar-item has-dropdown is-hoverable">
       <a className="navbar-link">Projects</a>
 
-      <div className="navbar-dropdown">
+      <div className="navbar-dropdown" >
         {projectSummaryData.map((project, index) => {
           return (
             <ProjectListItem

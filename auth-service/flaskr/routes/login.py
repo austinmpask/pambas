@@ -9,6 +9,7 @@ from flaskr.utils import (
 )
 import jwt
 from flaskr.validators import Validators
+import os
 
 loginBP = Blueprint("login", __name__)
 
@@ -71,8 +72,13 @@ def postLogin():
         # Send response with JWT added as http only cookie
         response = make_response(sendJsonResponse(200, "Successful login"))
 
+        # Configure JWT for dev vs prod
+        sameSiteType = "None"
+        if os.environ.get("FLASK_ENV") == "development":
+            sameSiteType = "Lax"
+
         response.set_cookie(
-            "token", sessionJWT, httponly=True, secure=True, samesite="None"
+            "token", sessionJWT, httponly=True, secure=(os.environ.get("FLASK_ENV") != "development"), samesite=sameSiteType
         )
         return response
 

@@ -10,16 +10,16 @@ export default function LeftHandMenu() {
   return (
     <div className="navbar-start">
       <a href="/dashboard" className="navbar-item">
-        <span className="icon-text">
+          <span>Dashboard</span>
+        {/* <span className="icon-text">
           <span className="icon">
             <FontAwesomeIcon icon={faTachometerAlt} />
           </span>
-          <span>Dashboard</span>
-        </span>
+        </span> */}
       </a>
-      <a href="/timesheet" className="navbar-item">
+      {/* <a href="/timesheet" className="navbar-item">
         <span>Timesheets</span>
-      </a>
+      </a> */}
       {/* Dropdown for current projects */}
       <ProjectList />
     </div>

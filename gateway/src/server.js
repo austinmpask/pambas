@@ -41,6 +41,14 @@ app.use(cookieParser());
 //Parse request bodies
 app.use(express.json());
 
+//Debug logging
+app.use((req, _res, next) => {
+  console.log('Incoming request headers:', req.headers);
+  console.log('Cookies received:', req.cookies);
+  next();
+});
+
+
 //Add routers for gateway endpoints
 app.use(healthRouter);
 app.use(userDataRouter);

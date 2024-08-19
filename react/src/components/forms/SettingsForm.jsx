@@ -18,7 +18,7 @@ import SubmitAlt from "src/components/forms/components/SubmitAlt";
 
 //Utils
 import toastRequest from "../../utils/toastRequest";
-import { Validators, DataFields } from "../../utils/validations";
+import { Validators, DataFields, UIVars } from "../../utils/validations";
 
 //Form for changing user info && viewing login credentials
 export default function SettingsForm() {
@@ -34,6 +34,7 @@ export default function SettingsForm() {
     handleSubmit,
     reset,
     clearErrors,
+    control,
     formState: { errors },
   } = useForm();
 
@@ -118,6 +119,20 @@ export default function SettingsForm() {
             loading={loading}
           />
         </form>
+      </section>
+      <h2 className="subtitle">App Preferences</h2>
+      <section className="section">
+        <FormField
+          field="activationSpeed"
+          type="dropdown"
+          required={false}
+          error={errors.activationSpeed?.message}
+          label={"Line Pop-Up Delay"}
+          loading={loading}
+          control={control}
+          defaultValue={UIVars.DEFAULT_LINE_DELAY}
+          options={UIVars.LINE_ACTIVATION_DELAY_OPTIONS}
+        />
       </section>
     </>
   );

@@ -172,7 +172,7 @@ export class DataFields {
 
 export class UIVars {
   static LINE_ANIM_WAIT_MS = 260;
-  static LINE_HOVER_DELAY_MS = 150;
+  static LINE_HOVER_DELAY_MS = 50;
   static HANGING_FLAG_ANIM_MS = 330;
   static PENDING_MENU_OPEN_ANIM_MS = 65;
   static PENDING_ITEM_IN_ANIM_MS = 300;
@@ -193,6 +193,30 @@ export class UIVars {
   static NOTE_COLLAPSED_HEIGHT_PX = 56;
 
   static NOTE_HELPER_DELAY_MS = 50;
+
+  //UI User settings
+
+  //Line Activation Delay
+  static XSLOW = "None";
+  static XSLOW_SELECT = { value: 0, label: this.XSLOW };
+
+  static SLOW = "Low";
+  static SLOW_SELECT = { value: 20, label: this.SLOW };
+
+  static NORMAL = "Default";
+  static NORMAL_SELECT = { value: 100, label: this.NORMAL };
+
+  static HIGH = "High";
+  static HIGH_SELECT = { value: 200, label: this.HIGH };
+
+  static LINE_ACTIVATION_DELAY_OPTIONS = [
+    this.XSLOW_SELECT,
+    this.SLOW_SELECT,
+    this.NORMAL_SELECT,
+    this.HIGH_SELECT,
+  ];
+
+  static DEFAULT_LINE_DELAY = this.NORMAL_SELECT;
 }
 
 //React hook form validators for use in forms

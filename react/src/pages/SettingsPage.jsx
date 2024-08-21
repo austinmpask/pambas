@@ -1,14 +1,14 @@
 //Children
 import PageWrapper from "src/components/PageWrapper";
 import NavBar from "src/components/navbar/Navbar";
-import SettingsForm from "src/components/forms/SettingsForm";
+import SettingsMenu from "src/components/settingspage/SettingsMenu";
 
 export default function SettingsPage() {
   return (
     <>
       <NavBar />
       <PageWrapper title="Settings">
-        <SettingsForm />
+        <SettingsMenu />
       </PageWrapper>
     </>
   );

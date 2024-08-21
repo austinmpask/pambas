@@ -1,6 +1,5 @@
 import routeFactory from "src/utils/routeFactory";
 import routeFactoryAuth from "src/utils/routeFactoryAuth";
-
 //Page wrapper components
 import LandingPage from "src/pages/LandingPage";
 import LoginPage from "src/pages/LoginPage";

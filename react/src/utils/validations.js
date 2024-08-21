@@ -194,6 +194,8 @@ export class UIVars {
 
   static NOTE_HELPER_DELAY_MS = 50;
 
+  static TOOLTIP_DELAY_MS = 500;
+
   //UI User settings
 
   //Line Activation Delay

@@ -13,17 +13,23 @@ import { Validators, DataFields } from "src/utils/validations";
 import { useForm } from "react-hook-form";
 import FormField from "src/components/forms/components/FormField";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Divider,
+  Image,
+} from "@nextui-org/react";
+
+//NextUI
 
 //Login form
 export default function LoginForm() {
   const navigate = useNavigate();
 
   //Form setup
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { control, handleSubmit } = useForm();
 
   //Loading state for visuals
   const [loading, setLoading] = useState(false);
@@ -47,44 +53,58 @@ export default function LoginForm() {
   return (
     <>
       <ToastContainer />
-      <form
-        className="box container fit-box"
-        onSubmit={handleSubmit((data) => login(data))}
-      >
-        <h2 className="title is-4 has-text-weight-bold mb-5">Login</h2>
-        <div className="m-4">
-          <div className="mb-2">
-            <FormField
-              field="credential"
-              error={errors.credential?.message}
-              label={DataFields.CRED_LABEL}
-              validations={Validators.LoginCredential}
-              loading={loading}
-              size="ff-med"
-              register={register}
+      <div className="flex justify-center">
+        <Card className="max-w-[400px]">
+          <CardHeader className="flex gap-3">
+            <Image
+              alt="Logo"
+              height={40}
+              radius="sm"
+              src="/logorings.png"
+              width={40}
             />
-          </div>
-
-          <div>
-            <FormField
-              field="password"
-              error={errors.password?.message}
-              label={DataFields.PASS_LABEL}
-              validations={Validators.Password}
-              loading={loading}
-              size="ff-med"
-              register={register}
-              type="password"
-            />
-          </div>
-          <SubmitAlt
-            submitLabel="Login"
-            altLabel="Register"
-            altAction={() => navigate("/register")}
-            loading={loading}
-          />
-        </div>
-      </form>
+            <div className="flex flex-col">
+              <p className="text-lg font-bold">Welcome Back!</p>
+              <p className="text-small text-default-500">
+                Don't have an account? Sign up
+              </p>
+            </div>
+          </CardHeader>
+          <Divider />
+          <CardBody>
+            <form
+              className="box container fit-box flex flex-col items-center"
+              onSubmit={handleSubmit((data) => login(data))}
+            >
+              <FormField
+                field="credential"
+                label={DataFields.CRED_LABEL}
+                validations={Validators.LoginCredential}
+                loading={loading}
+                size="ff-med"
+                control={control}
+              />
+              <FormField
+                field="password"
+                label={DataFields.PASS_LABEL}
+                validations={Validators.Password}
+                loading={loading}
+                size="ff-med"
+                control={control}
+                type="password"
+              />
+              <div className="w-full pl-1">
+                <SubmitAlt
+                  submitLabel="Login"
+                  altLabel="Sign Up"
+                  altAction={() => navigate("/register")}
+                  loading={loading}
+                />
+              </div>
+            </form>
+          </CardBody>
+        </Card>
+      </div>
     </>
   );
 }

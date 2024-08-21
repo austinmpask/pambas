@@ -1,3 +1,5 @@
+import { Button } from "@nextui-org/react";
+
 //Default submit and cancel/alt action form component
 export default function SubmitAlt({
   submitLabel,
@@ -7,28 +9,32 @@ export default function SubmitAlt({
   loading,
 }) {
   return (
-    <div className="field is-grouped">
-      <div className="control">
-        <button
-          type="submit"
-          className={`button is-dark ${loading && " is-loading"}`}
-          disabled={loading}
-        >
-          {submitLabel}
-        </button>
-      </div>
-      <div className="control">
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            altAction();
-          }}
-          className="button"
-          disabled={loading}
-        >
-          {altLabel}
-        </button>
-      </div>
+    <div className="mt-6 mb-3">
+      <Button
+        className="font-semibold mr-1"
+        size="md"
+        radius="sm"
+        type="submit"
+        variant="solid"
+        color="primary"
+        isLoading={loading}
+        disabled={loading}
+      >
+        {submitLabel}
+      </Button>
+      <Button
+        className="font-semibold"
+        size="md"
+        radius="sm"
+        onClick={(e) => {
+          e.preventDefault();
+          altAction();
+        }}
+        variant="solid"
+        disabled={loading}
+      >
+        {altLabel}
+      </Button>
     </div>
   );
 }

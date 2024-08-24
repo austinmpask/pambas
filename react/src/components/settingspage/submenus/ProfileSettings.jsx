@@ -48,8 +48,6 @@ import { Validators, DataFields, UIVars } from "src/utils/validations";
 export default function ProfileSettings() {
   return (
     <>
-      <ToastContainer />
-
       <SettingsCard title="Login and Password" icon={faLock}>
         <SettingsCardSection title="Username/Email">
           <UserInfo />

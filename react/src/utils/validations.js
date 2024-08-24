@@ -218,8 +218,33 @@ export class UIVars {
     this.HIGH_SELECT,
   ];
 
+  static INPUT_SIZE_PRESET_PX = {
+    xs: "sm:w-[150px]",
+    s: "sm:w-[200px]",
+    m: "sm:w-[250px]",
+    l: "sm:w-[300px]",
+  };
+
   static DEFAULT_LINE_DELAY = this.NORMAL_SELECT;
 }
+
+//Template for user settings key/value
+export const UserSettings = {
+  darkMode: false,
+  tooltips: true,
+  fancyVisuals: true,
+  confirmDelOpenItem: true,
+  completeProgress: false,
+  autoFillManager: false,
+  highContrast: false,
+  rowHoverDelayPreset: 1,
+  tooltipHoverDelayPreset: 2,
+  rowHeightPreset: 1,
+  rowExpandedPreset: 1,
+  defaultProjectType: 3,
+  defaultColorTheme: 0,
+  defaultManager: "",
+};
 
 //React hook form validators for use in forms
 export class Validators {

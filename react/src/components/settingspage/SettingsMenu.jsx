@@ -20,6 +20,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 import ProfileSettings from "src/components/settingspage/submenus/ProfileSettings";
+import AccessibilitySettings from "src/components/settingspage/submenus/AccessibilitySettings";
 
 import PreferencesSettings from "src/components/settingspage/submenus/PreferencesSettings";
 //Contexts
@@ -90,7 +91,7 @@ export default function SettingsMenu() {
     {
       id: "accessibility",
       label: "Accessibility",
-      content: "access stuff",
+      content: <AccessibilitySettings />,
       icon: <FontAwesomeIcon icon={faUniversalAccess} />,
     },
     {

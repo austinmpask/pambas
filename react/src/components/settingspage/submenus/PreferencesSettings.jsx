@@ -49,11 +49,17 @@ import SubmitAlt from "src/components/forms/components/SubmitAlt";
 import SettingsCard from "src/components/settingspage/SettingsCard";
 import SettingsCardSection from "src/components/settingspage/SettingsCardSection";
 
-import FancySwitch from "src/components/settingspage/FancySwitch";
+import ControlledSwitch from "src/components/forms/components/ControlledSwitch";
+import ControlledSlider from "src/components/forms/components/ControlledSlider";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
-import { Validators, DataFields, UIVars } from "src/utils/validations";
+import {
+  Validators,
+  DataFields,
+  UIVars,
+  UserSettings,
+} from "src/utils/validations";
 
 //Form for changing user info && viewing login credentials
 export default function ProfileSettings() {
@@ -69,174 +75,151 @@ export default function ProfileSettings() {
 
   //Make request to update user information
 
+  function testCB(dataKey, value) {
+    console.log({ dataKey, value });
+  }
+
   return (
     <>
       <ToastContainer />
 
       <SettingsCard title="General" icon={faGears}>
-        <FancySwitch title="Enable Dark Mode" desc="Give your eyes a rest" />
+        <ControlledSwitch
+          title="Enable Dark Mode"
+          desc="Give your eyes a rest"
+          dataKey="darkMode"
+          defaultValue={UserSettings.darkMode}
+          callback={testCB}
+        />
       </SettingsCard>
 
       <SettingsCard title="Project Page" icon={faTable}>
-        <FancySwitch
+        <ControlledSwitch
           title="Enable Tooltips"
           desc="Show help dialogues when hovering certain UI components"
+          dataKey="tooltips"
+          defaultValue={UserSettings.tooltips}
+          callback={testCB}
         />
 
-        <FancySwitch
+        <ControlledSwitch
           title="Enable Grid Animations"
           desc="Rows jump out when active"
+          dataKey="fancyVisuals"
+          defaultValue={UserSettings.fancyVisuals}
+          callback={testCB}
         />
 
-        <FancySwitch
+        <ControlledSwitch
           title="Confirm Before Deleting Open Item"
           desc="Prevent accidental erasure of Open Items"
+          dataKey="confirmDelOpenItem"
+          defaultValue={UserSettings.confirmDelOpenItem}
+          callback={testCB}
         />
 
-        <FancySwitch
+        <ControlledSwitch
           title="Only Count Complete Rows as Progress"
           desc="Project progress will not be incremented unless the entire Control Row is complete"
+          dataKey="completeProgress"
+          defaultValue={UserSettings.completeProgress}
+          callback={testCB}
         />
         <Spacer y={4} />
         <Divider />
         <Spacer y={8} />
-        <Slider
-          label={
-            <>
-              <p className="text-medium">Row Hover Delay</p>
-              <p className=" mb-2 text-tiny text-default-400">
-                Adjust the time it takes to select a Control Row after
-                mouse-over
-              </p>
-            </>
-          }
-          hideValue
-          startContent={
-            <FontAwesomeIcon
-              className="text-default-400"
-              icon={faHourglassHalf}
-            />
-          }
-          endContent={
-            <FontAwesomeIcon className="text-default-400" icon={faBolt} />
-          }
-          step={1}
-          maxValue={6}
-          minValue={1}
+
+        <ControlledSlider
+          title="Row Hover Delay"
+          desc="Adjust the time it takes to select a Control Row after
+                mouse-over"
+          dataKey="rowHoverDelayPreset"
+          defaultValue={UserSettings.rowHoverDelayPreset}
+          startIcon={faHourglassHalf}
+          endIcon={faBolt}
+          numSteps={6}
+          callback={testCB}
+          defaultValue={3}
           marks={[
             {
-              value: 6,
+              value: 5,
               label: "None",
             },
             {
-              value: 5,
+              value: 4,
               label: "Faster",
             },
             {
-              value: 4,
+              value: 3,
               label: "Fast",
             },
             {
-              value: 3,
+              value: 2,
               label: "Default",
             },
             {
-              value: 2,
+              value: 1,
               label: "Slow",
             },
             {
-              value: 1,
+              value: 0,
               label: "Slowest",
             },
           ]}
-          defaultValue={3}
-          className="max-w-md ml-5"
         />
+
         <Spacer y={4} />
-        <Slider
-          label={
-            <>
-              <p className="text-medium">Row Height</p>
-              <p className=" mb-2 text-tiny text-default-400">
-                Adjust the height of each Control Row in the Project Grid
-              </p>
-            </>
-          }
-          hideValue
-          startContent={
-            <FontAwesomeIcon
-              className="text-default-400"
-              icon={faDownLeftAndUpRightToCenter}
-            />
-          }
-          endContent={
-            <FontAwesomeIcon
-              className="text-default-400"
-              icon={faUpRightAndDownLeftFromCenter}
-            />
-          }
-          step={1}
-          maxValue={3}
-          minValue={1}
+
+        <ControlledSlider
+          title="Row Height"
+          desc="Adjust the height of each Control Row in the Project Grid"
+          dataKey="rowHeightPreset"
+          defaultValue={UserSettings.rowHeightPreset}
+          startIcon={faDownLeftAndUpRightToCenter}
+          endIcon={faUpRightAndDownLeftFromCenter}
+          numSteps={3}
+          callback={testCB}
           marks={[
             {
-              value: 1,
+              value: 0,
               label: "Small",
             },
             {
-              value: 2,
+              value: 1,
               label: "Default",
             },
             {
-              value: 3,
+              value: 2,
               label: "Large",
             },
           ]}
-          defaultValue={2}
-          className="max-w-md ml-5"
         />
+
         <Spacer y={4} />
-        <Slider
-          label={
-            <>
-              <p className="text-medium">Expanded Row Height</p>
-              <p className=" mb-2 text-tiny text-default-400">
-                Adjust the height the Control Row when editing Quick Notes
-              </p>
-            </>
-          }
-          hideValue
-          startContent={
-            <FontAwesomeIcon
-              className="text-default-400"
-              icon={faDownLeftAndUpRightToCenter}
-            />
-          }
-          endContent={
-            <FontAwesomeIcon
-              className="text-default-400"
-              icon={faUpRightAndDownLeftFromCenter}
-            />
-          }
-          step={1}
-          maxValue={3}
-          minValue={1}
+
+        <ControlledSlider
+          title="Expanded Row Height"
+          desc="Adjust the height the Control Row when editing Quick Notes"
+          dataKey="rowExpandedPreset"
+          defaultValue={UserSettings.rowExpandedPreset}
+          startIcon={faDownLeftAndUpRightToCenter}
+          endIcon={faUpRightAndDownLeftFromCenter}
+          numSteps={3}
+          callback={testCB}
           marks={[
             {
-              value: 1,
+              value: 0,
               label: "Small",
             },
             {
-              value: 2,
+              value: 1,
               label: "Default",
             },
             {
-              value: 3,
+              value: 2,
               label: "Large",
             },
           ]}
-          defaultValue={2}
-          className="max-w-md ml-5"
         />
       </SettingsCard>
 
@@ -279,7 +262,7 @@ export default function ProfileSettings() {
         <Divider />
         <Spacer y={4} />
 
-        <FancySwitch
+        <ControlledSwitch
           title="Autofill Project Manager"
           desc="Automatically assign a default Project Manager to new projects. You can still change before creating the project"
         />

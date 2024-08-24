@@ -33,8 +33,9 @@ import SettingsCardSection from "src/components/settingspage/SettingsCardSection
 import UserInfo from "src/components/settingspage/UserInfo";
 
 //Form
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import FormField from "src/components/forms/components/FormField";
+import ControlledInput from "src/components/forms/components/ControlledInput";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
 
 //Utils
@@ -42,13 +43,30 @@ import toastRequest from "src/utils/toastRequest";
 import { Validators, DataFields, UIVars } from "src/utils/validations";
 
 export default function NameSettingsForm() {
+  const { userData, setUserData } = useContext(UserContext);
+
+  //Form setup
+  const {
+    control,
+    watch,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
   //Loading state for visuals
   const [loading, setLoading] = useState(false);
 
-  const { userData } = useContext(UserContext);
+  //Watch the values and save to state
+  const formValues = useWatch({
+    control,
+    name: ["firstName", "lastName"],
+  });
+  const [vals, setVals] = useState([]);
 
-  //Form setup
-  const { control, handleSubmit, reset } = useForm();
+  useEffect(() => {
+    setVals(formValues);
+  }, [formValues]);
 
   //Make request to update user information
   async function updateData(data) {
@@ -60,8 +78,6 @@ export default function NameSettingsForm() {
       success: "Profile updated!",
       successCB: (message) => {
         //If successful, update user context
-        reset();
-        console.log(message.first_name);
         setUserData((prev) => ({
           ...prev,
           firstName: message.first_name,
@@ -69,36 +85,40 @@ export default function NameSettingsForm() {
         }));
       },
     });
+    reset();
   }
+
   return (
     <>
+      {/* <ToastContainer /> */}
       <form onSubmit={handleSubmit((data) => updateData(data))}>
-        <FormField
+        <ControlledInput
+          required
           field="firstName"
+          errors={errors}
           label={DataFields.FIRST_NAME_LABEL}
-          placeHolder={userData.firstName}
+          placeholder={userData.firstName}
           validations={Validators.FirstName}
           loading={loading}
           control={control}
+          size="s"
         />
 
-        <FormField
+        <Spacer y={4} />
+
+        <ControlledInput
+          required
           field="lastName"
+          errors={errors}
           label={DataFields.LAST_NAME_LABEL}
+          placeholder={userData.lastName}
           validations={Validators.LastName}
-          placeHolder={userData.lastName}
           loading={loading}
           control={control}
+          size="s"
         />
 
-        <SubmitAlt
-          submitLabel="Save Changes"
-          altLabel="Discard"
-          altAction={() => {
-            reset();
-          }}
-          loading={loading}
-        />
+        <SubmitAlt vals={vals} submitLabel="Save" loading={loading} />
       </form>
     </>
   );

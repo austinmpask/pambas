@@ -1,5 +1,5 @@
 //React
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 //Toasts
@@ -9,8 +9,10 @@ import { ToastContainer } from "react-toastify";
 import toastRequest from "../../utils/toastRequest";
 import { Validators, DataFields } from "src/utils/validations";
 
+import ControlledInput from "src/components/forms/components/ControlledInput";
+
 //Form
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import FormField from "src/components/forms/components/FormField";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
 import {
@@ -20,6 +22,8 @@ import {
   CardFooter,
   Divider,
   Image,
+  Spacer,
+  Link,
 } from "@nextui-org/react";
 
 //NextUI
@@ -29,10 +33,26 @@ export default function LoginForm() {
   const navigate = useNavigate();
 
   //Form setup
-  const { control, handleSubmit } = useForm();
+  const {
+    control,
+    watch,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
 
   //Loading state for visuals
   const [loading, setLoading] = useState(false);
+
+  const formValues = useWatch({
+    control,
+    name: ["credential", "password"],
+  });
+  const [vals, setVals] = useState([]);
+
+  useEffect(() => {
+    setVals(formValues);
+  }, [formValues]);
 
   //Handler for logging in user
   async function login(data) {
@@ -41,7 +61,7 @@ export default function LoginForm() {
       method: "POST",
       route: "/login",
       data,
-      setLoading,
+      error: "Account not found!",
       successCB: () => {
         setTimeout(() => {
           navigate("/dashboard");
@@ -54,52 +74,59 @@ export default function LoginForm() {
     <>
       <ToastContainer />
       <div className="flex justify-center">
-        <Card className="max-w-[400px]">
+        <Card className="w-full sm:w-[260px]">
           <CardHeader className="flex gap-3">
             <Image
               alt="Logo"
               height={40}
               radius="sm"
-              src="/logorings.png"
+              src="/rings.png"
               width={40}
             />
             <div className="flex flex-col">
               <p className="text-lg font-bold">Welcome Back!</p>
-              <p className="text-small text-default-500">
-                Don't have an account? Sign up
-              </p>
+              <div className="flex">
+                <p className="text-small text-default-500">No account?&nbsp;</p>
+                <Link className="text-small" href="/register">
+                  Sign up
+                </Link>
+              </div>
             </div>
           </CardHeader>
           <Divider />
-          <CardBody>
+          <CardBody className="mt-6 sm:mt-0 p-6">
             <form
-              className="box container fit-box flex flex-col items-center"
+              className="flex flex-col items-center"
               onSubmit={handleSubmit((data) => login(data))}
             >
-              <FormField
+              <ControlledInput
+                required
                 field="credential"
+                errors={errors}
                 label={DataFields.CRED_LABEL}
                 validations={Validators.LoginCredential}
                 loading={loading}
-                size="ff-med"
                 control={control}
+                size="s"
+                type="text"
               />
-              <FormField
+
+              <Spacer y={4} />
+
+              <ControlledInput
+                required
                 field="password"
+                errors={errors}
                 label={DataFields.PASS_LABEL}
                 validations={Validators.Password}
                 loading={loading}
-                size="ff-med"
                 control={control}
+                size="s"
                 type="password"
               />
-              <div className="w-full pl-1">
-                <SubmitAlt
-                  submitLabel="Login"
-                  altLabel="Sign Up"
-                  altAction={() => navigate("/register")}
-                  loading={loading}
-                />
+
+              <div className="w-full mt-6 sm:mt-0 sm:w-[200px]">
+                <SubmitAlt vals={vals} submitLabel="Login" loading={loading} />
               </div>
             </form>
           </CardBody>

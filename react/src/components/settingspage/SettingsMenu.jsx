@@ -9,6 +9,7 @@ import {
   Image,
   Tabs,
   Tab,
+  Spacer,
 } from "@nextui-org/react";
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -105,22 +106,49 @@ export default function SettingsMenu() {
   return (
     <>
       <ToastContainer />
-      <Tabs isVertical variant="light" aria-label="Settings tabs" items={tabs}>
-        {(item) => (
-          <Tab
-            className="min-w-fit max-w-full"
-            key={item.id}
-            title={
-              <div className="flex w-[150px] flex-row justify-start items-center space-x-2">
-                {item.icon}
-                <span>{item.label}</span>
-              </div>
-            }
-          >
-            {item.content}
-          </Tab>
-        )}
-      </Tabs>
+      {/* DESKTOP */}
+      <div className="hidden sm:flex sm:flex-col">
+        <Tabs
+          isVertical
+          variant="light"
+          aria-label="Settings tabs"
+          items={tabs}
+        >
+          {(item) => (
+            <Tab
+              key={item.id}
+              className="w-full"
+              title={
+                <div className="flex w-full sm:w-[150px] flex-row justify-start items-center space-x-2">
+                  {item.icon}
+                  <span>{item.label}</span>
+                </div>
+              }
+            >
+              {item.content}
+            </Tab>
+          )}
+        </Tabs>
+      </div>
+      {/* MOBILE */}
+      <div className="flex flex-col sm:hidden">
+        <Tabs aria-label="Settings tabs" items={tabs}>
+          {(item) => (
+            <Tab
+              className="w-full h-[60px]"
+              key={item.id}
+              title={
+                <div className="flex w-full flex-row justify-start items-center space-x-2">
+                  {item.icon}
+                  <span>{item.label}</span>
+                </div>
+              }
+            >
+              <div className="w-full">{item.content}</div>
+            </Tab>
+          )}
+        </Tabs>
+      </div>
     </>
   );
 }

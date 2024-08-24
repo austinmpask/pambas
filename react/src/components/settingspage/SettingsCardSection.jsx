@@ -47,9 +47,9 @@ export default function SettingsCardSection({ title, children = null }) {
       <Spacer y={4} />
 
       <div className="flex flex-row">
-        <Spacer x={4} />
+        <Spacer className="hidden sm:flex" x={4} />
 
-        <div className="flex flex-col">{children}</div>
+        <div className="flex flex-col w-full sm:w-fit">{children}</div>
       </div>
     </>
   );

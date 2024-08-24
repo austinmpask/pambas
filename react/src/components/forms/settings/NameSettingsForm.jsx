@@ -118,7 +118,9 @@ export default function NameSettingsForm() {
           size="s"
         />
 
-        <SubmitAlt vals={vals} submitLabel="Save" loading={loading} />
+        <div className="w-full mt-6 sm:mt-0 sm:w-fit">
+          <SubmitAlt vals={vals} submitLabel="Save" loading={loading} />
+        </div>
       </form>
     </>
   );

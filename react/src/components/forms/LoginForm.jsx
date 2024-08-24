@@ -74,7 +74,7 @@ export default function LoginForm() {
     <>
       <ToastContainer />
       <div className="flex justify-center">
-        <Card className="w-full sm:w-[260px]">
+        <Card className="w-full sm:w-[260px] rounded-none sm:rounded-xl">
           <CardHeader className="flex gap-3">
             <Image
               alt="Logo"

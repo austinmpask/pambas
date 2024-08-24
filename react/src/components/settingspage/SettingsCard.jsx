@@ -33,25 +33,16 @@ import { Validators, DataFields, UIVars } from "../../utils/validations";
 export default function SettingsCard({ title, icon, children, end = false }) {
   return (
     <>
-      <Card>
-        <div className="flex flex-row">
-          <div className="flex flex-col">
-            <Card className="w-[600px]">
-              <CardHeader className="p-4 pr-6 flex flex-row justify-between">
-                <p className="text-xl font-semibold">{title}</p>
-                <FontAwesomeIcon
-                  size="lg"
-                  className="text-default-400"
-                  icon={icon}
-                />
-              </CardHeader>
-              <Divider />
+      <Card className="w-full sm:max-w-[600px] rounded-none sm:rounded-xl">
+        <CardHeader className="p-4 sm:pr-6 flex flex-row justify-between">
+          <p className="text-xl sm:font-semibold">{title}</p>
+          <FontAwesomeIcon size="lg" className="text-default-400" icon={icon} />
+        </CardHeader>
+        <Divider />
 
-              <CardBody className="p-6">{children}</CardBody>
-            </Card>
-          </div>
-        </div>
+        <CardBody className="p-8 sm:p-6">{children}</CardBody>
       </Card>
+
       {!end && <Spacer y={4} />}
     </>
   );

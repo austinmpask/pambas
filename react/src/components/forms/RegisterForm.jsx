@@ -80,7 +80,7 @@ export default function RegisterForm() {
       <ToastContainer />
 
       <div className="flex justify-center">
-        <Card>
+        <Card className="rounded-none sm:rounded-xl">
           <CardHeader className="flex gap-3">
             <Image
               alt="Logo"

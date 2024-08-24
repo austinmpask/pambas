@@ -45,7 +45,7 @@ export default function ControlledSlider({
       value={value}
       onChange={setValue}
       onChangeEnd={() => callback(dataKey, value)}
-      className="max-w-md ml-5"
+      className="max-w-md sm:ml-5"
     />
   );
 }

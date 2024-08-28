@@ -151,31 +151,29 @@ export default function LineItem({ lineItemData }) {
     // Line item container div
     <div
       //Raise z-index after the animation completes to avoid clipping issues
-      style={lineUIState.up ? { zIndex: "20" } : { zIndex: "0" }}
+      // style={lineUIState.up ? { zIndex: "20" } : { zIndex: "0" }}
       //Border/fill will vary depending on if it is active
-      className={`grid ${
-        lineUIState.active ? "line-raised" : "hoverable-line"
-      }`}
-      onMouseEnter={() => {
-        //If the line is not already activated, prep it for activation after delay
-        if (!lineUIState.active) {
-          timeoutRef.current = setTimeout(() => {
-            setLineUIState((prev) => ({
-              ...prev,
-              hoveringHeld: true,
-            }));
-          }, UIVars.LINE_HOVER_DELAY_MS);
-        }
-      }}
-      onMouseLeave={() => {
-        //Clear the timeout if the mouse ever leaves
-        clearTimeout(timeoutRef.current);
+      className={`grid grid-cols-proj w-full ${lineUIState.active ? "" : ""}`}
+      // onMouseEnter={() => {
+      //   //If the line is not already activated, prep it for activation after delay
+      //   if (!lineUIState.active) {
+      //     timeoutRef.current = setTimeout(() => {
+      //       setLineUIState((prev) => ({
+      //         ...prev,
+      //         hoveringHeld: true,
+      //       }));
+      //     }, UIVars.LINE_HOVER_DELAY_MS);
+      //   }
+      // }}
+      // onMouseLeave={() => {
+      //   //Clear the timeout if the mouse ever leaves
+      //   clearTimeout(timeoutRef.current);
 
-        //If this line is active, and no menus are used, deactivate it and remove lockout
-        if (!lineUIState.writingNote && !lineUIState.menuOpen) {
-          exitLine();
-        }
-      }}
+      //   //If this line is active, and no menus are used, deactivate it and remove lockout
+      //   if (!lineUIState.writingNote && !lineUIState.menuOpen) {
+      //     exitLine();
+      //   }
+      // }}
     >
       {/* Hanging flag marker, animated with CSSTransition */}
       <HangingFlag />

@@ -17,7 +17,7 @@ export default function ProjectGrid({ contextSlice, projectDetails }) {
       timeout={UIVars.PROJ_GRID_IN_ANIM_MS}
       classNames={"section"}
     >
-      <div className="project-content">
+      <div className="p-3 flex flex-col items-center">
         {projectDetails &&
           projectDetails.sections.map((section, index) => {
             return (

@@ -12,8 +12,8 @@ export default function NoteBoxCell({ exit }) {
   const { lineUIState } = useContext(LineStateContext);
   return (
     <div
-      className={`cell line-item-cell centered-cell ${
-        lineUIState.complete && !lineUIState.active && " complete-cell"
+      className={`border-solid border-x-1 border-inherit ${
+        lineUIState.complete && !lineUIState.active && " TODOcomplete-cell"
       }`}
     >
       <NoteBox exit={exit} />

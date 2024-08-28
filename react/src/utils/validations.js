@@ -228,6 +228,23 @@ export class UIVars {
   static DEFAULT_LINE_DELAY = this.NORMAL_SELECT;
 }
 
+export const Colors = {
+  success: "#00FF9B",
+  successShadow: "#0a8f5a",
+
+  danger: "#FF3A85",
+  dangerShadow: "#a12554",
+
+  primary: "#11E6FF",
+  primaryShadow: "#128694",
+
+  warn: "#FFFF5C",
+  warnShadow: "#a6a630",
+
+  lightBg: "FILLIN",
+  lightShadow: "#CED6D6",
+};
+
 //Template for user settings key/value
 export const UserSettings = {
   darkMode: false,

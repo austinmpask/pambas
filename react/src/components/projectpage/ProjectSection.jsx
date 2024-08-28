@@ -5,6 +5,25 @@ import { useContext } from "react";
 import { ProjectUpdaterContext } from "src/pages/ProjectPage";
 import { LockoutContext } from "src/context/LockoutContext";
 
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  Divider,
+  Image,
+  Tabs,
+  Tab,
+  Spacer,
+  Switch,
+  cn,
+  Slider,
+  Select,
+  SelectItem,
+  Input,
+  Button,
+} from "@nextui-org/react";
+
 //Children
 import ProjectEditableField from "src/components/projectpage/ProjectEditableField";
 import LineItemWrapper from "./lineitem/LineItemWrapper";
@@ -28,58 +47,49 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
   }
 
   return (
-    <div className="card mt-6 section-card default-body-background">
+    <Card className="m-6 mb-0 w-full sm:w-11/12 lg:w-3/5">
       {/* Header for section card */}
-      <div
-        className="card-header sec-header default-header-color"
+      <CardHeader
+        className="px-0 py-3"
         style={lockout ? { boxShadow: "none" } : {}}
       >
-        <div className="fixed-grid has-6-cols">
-          {/* Column headers shown on only on first card (index === 0) */}
-          {index ? (
-            // Rest of cards headers
-            <div className="title-cell">
-              <h2 className="title is-5 has-text-weight-medium has-text-white">{`Section ${sectionData.sectionNumber}`}</h2>
-            </div>
-          ) : (
-            // First card header
-            <div className="grid">
-              <div className="title-cell">
-                <h2
-                  className="title is-5 has-text-weight-medium has-text-white"
-                  style={{ position: "absolute" }}
-                >{`Sec. ${sectionData.sectionNumber}`}</h2>
-              </div>
+        {/* Column headers shown on only on first card (index === 0) */}
+        {index ? (
+          // Rest of cards headers
+          <p className="pl-4 text-large text-default-500 font-semibold">{`Section ${sectionData.sectionNumber}`}</p>
+        ) : (
+          // First card header
+          <>
+            <div className="grid grid-cols-proj w-full">
+              <p className="pl-4 text-large text-default-500 font-semibold">{`Sec. ${sectionData.sectionNumber}`}</p>
+
               {contextSlice.checkBoxHeaders.map((header, i) => {
                 return (
-                  <div key={i} className="cell header-cell-centered">
-                    {!index && (
-                      <ProjectEditableField
-                        initialContent={header}
-                        objKey={i}
-                        onSubmit={updateHeaders}
-                        mini={true}
-                      />
-                    )}
-                  </div>
+                  !index && (
+                    <ProjectEditableField
+                      initialContent={header}
+                      objKey={i}
+                      key={i}
+                      onSubmit={updateHeaders}
+                      mini={true}
+                    />
+                  )
                 );
               })}
-              <div className="cell header-cell-centered">
-                <label className="section-header has-text-white">NOTES</label>
-              </div>
+              <p className="flex flex-col items-center justify-center text-small text-default-500">
+                NOTES
+              </p>
             </div>
-          )}
-        </div>
-      </div>
+          </>
+        )}
+      </CardHeader>
+      <Divider />
 
       {/* Section card content (line items) */}
-      <div className="fixed-grid has-6-cols">
-        {sectionData.lineItems.map((line, index) => (
-          <div key={index} className="line-item-row">
-            <LineItemWrapper line={line} index={index} />
-          </div>
-        ))}
-      </div>
-    </div>
+
+      {sectionData.lineItems.map((line, index) => (
+        <LineItemWrapper key={index} line={line} index={index} />
+      ))}
+    </Card>
   );
 }

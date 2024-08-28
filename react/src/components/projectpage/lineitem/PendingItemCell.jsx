@@ -20,13 +20,13 @@ export default function PendingItemCell() {
   return (
     <div
       // Change background color to green if !active && line is complete
-      className={`cell line-item-cell centered-cell item-cell  ${
-        lineUIState.complete && !lineUIState.active && " complete-cell"
+      className={`flex justify-center items-center ${
+        lineUIState.complete && !lineUIState.active && "TODOcomplete-cell"
       }`}
     >
       <div
         // Adjust cursor for line being active
-        className={lineUIState.active && "click-cell p-5"}
+        className={lineUIState.active && ""}
         // Toggle the menu when clicking
         onClick={() => {
           if (lineUIState.active) {

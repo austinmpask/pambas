@@ -9,22 +9,22 @@ export default function ControlNumberCell({ handleClick }) {
   const { lineState, lineUIState } = useContext(LineStateContext);
   return (
     <div
-      className={`cell centered-cell control-cell ${
-        lineUIState.active && " click-cell control-cell-active"
+      className={`border-solid border-r-1 border-inherit flex flex-col justify-center items-center ${
+        lineUIState.active && " TODOclick-cell,control-cell-active"
       } ${
-        lineUIState.active && lineState.flagMarker && " control-cell-danger"
-      } ${lineUIState.complete && !lineUIState.active && " complete-cell"} `}
+        lineUIState.active && lineState.flagMarker && "TODOcontrol-cell-danger"
+      } ${lineUIState.complete && !lineUIState.active && "TODOcomplete-cell"} `}
       onClick={handleClick}
     >
-      <label
-        className={`label ${
+      <p
+        className={`text-small font-semibold text-default-500 ${
           lineState.flagMarker && lineUIState.active
-            ? "has-text-white"
-            : "has-text-grey"
-        } ${lineUIState.active && "click-cell z1"} `}
+            ? "TODOhas-text-white"
+            : "TODOhas-text-grey"
+        } ${lineUIState.active && "TODOclick-cell,z1"} `}
       >
         {lineState.controlNumber}
-      </label>
+      </p>
     </div>
   );
 }

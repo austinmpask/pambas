@@ -8,7 +8,11 @@ export default {
     "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      gridTemplateColumns: {
+        proj: "0.3fr 0.6fr 0.6fr 0.6fr 2fr 0.3fr",
+      },
+    },
   },
   darkMode: "class",
   plugins: [nextui()],

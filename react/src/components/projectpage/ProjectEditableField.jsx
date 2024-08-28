@@ -51,19 +51,13 @@ export default function ProjectEditableField({
 
   return (
     <div
-      className="edit-field"
+      className="flex flex-col items-center justify-center"
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
       onClick={() => setEditing(true)}
     >
       {!editing && (
-        <label
-          className={`section-header has-text-white ${
-            title ? " title is-4 has-text-weight-bold" : " has-text-white"
-          }`}
-        >
-          {initialContent}
-        </label>
+        <p className="text-small text-default-500">{initialContent}</p>
       )}
       {editing && (
         <>
@@ -84,7 +78,7 @@ export default function ProjectEditableField({
         </>
       )}
       {hovering && !editing && (
-        <span className="icon has-text-white">
+        <span className="">
           <FontAwesomeIcon icon={faSquarePen} />
         </span>
       )}

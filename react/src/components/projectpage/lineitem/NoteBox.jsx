@@ -10,6 +10,8 @@ import { UIVars } from "src/utils/validations";
 //Contexts
 import { LineStateContext } from "./LineItemWrapper";
 
+import { Textarea } from "@nextui-org/react";
+
 //Text area component for quick notes associated with a line item
 export default function NoteBox({ exit }) {
   //Access unique line item context
@@ -76,46 +78,51 @@ export default function NoteBox({ exit }) {
   }
 
   return (
-    <div
-      className={`note-cell ${lineUIState.active && " note-cell-active "} ${
-        lineUIState.complete && !lineUIState.active && " complete-cell"
-      }`}
-      // Adjust height based on if the note is active or not
-      style={
-        lineUIState.writingNote
-          ? { minHeight: `${UIVars.NOTE_EXPANDED_HEIGHT_PX}px` }
-          : { minHeight: `${UIVars.NOTE_COLLAPSED_HEIGHT_PX}px` }
-      }
-    >
-      <div
-        // Shrink the conatiner slightly from the edges when it is in use
-        className={`note-wrapper ${lineUIState.writingNote && "shrink"}`}
-      >
-        <textarea
-          className={`input is-small notes-input has-text-grey ${
-            lineUIState.active && "active-text"
-          } ${lineUIState.writingNote && " input-attention"} ${
-            lineUIState.complete &&
-            !lineUIState.active &&
-            " complete-cell min-text"
-          }`}
-          type="text"
-          // Open the note if it is not being used and the line is active
-          onClick={() =>
-            lineUIState.active && !lineUIState.writingNote && openNote()
-          }
-          ref={noteRef}
-          //Hold temporary note state
-          value={noteState}
-          onChange={(e) => setNoteState(e.target.value)}
-          //Hotkeys for exiting or saving
-          onKeyDown={noteKeyDownHandler}
-          disabled={!lineUIState.active}
-        />
+    <>
+      <Textarea
+        ref={noteRef}
+        // disableAutosize
+        className="h-[60px]"
+        // placeholder={noteState}
+        isDisabled={!lineUIState.active}
+        onClick={() =>
+          lineUIState.active && !lineUIState.writingNote && openNote()
+        }
+        value={noteState}
+        onChange={(e) => setNoteState(e.target.value)}
+        //Hotkeys for exiting or saving
+        onKeyDown={noteKeyDownHandler}
+      />
 
-        {/* Append helpers to show how to discard or save */}
-        {lineUIState.writingNote && <TextBoxHelpers content={noteState} />}
-      </div>
-    </div>
+      {/* <textarea
+  style={
+    lineUIState.writingNote
+      ? { minHeight: `${UIVars.NOTE_EXPANDED_HEIGHT_PX}px` }
+      : { minHeight: `${UIVars.NOTE_COLLAPSED_HEIGHT_PX}px` }
+  }
+  className={`input is-small notes-input has-text-grey ${
+    lineUIState.active && "active-text"
+  } ${lineUIState.writingNote && " input-attention"} ${
+    lineUIState.complete &&
+    !lineUIState.active &&
+    " complete-cell min-text"
+  }`}
+  type="text"
+  // Open the note if it is not being used and the line is active
+  onClick={() =>
+    lineUIState.active && !lineUIState.writingNote && openNote()
+  }
+  ref={noteRef}
+  //Hold temporary note state
+  value={noteState}
+  onChange={(e) => setNoteState(e.target.value)}
+  //Hotkeys for exiting or saving
+  onKeyDown={noteKeyDownHandler}
+  disabled={!lineUIState.active}
+/> */}
+
+      {/* Append helpers to show how to discard or save */}
+      {/* {lineUIState.writingNote && <TextBoxHelpers content={noteState} />} */}
+    </>
   );
 }

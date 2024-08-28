@@ -148,7 +148,6 @@ export default function ProjectPage() {
   return (
     <>
       <LockoutProvider>
-        <div className="project-page-background" />
         <NavBar />
         <HeaderStatsContext.Provider value={{ headerStats, setHeaderStats }}>
           <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>

@@ -20,14 +20,10 @@ export default function LineItemWrapper({ line, index }) {
 
   //State for line's UI related info, not table data
   const [lineUIState, setLineUIState] = useState({
-    active: false, //State to track if this line item is selected and active
-    hoveringHeld: false, //Track if the component was hovered by user for xxx ms
-    up: false, //Line item has COMPLETED the animation to being selected/being deselected
     writingNote: false, //User has clicked and opened note box
     menuOpen: false, //User has opened side menu
     complete: false, //All checkkboxes are complete
     hangingFlag: false,
-    css: "hoverable-line",
   });
 
   //Loading for visuals or lockouts

@@ -10,10 +10,8 @@ import { UIVars } from "src/utils/validations";
 //Contexts
 import { LineStateContext } from "./LineItemWrapper";
 
-import { Textarea } from "@nextui-org/react";
-
 //Text area component for quick notes associated with a line item
-export default function NoteBox({ exit }) {
+export default function NoteBox() {
   //Access unique line item context
   const { lineState, lineUIState, setLineState, setLineUIState, setLoading } =
     useContext(LineStateContext);
@@ -24,6 +22,8 @@ export default function NoteBox({ exit }) {
   //Temporary state for the text input, will reflect line state by default unless user is changing it
   const [noteState, setNoteState] = useState(lineState.notes || "");
 
+  const [helpers, setHelpers] = useState(false);
+
   //Copy/update the existing notes into the temporary note state
   useEffect(() => {
     setNoteState(lineState.notes);
@@ -32,7 +32,7 @@ export default function NoteBox({ exit }) {
   //When no longer writing note, return note to normal zindex
   useEffect(() => {
     if (!lineUIState.writingNote) {
-      noteRef.current.classList.remove("top");
+      //TODO!!!!
     }
   }, [lineUIState.writingNote]);
 
@@ -40,9 +40,10 @@ export default function NoteBox({ exit }) {
   function openNote() {
     //Reflect in parent line state
     setLineUIState((prev) => ({ ...prev, writingNote: true }));
+    setHelpers(true);
 
     //Bring note z index above any others
-    noteRef.current.classList.add("top");
+    //TODO
 
     //Focus the note
     noteRef.current.focus();
@@ -53,11 +54,11 @@ export default function NoteBox({ exit }) {
     noteRef.current.blur();
 
     //Exit the line
-    exit();
 
     //Remove the helper tags midway thru transition so it looks nice
+    setLineUIState((prev) => ({ ...prev, writingNote: false }));
     setTimeout(() => {
-      setLineUIState((prev) => ({ ...prev, writingNote: false }));
+      setHelpers(false);
     }, UIVars.NOTE_HELPER_DELAY_MS);
   }
 
@@ -78,51 +79,27 @@ export default function NoteBox({ exit }) {
   }
 
   return (
-    <>
-      <Textarea
+    <div className="h-full w-full">
+      <textarea
+        // className="w-full h-full resize-none p-2 text-sm text-default-500"
+        className={`${helpers && "z-20"} overflow-y-hidden ${
+          lineUIState.writingNote &&
+          "overflow-y-scroll border-3 border-blue-500 shadow-2xl"
+        }  p-2 text-sm text-default-500 rounded-xl relative resize-none h-full w-full outline-none`}
+        type="text"
+        spellcheck="false"
+        // Open the note if it is not being used and the line is active
+        onClick={() => !lineUIState.writingNote && openNote()}
         ref={noteRef}
-        // disableAutosize
-        className="h-[60px]"
-        // placeholder={noteState}
-        isDisabled={!lineUIState.active}
-        onClick={() =>
-          lineUIState.active && !lineUIState.writingNote && openNote()
-        }
+        //Hold temporary note state
         value={noteState}
         onChange={(e) => setNoteState(e.target.value)}
         //Hotkeys for exiting or saving
         onKeyDown={noteKeyDownHandler}
       />
 
-      {/* <textarea
-  style={
-    lineUIState.writingNote
-      ? { minHeight: `${UIVars.NOTE_EXPANDED_HEIGHT_PX}px` }
-      : { minHeight: `${UIVars.NOTE_COLLAPSED_HEIGHT_PX}px` }
-  }
-  className={`input is-small notes-input has-text-grey ${
-    lineUIState.active && "active-text"
-  } ${lineUIState.writingNote && " input-attention"} ${
-    lineUIState.complete &&
-    !lineUIState.active &&
-    " complete-cell min-text"
-  }`}
-  type="text"
-  // Open the note if it is not being used and the line is active
-  onClick={() =>
-    lineUIState.active && !lineUIState.writingNote && openNote()
-  }
-  ref={noteRef}
-  //Hold temporary note state
-  value={noteState}
-  onChange={(e) => setNoteState(e.target.value)}
-  //Hotkeys for exiting or saving
-  onKeyDown={noteKeyDownHandler}
-  disabled={!lineUIState.active}
-/> */}
-
       {/* Append helpers to show how to discard or save */}
-      {/* {lineUIState.writingNote && <TextBoxHelpers content={noteState} />} */}
-    </>
+      {helpers && <TextBoxHelpers content={noteState} />}
+    </div>
   );
 }

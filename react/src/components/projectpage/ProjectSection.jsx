@@ -47,7 +47,7 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
   }
 
   return (
-    <Card className="m-6 mb-0 w-full sm:w-11/12 lg:w-3/5">
+    <Card className="m-6 mb-0 w-full sm:w-11/12 lg:w-3/5 overflow-visible">
       {/* Header for section card */}
       <CardHeader
         className="px-0 py-3"

@@ -25,21 +25,22 @@ export default function CheckBoxCell({ i, cbState }) {
 
   const styles = {
     idle: {
-      boxShadow: "none",
       marginTop: 0,
+      paddingTop: 0,
       position: "relative",
       zIndex: 0,
-      bottom: 0,
       height: "100%",
+      bottom: "0%",
       color: "#000000",
+      boxShadow: "none",
     },
     hover: {
       marginTop: 0,
       paddingTop: 0,
       position: "relative",
-      zIndex: 0,
-      height: "107%",
-      bottom: "7%",
+      zIndex: 10,
+      height: "109%",
+      bottom: "9%",
       border: "1px solid ",
       boxShadow: "0px 3px 10px 0px rgba(0,0,0,0.3), inset 0 -6px 0 ",
     },

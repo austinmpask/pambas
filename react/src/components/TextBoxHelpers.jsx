@@ -28,7 +28,7 @@ export default function TextBoxHelpers({ content, mini = false }) {
   useEffect(() => {
     setTimeout(() => {
       setLeftY(true);
-    }, 100);
+    }, 1);
   }, []);
 
   useEffect(() => {

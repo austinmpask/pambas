@@ -148,6 +148,7 @@ export default function ProjectPage() {
   return (
     <>
       <LockoutProvider>
+        <div className="fixed -z-50 w-full h-full bg-projBg bg-proj-img bg-proj-size" />
         <NavBar />
         <HeaderStatsContext.Provider value={{ headerStats, setHeaderStats }}>
           <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>

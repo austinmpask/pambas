@@ -192,7 +192,8 @@ export class UIVars {
   static NOTE_EXPANDED_HEIGHT_PX = 100;
   static NOTE_COLLAPSED_HEIGHT_PX = 56;
 
-  static NOTE_HELPER_DELAY_MS = 50;
+  static NOTE_HELPER_DELAY_IN_MS = 200;
+  static NOTE_HELPER_DELAY_OUT_MS = 50;
 
   static TOOLTIP_DELAY_MS = 500;
 

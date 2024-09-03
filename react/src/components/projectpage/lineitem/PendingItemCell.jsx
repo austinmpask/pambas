@@ -19,35 +19,21 @@ export default function PendingItemCell() {
 
   return (
     <div
-      // Change background color to green if !active && line is complete
-      className={`flex justify-center items-center ${
-        lineUIState.complete && !lineUIState.active && "TODOcomplete-cell"
-      }`}
+      // Change background color to green if  line is complete
+      className={`flex justify-center items-center transition-all cursor-pointer border-solid border-b-1 border-inherit
+        ${lineUIState.complete && "bg-success border-success"}`}
     >
       <div
-        // Adjust cursor for line being active
-        className={lineUIState.active && ""}
         // Toggle the menu when clicking
         onClick={() => {
-          if (lineUIState.active) {
-            setLineUIState((prev) => ({ ...prev, menuOpen: !prev.menuOpen }));
-          }
+          setLineUIState((prev) => ({ ...prev, menuOpen: !prev.menuOpen }));
         }}
       >
         {/* Dynamic color/type of icon depending on line state and items */}
         <PendingItemIcon />
       </div>
 
-      {/* Transition handled here b/c gets messy with PendingItemList returning createPortal */}
-      <CSSTransition
-        in={lineUIState.menuOpen}
-        unmountOnExit
-        timeout={UIVars.PENDING_MENU_OPEN_ANIM_MS}
-        classNames="item-card"
-      >
-        {/* Side menu for pending/open items */}
-        <PendingItemList />
-      </CSSTransition>
+      <PendingItemList />
     </div>
   );
 }

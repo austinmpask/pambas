@@ -40,7 +40,6 @@ export default function CheckBoxButton({ buttonStyle, i, cbState }) {
     <ReactiveButton
       width="100%"
       height="100%"
-      style={{}}
       onClick={handleCheckBoxClick}
       style={buttonStyle}
       idleText={

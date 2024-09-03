@@ -56,9 +56,7 @@ export default function ProjectEditableField({
       onMouseLeave={() => setHovering(false)}
       onClick={() => setEditing(true)}
     >
-      {!editing && (
-        <p className="text-small text-default-500">{initialContent}</p>
-      )}
+      {!editing && <p className="text-small text-white">{initialContent}</p>}
       {editing && (
         <>
           <div className={`edit-input ${!title && " small-input"}`}>

@@ -40,7 +40,9 @@ export default function NoteBox() {
   function openNote() {
     //Reflect in parent line state
     setLineUIState((prev) => ({ ...prev, writingNote: true }));
-    setHelpers(true);
+    setTimeout(() => {
+      setHelpers(true);
+    }, UIVars.NOTE_HELPER_DELAY_IN_MS);
 
     //Bring note z index above any others
     //TODO
@@ -59,7 +61,7 @@ export default function NoteBox() {
     setLineUIState((prev) => ({ ...prev, writingNote: false }));
     setTimeout(() => {
       setHelpers(false);
-    }, UIVars.NOTE_HELPER_DELAY_MS);
+    }, UIVars.NOTE_HELPER_DELAY_OUT_MS);
   }
 
   //Handle key shortcuts for saving/closing note box
@@ -79,13 +81,17 @@ export default function NoteBox() {
   }
 
   return (
-    <div className="h-full w-full">
+    <div className="h-full w-full bg-transparent">
       <textarea
         // className="w-full h-full resize-none p-2 text-sm text-default-500"
-        className={`${helpers && "z-20"} overflow-y-hidden ${
+        className={`${
+          helpers && "z-20"
+        } bg-inherit outline-none overflow-y-hidden ${
           lineUIState.writingNote &&
-          "overflow-y-scroll border-3 border-blue-500 shadow-2xl"
-        }  p-2 text-sm text-default-500 rounded-xl relative resize-none h-full w-full outline-none`}
+          "overflow-y-scroll border-3 border-blue-500 shadow-2xl rounded-xl bg-slate-50"
+        }  p-2 text-sm text-default-500 relative resize-none h-full w-full transition-all ${
+          lineUIState.complete && !lineUIState.writingNote && "opacity-50"
+        }`}
         type="text"
         spellcheck="false"
         // Open the note if it is not being used and the line is active

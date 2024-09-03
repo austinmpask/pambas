@@ -139,7 +139,6 @@ export default function ProfileSettings() {
           endIcon={faBolt}
           numSteps={6}
           callback={testCB}
-          defaultValue={3}
           marks={[
             {
               value: 5,

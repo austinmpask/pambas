@@ -50,18 +50,18 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
     <Card className="m-6 mb-0 w-full sm:w-11/12 lg:w-3/5 overflow-visible">
       {/* Header for section card */}
       <CardHeader
-        className="px-0 py-3"
+        className="px-0 py-3 bg-header-img"
         style={lockout ? { boxShadow: "none" } : {}}
       >
         {/* Column headers shown on only on first card (index === 0) */}
         {index ? (
           // Rest of cards headers
-          <p className="pl-4 text-large text-default-500 font-semibold">{`Section ${sectionData.sectionNumber}`}</p>
+          <p className="pl-4 text-large text-white font-semibold">{`Section ${sectionData.sectionNumber}`}</p>
         ) : (
           // First card header
           <>
             <div className="grid grid-cols-proj w-full">
-              <p className="pl-4 text-large text-default-500 font-semibold">{`Sec. ${sectionData.sectionNumber}`}</p>
+              <p className="pl-4 text-large text-white font-semibold">{`Sec. ${sectionData.sectionNumber}`}</p>
 
               {contextSlice.checkBoxHeaders.map((header, i) => {
                 return (
@@ -76,8 +76,8 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
                   )
                 );
               })}
-              <p className="flex flex-col items-center justify-center text-small text-default-500">
-                NOTES
+              <p className="flex flex-col items-center justify-center text-small text-white">
+                Notes
               </p>
             </div>
           </>

@@ -12,8 +12,8 @@ export default function NoteBoxCell() {
   const { lineUIState } = useContext(LineStateContext);
   return (
     <div
-      className={`transition-all duration-200 ease-in-out border-solid border-x-1 border-b-1 border-inherit h-[60px] ${
-        lineUIState.complete && " TODOcomplete-cell"
+      className={`transition-all border-solid border-x-1 border-b-1 border-inherit ${
+        lineUIState.complete && "bg-success border-success"
       } ${lineUIState.writingNote ? "h-[120px] p-2" : "h-[60px]"}`}
     >
       <NoteBox />

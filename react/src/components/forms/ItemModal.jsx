@@ -4,21 +4,11 @@ import { createPortal } from "react-dom";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
-import { DataFields, Validators } from "src/utils/validations";
 
 //Form
 import { useForm } from "react-hook-form";
-import FormField from "src/components/forms/components/FormField";
-import SubmitAlt from "src/components/forms/components/SubmitAlt";
-import { CSSTransition } from "react-transition-group";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBarsStaggered,
-  faFile,
-  faFish,
-  faRectangleXmark,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
+
+//Contexts
 import { LineStateContext } from "src/components/projectpage/lineitem/LineItemWrapper";
 import { HeaderStatsContext } from "src/pages/ProjectPage";
 
@@ -113,7 +103,7 @@ export default function ItemModal({
   //Modal to appear ontop of entire DOM
   return createPortal(
     <>
-      <CSSTransition
+      {/* <CSSTransition
         in={open}
         unmountOnExit
         timeout={1000}
@@ -218,7 +208,7 @@ export default function ItemModal({
             </form>
           </div>
         </div>
-      </CSSTransition>
+      </CSSTransition> */}
     </>,
     document.body
   );

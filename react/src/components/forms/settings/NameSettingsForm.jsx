@@ -1,54 +1,30 @@
+/*-------------------Cleaned up 9/6/24-------------------*/
 //React
-import { useContext, useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Divider,
-  Image,
-  Tabs,
-  Tab,
-  Spacer,
-} from "@nextui-org/react";
-//Icons
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faGear,
-  faUniversalAccess,
-  faCode,
-  faCircleUser,
-  faLock,
-} from "@fortawesome/free-solid-svg-icons";
+import { useContext, useState } from "react";
+
+//Children
+import { Spacer } from "@nextui-org/react";
 
 //Contexts
 import { UserContext } from "src/context/UserContext";
 
-//Toasts
-import { ToastContainer } from "react-toastify";
-
-import SettingsCard from "src/components/settingspage/SettingsCard";
-import SettingsCardSection from "src/components/settingspage/SettingsCardSection";
-import UserInfo from "src/components/settingspage/UserInfo";
-
 //Form
 import { useForm, useWatch } from "react-hook-form";
-import FormField from "src/components/forms/components/FormField";
 import ControlledInput from "src/components/forms/components/ControlledInput";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
-import { Validators, DataFields, UIVars } from "src/utils/validations";
+import { Validators, DataFields } from "src/utils/validations";
 
+//Settings menu form for user to change first and or last name
 export default function NameSettingsForm() {
+  //Consume user context
   const { userData, setUserData } = useContext(UserContext);
 
   //Form setup
   const {
     control,
-    watch,
     handleSubmit,
     formState: { errors },
     reset,
@@ -57,16 +33,11 @@ export default function NameSettingsForm() {
   //Loading state for visuals
   const [loading, setLoading] = useState(false);
 
-  //Watch the values and save to state
+  //Watch required values and pass to submit button
   const formValues = useWatch({
     control,
     name: ["firstName", "lastName"],
   });
-  const [vals, setVals] = useState([]);
-
-  useEffect(() => {
-    setVals(formValues);
-  }, [formValues]);
 
   //Make request to update user information
   async function updateData(data) {
@@ -90,7 +61,6 @@ export default function NameSettingsForm() {
 
   return (
     <>
-      {/* <ToastContainer /> */}
       <form onSubmit={handleSubmit((data) => updateData(data))}>
         <ControlledInput
           required
@@ -119,7 +89,7 @@ export default function NameSettingsForm() {
         />
 
         <div className="w-full mt-6 sm:mt-0 sm:w-fit">
-          <SubmitAlt vals={vals} submitLabel="Save" loading={loading} />
+          <SubmitAlt vals={formValues} submitLabel="Save" loading={loading} />
         </div>
       </form>
     </>

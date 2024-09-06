@@ -26,7 +26,6 @@ import SettingsCard from "src/components/settingspage/SettingsCard";
 
 //Form
 import { useForm } from "react-hook-form";
-import FormField from "src/components/forms/components/FormField";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
 
 //Utils

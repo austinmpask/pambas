@@ -1,5 +1,6 @@
+/*-------------------Cleaned up 9/6/24, needs to be broken up-------------------*/
 //React
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 //Toasts
@@ -7,26 +8,23 @@ import { ToastContainer } from "react-toastify";
 
 //Utils
 import toastRequest from "../../utils/toastRequest";
-import { Validators, DataFields } from "src/utils/validations";
-
-import ControlledInput from "src/components/forms/components/ControlledInput";
+import { Validators, DataFields, UIVars } from "src/utils/validations";
 
 //Form
 import { useForm, useWatch } from "react-hook-form";
-import FormField from "src/components/forms/components/FormField";
+import ControlledInput from "src/components/forms/components/ControlledInput";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
+
+//Children
 import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   Divider,
   Image,
   Spacer,
   Link,
 } from "@nextui-org/react";
-
-//NextUI
 
 //Login form
 export default function LoginForm() {
@@ -35,24 +33,18 @@ export default function LoginForm() {
   //Form setup
   const {
     control,
-    watch,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm();
 
   //Loading state for visuals
   const [loading, setLoading] = useState(false);
 
+  //Watch values to be passed to child submit button
   const formValues = useWatch({
     control,
     name: ["credential", "password"],
   });
-  const [vals, setVals] = useState([]);
-
-  useEffect(() => {
-    setVals(formValues);
-  }, [formValues]);
 
   //Handler for logging in user
   async function login(data) {
@@ -61,11 +53,12 @@ export default function LoginForm() {
       method: "POST",
       route: "/login",
       data,
+      setLoading,
       error: "Account not found!",
       successCB: () => {
         setTimeout(() => {
           navigate("/dashboard");
-        }, 2000);
+        }, UIVars.REDIRECT_DELAY_MS);
       },
     });
   }
@@ -95,6 +88,7 @@ export default function LoginForm() {
           </CardHeader>
           <Divider />
           <CardBody className="mt-6 sm:mt-0 p-6">
+            {/* Form */}
             <form
               className="flex flex-col items-center"
               onSubmit={handleSubmit((data) => login(data))}
@@ -126,7 +120,11 @@ export default function LoginForm() {
               />
 
               <div className="w-full mt-6 sm:mt-0 sm:w-[200px]">
-                <SubmitAlt vals={vals} submitLabel="Login" loading={loading} />
+                <SubmitAlt
+                  vals={formValues}
+                  submitLabel="Login"
+                  loading={loading}
+                />
               </div>
             </form>
           </CardBody>

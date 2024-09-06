@@ -16,7 +16,6 @@ import { Validators, DataFields } from "../../../utils/validations";
 
 //Form
 import { Controller, useForm } from "react-hook-form";
-import FormField from "src/components/forms/components/FormField";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
 
 //Contexts
@@ -135,7 +134,7 @@ export default function ProjectForm() {
 
   return (
     <section className="section">
-      <ToastContainer />
+      {/* <ToastContainer />
       <form onSubmit={handleSubmit((data) => createProject(data))}>
         <div className="columns">
           <div className="column">
@@ -227,7 +226,7 @@ export default function ProjectForm() {
             </div>
           </div>
         </div>
-      </form>
+      </form> */}
     </section>
   );
 }

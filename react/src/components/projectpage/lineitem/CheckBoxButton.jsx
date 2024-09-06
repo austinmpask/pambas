@@ -43,16 +43,20 @@ export default function CheckBoxButton({ buttonStyle, i, cbState }) {
       onClick={handleCheckBoxClick}
       style={buttonStyle}
       idleText={
-        <FontAwesomeIcon
-          icon={(() => {
-            switch (cbState) {
-              case 1:
-                return faCheck;
-              case 2:
-                return faRotateLeft;
-            }
-          })()}
-        />
+        cbState ? (
+          <FontAwesomeIcon
+            icon={(() => {
+              switch (cbState) {
+                case 1:
+                  return faCheck;
+                case 2:
+                  return faRotateLeft;
+              }
+            })()}
+          />
+        ) : (
+          " "
+        )
       }
     />
   );

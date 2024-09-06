@@ -227,6 +227,8 @@ export class UIVars {
   };
 
   static DEFAULT_LINE_DELAY = this.NORMAL_SELECT;
+
+  static REDIRECT_DELAY_MS = 2000;
 }
 
 export const Colors = {

@@ -34,7 +34,6 @@ import UserInfo from "src/components/settingspage/UserInfo";
 
 //Form
 import { useForm } from "react-hook-form";
-import FormField from "src/components/forms/components/FormField";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
 
 import PasswordSettingsForm from "src/components/forms/settings/PasswordSettingsForm";

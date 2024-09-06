@@ -1,7 +1,10 @@
+/*-------------------Cleaned up 9/6/24, needs to be broken up-------------------*/
+//React
+import { useContext } from "react";
+
 //Children
 import {
   Navbar,
-  NavbarBrand,
   NavbarContent,
   NavbarItem,
   Link,
@@ -16,15 +19,8 @@ import {
   Tooltip,
   Chip,
 } from "@nextui-org/react";
-import { useContext } from "react";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBars,
-  faExclamationTriangle,
-  faUser,
-} from "@fortawesome/free-solid-svg-icons";
-
+//Contexts
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
 import { UserContext } from "src/context/UserContext";
 
@@ -43,13 +39,7 @@ export default function NavBar() {
               disableRipple
               className="text-base font-semibold"
             >
-              <Image
-                alt="Logo"
-                height={35}
-                radius="sm"
-                src="/rings.png"
-                // width={200}
-              />
+              <Image alt="Logo" height={35} radius="sm" src="/rings.png" />
             </Button>
           </DropdownTrigger>
           <DropdownMenu
@@ -74,7 +64,6 @@ export default function NavBar() {
           height={35}
           radius="sm"
           src="/rings.png"
-          // width={200}
         />
 
         <NavbarItem className="hidden sm:flex">

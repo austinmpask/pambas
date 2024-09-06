@@ -1,46 +1,17 @@
 //React
 import { useContext, useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Divider,
-  Image,
-  Tabs,
-  Tab,
-  Spacer,
-} from "@nextui-org/react";
-//Icons
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faGear,
-  faUniversalAccess,
-  faCode,
-  faCircleUser,
-  faLock,
-} from "@fortawesome/free-solid-svg-icons";
+import { Spacer } from "@nextui-org/react";
 
 //Contexts
 import { UserContext } from "src/context/UserContext";
 
-//Toasts
-import { ToastContainer } from "react-toastify";
-
-import SettingsCard from "src/components/settingspage/SettingsCard";
-import SettingsCardSection from "src/components/settingspage/SettingsCardSection";
-import UserInfo from "src/components/settingspage/UserInfo";
-
 //Form
 import { useForm, useWatch } from "react-hook-form";
-import FormField from "src/components/forms/components/FormField";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
 import ControlledInput from "src/components/forms/components/ControlledInput";
 
 //Utils
-import toastRequest from "src/utils/toastRequest";
-import { Validators, DataFields, UIVars } from "src/utils/validations";
+import { Validators } from "src/utils/validations";
 
 export default function PasswordSettingsForm() {
   const { userData } = useContext(UserContext);

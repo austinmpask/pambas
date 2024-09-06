@@ -93,7 +93,7 @@ export default function NoteBox() {
           lineUIState.complete && !lineUIState.writingNote && "opacity-50"
         }`}
         type="text"
-        spellcheck="false"
+        spellCheck="false"
         // Open the note if it is not being used and the line is active
         onClick={() => !lineUIState.writingNote && openNote()}
         ref={noteRef}

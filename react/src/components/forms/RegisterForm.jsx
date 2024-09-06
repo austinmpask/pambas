@@ -1,5 +1,6 @@
+/*-------------------Cleaned up 9/6/24, needs to be broken up-------------------*/
 //React
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 //Toasts
@@ -7,15 +8,14 @@ import { ToastContainer } from "react-toastify";
 
 //Form
 import { useForm, useWatch } from "react-hook-form";
-import FormField from "../forms/components/FormField";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
 import ControlledInput from "src/components/forms/components/ControlledInput";
 
+//Children
 import {
   Card,
   CardHeader,
   CardBody,
-  CardFooter,
   Divider,
   Image,
   Spacer,
@@ -23,8 +23,9 @@ import {
   Tooltip,
 } from "@nextui-org/react";
 
-import { Validators, DataFields } from "../../utils/validations";
-import toastRequest from "../../utils/toastRequest";
+//Utils
+import { Validators, DataFields } from "src/utils/validations";
+import toastRequest from "src/utils/toastRequest";
 
 //User registration form
 export default function RegisterForm() {
@@ -33,15 +34,14 @@ export default function RegisterForm() {
   //Form setup
   const {
     control,
-    watch,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm();
 
   //Loading state for visuals
   const [loading, setLoading] = useState(false);
 
+  //Watch required fields for passing to child button
   const formValues = useWatch({
     control,
     name: [
@@ -53,11 +53,6 @@ export default function RegisterForm() {
       "confirmPassword",
     ],
   });
-  const [vals, setVals] = useState([]);
-
-  useEffect(() => {
-    setVals(formValues);
-  }, [formValues]);
 
   //Submit form and register user
   async function registerUser(data) {
@@ -222,7 +217,11 @@ export default function RegisterForm() {
               </Tooltip>
               <Spacer y={4} />
 
-              <SubmitAlt vals={vals} submitLabel="Register" loading={loading} />
+              <SubmitAlt
+                vals={formValues}
+                submitLabel="Register"
+                loading={loading}
+              />
             </form>
           </CardBody>
         </Card>

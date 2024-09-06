@@ -1,13 +1,14 @@
+/*-------------------Cleaned up 9/6/24-------------------*/
+//Children
 import { Button } from "@nextui-org/react";
 
-//Default submit and cancel/alt action form component
+//Standardized form submission & optional alt action component
 export default function SubmitAlt({
   submitLabel,
   altLabel = "",
   altAction = () => {},
-  isLink,
   loading,
-  vals = [],
+  vals = [], //React hook form values from parent. Buttons are disabled until all fields passed here have data
 }) {
   //Enable button once all fields have some value in them
   const disabled = vals.some((value) => !value);
@@ -26,6 +27,7 @@ export default function SubmitAlt({
         {submitLabel}
       </Button>
 
+      {/* Optional alt action button, not present unless explicitly provided for */}
       {altLabel && (
         <Button
           className="font-semibold"

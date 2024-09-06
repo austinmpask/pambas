@@ -1,12 +1,21 @@
-import { Input } from "@nextui-org/react";
-import { Controller } from "react-hook-form";
-
+/*-------------------Cleaned up 9/6/24-------------------*/
+//React
 import { useState } from "react";
 
-import { Validators, DataFields, UIVars } from "src/utils/validations";
+//Children
+import { Input } from "@nextui-org/react";
+
+//Forms
+import { Controller } from "react-hook-form";
+
+//Utils
+import { UIVars } from "src/utils/validations";
+
+//Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-//Render a controlled field, requiring form submission, which will expect a react hook form control from the parent.
+
+//Render a styled input field which dynamically shows validation errors. Requires react hook form in parent, takes control as prop.
 export default function ControlledInput({
   required = false,
   type = "text",
@@ -17,17 +26,16 @@ export default function ControlledInput({
   loading,
   size = "m",
   placeholder = "",
-  defaultValue,
   control,
-  isClearable = false,
   startIcon = null,
 }) {
+  //State for showing/hiding password text when applicable
   const [visible, setVisible] = useState(false);
 
   return (
     <Controller
-      name={field}
-      control={control}
+      name={field} //Take field from parent form
+      control={control} //Take control from parent form
       rules={validations}
       render={({ field: { onChange, value } }) => (
         <Input
@@ -38,11 +46,11 @@ export default function ControlledInput({
           label={label}
           onValueChange={onChange}
           value={value ?? ""}
-          variant={!!errors[field] ? "bordered" : ""}
+          variant={errors[field] ? "bordered" : ""}
           isDisabled={loading}
           placeholder={placeholder}
           startContent={startIcon ? <FontAwesomeIcon icon={startIcon} /> : null}
-          // Password specific
+          // Password specific additions
           endContent={
             type === "password" && value ? (
               <button
@@ -51,6 +59,7 @@ export default function ControlledInput({
                 onClick={() => setVisible((prev) => !prev)}
                 aria-label="Toggle password visibility"
               >
+                {/* Show an eye open/shut icon when password text is visible or not */}
                 {visible ? (
                   <div className="text-s text-default-400 pointer-events-none">
                     <FontAwesomeIcon icon={faEye} />

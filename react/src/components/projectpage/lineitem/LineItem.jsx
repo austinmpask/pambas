@@ -1,41 +1,38 @@
+/*-------------------Cleaned up 9/10/24-------------------*/
 //React
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 
 //Contexts
-import { LockoutContext } from "src/context/LockoutContext";
 import { LineStateContext } from "./LineItemWrapper";
 import { HeaderStatsContext } from "src/pages/ProjectPage";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
-import { UIVars } from "src/utils/validations";
 
 //Children
-import PendingItemCell from "./PendingItemCell";
 import HangingFlag from "./HangingFlag";
 import ControlNumberCell from "./ControlNumberCell";
-import NoteBoxCell from "./NoteBoxCell";
 import CheckBoxCell from "./CheckBoxCell";
+import NoteBoxCell from "./NoteBoxCell";
+import PendingItemCell from "./PendingItemCell";
 
-// Individual line item for the project grid
+// Individual line item for the project grid. Wrapped by a unique context to track state
 export default function LineItem({ lineItemData }) {
-  //Lock out UI elements if user is interacting with one already
-  const { lockout, setLockout } = useContext(LockoutContext);
-
   //Setter for project summary info which is affected by line item components
   const { setHeaderStats } = useContext(HeaderStatsContext);
 
+  const [close, setClose] = useState(false);
   //Access the particular line context
   const {
     lineState,
     setLineState,
-    lineUIState,
     setLineUIState,
     loading,
     setLoading,
+    setHovering,
   } = useContext(LineStateContext);
 
-  //Populate the line with initial line item data once it is fetched
+  //Populate the line with initial line item data once it has been fetched
   useEffect(() => {
     lineItemData &&
       setLineState((prev) => ({
@@ -89,19 +86,26 @@ export default function LineItem({ lineItemData }) {
   //Click flag: update state optimistically, trigger api request
   function handleFlagClick() {
     setLoading(true);
-    //Line state update triggers API req
-    setLineState((prev) => ({
-      ...prev,
-      flagMarker: !prev.flagMarker,
-    }));
+    //Close the flag marker
+    lineState.flagMarker
+      ? setClose(true) //This will change the line state from HangingFlag after 200ms delay for animation
+      : setLineState((prev) => ({ ...prev, flagMarker: true })); //Open the flag marker immediately if it doesnt exist
   }
 
   return (
-    // Line item container div
-    <div className="grid grid-cols-proj w-full">
-      {/* Hanging flag marker, animated with CSSTransition */}
-      <HangingFlag />
-      {/* lINE ITEM CELLS (CONTROL #, CHECKBOXES, NOTES, PENDING ITEMS) */}
+    // Line item container
+    <div
+      className="grid grid-cols-proj w-full"
+      // Handle line hovered state change
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
+    >
+      {/* Hanging flag marker*/}
+      {lineState.flagMarker && (
+        <HangingFlag close={close} setClose={setClose} />
+      )}
+
+      {/* Cell displaying control number, clicking it toggles the hanging flag marker */}
       <ControlNumberCell handleClick={handleFlagClick} />
 
       {/* Checkbox Cells */}
@@ -109,6 +113,7 @@ export default function LineItem({ lineItemData }) {
         return <CheckBoxCell key={i} i={i} cbState={checkBox} />;
       })}
 
+      {/* Notes and pending item components */}
       <NoteBoxCell />
       <PendingItemCell />
     </div>

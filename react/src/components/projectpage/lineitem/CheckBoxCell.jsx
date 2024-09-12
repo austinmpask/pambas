@@ -1,28 +1,24 @@
+/*-------------------Cleaned up 9/10/24-------------------*/
 //React
-import { useContext, useState, useEffect } from "react";
+import { useState } from "react";
 
 //Children
 import CheckBoxButton from "./CheckBoxButton";
 
-//Contexts
-import { LineStateContext } from "./LineItemWrapper";
-
+//Utils
 import { Colors } from "src/utils/validations";
 
-//Container for the checkbox button
+//Container cell for the checkbox button. Handles styling based on mouse events w/ cell
 export default function CheckBoxCell({ i, cbState }) {
-  const { lineUIState } = useContext(LineStateContext);
-
-  //Map cbState to colors
-  const backgroundColor = ["#ffffff", Colors.success, Colors.warn];
+  //Map button color and shadow to cbState value (0,1,2)
+  const backgroundColor = [Colors.lightBg, Colors.success, Colors.warn];
   const shadowColor = [
     Colors.lightShadow,
     Colors.successShadow,
     Colors.warnShadow,
   ];
 
-  //Button styles
-
+  //Button CSS styles for hovering, idle and clicking
   const styles = {
     idle: {
       marginTop: 0,
@@ -55,20 +51,21 @@ export default function CheckBoxCell({ i, cbState }) {
     },
   };
 
+  //Persist button CSS Styles
   const [buttonStyle, setButtonStyle] = useState(styles.idle);
 
   return (
     <div
+      // Assign CSS Styling to button based on mouse actions in the cell
       onMouseDown={() => setButtonStyle(styles.clicked)}
       onMouseUp={() => setButtonStyle(styles.hover)}
       onMouseEnter={() => setButtonStyle(styles.hover)}
       onMouseLeave={() => setButtonStyle(styles.idle)}
       key={i}
-      className={` flex flex-col items-center justify-center ${
-        lineUIState.complete && !lineUIState.active && "TODOcomplete-cell"
-      }`}
+      className="flex flex-col items-center justify-center"
     >
       <CheckBoxButton
+        // Combine CSS Styling from mouse interactions + cbState
         buttonStyle={{
           ...buttonStyle,
           backgroundColor: backgroundColor[cbState],

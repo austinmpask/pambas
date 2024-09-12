@@ -153,18 +153,15 @@ export default function ProjectPage() {
         <HeaderStatsContext.Provider value={{ headerStats, setHeaderStats }}>
           <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
             {/* Slide in project detail header from top */}
-            <CSSTransition
-              in={contextSlice}
-              unmountOnExit
-              timeout={UIVars.HEADER_MENU_IN_ANIM_MS}
-              classNames={"header-card"}
-            >
+
+            {contextSlice && (
               <ProjectHeader
                 contextSlice={contextSlice}
                 projectDetails={projectDetails}
                 setProjectDetails={setProjectDetails}
               />
-            </CSSTransition>
+            )}
+
             {/* Component for project sections */}
             <ProjectGrid
               contextSlice={contextSlice}

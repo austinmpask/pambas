@@ -189,8 +189,8 @@ export class UIVars {
   static BUTTON_ACTIVE_ZINDEX = 0;
   static BUTTON_INACTIVE_ZINDEX = 0;
 
-  static NOTE_EXPANDED_HEIGHT_PX = 100;
-  static NOTE_COLLAPSED_HEIGHT_PX = 56;
+  // static NOTE_EXPANDED_HEIGHT_PX = 100;
+  // static NOTE_COLLAPSED_HEIGHT_PX = 56;
 
   static NOTE_HELPER_DELAY_IN_MS = 200;
   static NOTE_HELPER_DELAY_OUT_MS = 50;
@@ -219,6 +219,9 @@ export class UIVars {
     this.HIGH_SELECT,
   ];
 
+  static ROW_HEIGHT_PX_OPTIONS = [45, 60, 75];
+  static ROW_EXPANDED_PX_OPTIONS = [90, 120, 170];
+
   static INPUT_SIZE_PRESET_PX = {
     xs: "sm:w-[150px]",
     s: "sm:w-[200px]",
@@ -244,7 +247,7 @@ export const Colors = {
   warn: "#FFFF5C",
   warnShadow: "#a6a630",
 
-  lightBg: "FILLIN",
+  lightBg: "#FFFFFF",
   lightShadow: "#CED6D6",
 };
 

@@ -1,3 +1,4 @@
+/*-------------------Cleaned up 9/11/24-------------------*/
 //React
 import { createContext, useState } from "react";
 //Children
@@ -23,11 +24,12 @@ export default function LineItemWrapper({ line, index }) {
     writingNote: false, //User has clicked and opened note box
     menuOpen: false, //User has opened side menu
     complete: false, //All checkkboxes are complete
-    hangingFlag: false,
   });
 
   //Loading for visuals or lockouts
   const [loading, setLoading] = useState(false);
+
+  const [hovering, setHovering] = useState(false);
 
   //Wrap the line item in its unique context
   return (
@@ -39,6 +41,8 @@ export default function LineItemWrapper({ line, index }) {
         setLineUIState,
         loading,
         setLoading,
+        hovering,
+        setHovering,
       }}
     >
       <LineItem lineItemData={line} />

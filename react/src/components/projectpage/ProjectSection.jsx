@@ -61,7 +61,7 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
           // First card header
           <>
             <div className="grid grid-cols-proj w-full">
-              <p className="pl-4 text-large text-white font-semibold">{`Sec. ${sectionData.sectionNumber}`}</p>
+              <p className="pl-4  truncate text-large text-white font-semibold">{`Sec. ${sectionData.sectionNumber}`}</p>
 
               {contextSlice.checkBoxHeaders.map((header, i) => {
                 return (

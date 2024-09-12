@@ -1,3 +1,4 @@
+/*-------------------Cleaned up 9/12/24-------------------*/
 //React
 import { useRef, useState, useEffect, useContext } from "react";
 
@@ -22,19 +23,13 @@ export default function NoteBox() {
   //Temporary state for the text input, will reflect line state by default unless user is changing it
   const [noteState, setNoteState] = useState(lineState.notes || "");
 
+  //Whether keyboard shortcuts should be shown. Accomodates delay for in/out
   const [helpers, setHelpers] = useState(false);
 
   //Copy/update the existing notes into the temporary note state
   useEffect(() => {
     setNoteState(lineState.notes);
   }, [lineState.notes]);
-
-  //When no longer writing note, return note to normal zindex
-  useEffect(() => {
-    if (!lineUIState.writingNote) {
-      //TODO!!!!
-    }
-  }, [lineUIState.writingNote]);
 
   //Handle clicking into the note box
   function openNote() {
@@ -43,21 +38,11 @@ export default function NoteBox() {
     setTimeout(() => {
       setHelpers(true);
     }, UIVars.NOTE_HELPER_DELAY_IN_MS);
-
-    //Bring note z index above any others
-    //TODO
-
-    //Focus the note
-    noteRef.current.focus();
   }
 
   function closeNote() {
-    //Unfocus the note
-    noteRef.current.blur();
-
-    //Exit the line
-
     //Remove the helper tags midway thru transition so it looks nice
+    noteRef.current.blur();
     setLineUIState((prev) => ({ ...prev, writingNote: false }));
     setTimeout(() => {
       setHelpers(false);
@@ -83,8 +68,8 @@ export default function NoteBox() {
   return (
     <div className="h-full w-full bg-transparent">
       <textarea
-        // className="w-full h-full resize-none p-2 text-sm text-default-500"
         className={`${
+          // Raise note above project content
           helpers && "z-20"
         } bg-inherit outline-none overflow-y-hidden ${
           lineUIState.writingNote &&
@@ -94,7 +79,7 @@ export default function NoteBox() {
         }`}
         type="text"
         spellCheck="false"
-        // Open the note if it is not being used and the line is active
+        // Open the note on click if not already open
         onClick={() => !lineUIState.writingNote && openNote()}
         ref={noteRef}
         //Hold temporary note state

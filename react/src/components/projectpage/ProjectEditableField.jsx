@@ -11,7 +11,7 @@ export default function ProjectEditableField({
   initialContent,
   objKey,
   onSubmit,
-  title,
+  title = false,
   mini,
 }) {
   const [editing, setEditing] = useState(false);
@@ -56,7 +56,15 @@ export default function ProjectEditableField({
       onMouseLeave={() => setHovering(false)}
       onClick={() => setEditing(true)}
     >
-      {!editing && <p className="text-small text-white">{initialContent}</p>}
+      {!editing && (
+        <p
+          className={
+            title ? "text-xl font-semibold text-white" : "text-small text-white"
+          }
+        >
+          {initialContent}
+        </p>
+      )}
       {editing && (
         <>
           <div className={`edit-input ${!title && " small-input"}`}>

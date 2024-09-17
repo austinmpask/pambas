@@ -249,6 +249,8 @@ export const Colors = {
 
   lightBg: "#FFFFFF",
   lightShadow: "#CED6D6",
+
+  turquoise: "#00D1B2",
 };
 
 //Template for user settings key/value

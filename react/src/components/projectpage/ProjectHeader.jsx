@@ -58,7 +58,7 @@ export default function ProjectHeader({ contextSlice }) {
           max={contextSlice.budget}
           color="primary"
           label="Budget Hours Remaining"
-          type="bill"
+          dropdown
           objKey="billed"
           onSubmit={updateContext}
         />

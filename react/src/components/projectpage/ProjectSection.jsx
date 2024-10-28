@@ -1,40 +1,20 @@
+/*-------------------Cleaned up 10/28/24-------------------*/
+
 //React
 import { useContext } from "react";
 
 //Contexts
 import { ProjectUpdaterContext } from "src/pages/ProjectPage";
-import { LockoutContext } from "src/context/LockoutContext";
-
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Divider,
-  Image,
-  Tabs,
-  Tab,
-  Spacer,
-  Switch,
-  cn,
-  Slider,
-  Select,
-  SelectItem,
-  Input,
-  Button,
-} from "@nextui-org/react";
 
 //Children
 import ProjectEditableField from "src/components/projectpage/ProjectEditableField";
+import { Card, CardHeader, Divider } from "@nextui-org/react";
 import LineItemWrapper from "./lineitem/LineItemWrapper";
 
 //Individual project section within the project grid
 export default function ProjectSection({ contextSlice, sectionData, index }) {
   //Updates project summary context slice with specific key/value
   const updateProjectSummaryContext = useContext(ProjectUpdaterContext);
-
-  //Tracks if user is interacting with a cell currently
-  const { lockout } = useContext(LockoutContext);
 
   //Apply a change to whatever index of the header array the user edited, then use context updater
   function updateHeaders(i, value) {
@@ -47,12 +27,10 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
   }
 
   return (
+    // Section card
     <Card className="m-6 mb-0 w-full sm:w-11/12 lg:w-3/5 overflow-visible">
       {/* Header for section card */}
-      <CardHeader
-        className="px-0 py-3 bg-header-img"
-        style={lockout ? { boxShadow: "none" } : {}}
-      >
+      <CardHeader className="px-0 py-3 bg-header-img">
         {/* Column headers shown on only on first card (index === 0) */}
         {index ? (
           // Rest of cards headers
@@ -63,6 +41,7 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
             <div className="grid grid-cols-proj w-full">
               <p className="pl-4  truncate text-large text-white font-semibold">{`Sec. ${sectionData.sectionNumber}`}</p>
 
+              {/* Map checkbox headers to checkbox columns */}
               {contextSlice.checkBoxHeaders.map((header, i) => {
                 return (
                   !index && (
@@ -76,6 +55,7 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
                   )
                 );
               })}
+              {/* Label notes column */}
               <p className="flex flex-col items-center justify-center text-small text-white">
                 Notes
               </p>
@@ -86,7 +66,6 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
       <Divider />
 
       {/* Section card content (line items) */}
-
       {sectionData.lineItems.map((line, index) => (
         <LineItemWrapper key={index} line={line} index={index} />
       ))}

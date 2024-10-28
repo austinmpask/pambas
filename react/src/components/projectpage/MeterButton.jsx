@@ -1,10 +1,13 @@
+/*-------------------Cleaned up 10/28/24-------------------*/
+//React
 import { useEffect, useState } from "react";
+
+//Children
 import CircleMeter from "./CircleMeter";
+import { Input, Button } from "@nextui-org/react";
 
 //Animation
 import { motion, AnimatePresence } from "framer-motion";
-
-import { Input, Button } from "@nextui-org/react";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,7 +17,7 @@ import {
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
 
-//Two types: "bill", and "modal". Bill will open the bill interface within the component, modal will open a list of pending items (TODO)
+//Button which displays a circlemeter on the right side. Can be a dropdown or have no action.
 export default function MeterButton({
   val,
   displayVal,
@@ -22,8 +25,8 @@ export default function MeterButton({
   color,
   percentage = false,
   label,
-  type,
-  objKey,
+  dropdown = false,
+  objKey, //Key of proj context to update
   onSubmit,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -44,15 +47,15 @@ export default function MeterButton({
   return (
     <div
       className={`px-3 py-2 transition-all rounded-2xl select-none w-full flex flex-col mb-2 ${
-        type === "bill" && "hover:shadow-xl hover:mb-4 hover:mt-1"
+        dropdown && "hover:shadow-xl hover:mb-4 hover:mt-1"
       } ${menuOpen && "header-button-menu-open shadow-xl mb-4 mt-1"}`}
     >
       <div
         className={`h-16 w-full flex flex-row justify-start items-center ${
-          type === "bill" && "cursor-pointer"
+          dropdown && "cursor-pointer"
         }`}
         onClick={() => {
-          type === "bill" && setMenuOpen((prev) => !prev);
+          dropdown && setMenuOpen((prev) => !prev);
         }}
       >
         <div className="mr-4">

@@ -25,7 +25,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DataFields } from "src/utils/validations";
 
 //Dynamic form allowing user to input the sections they are assigned, along with control amounts per section
-export default function SectionsForm({ sections, setSections }) {
+export default function SectionsForm({ loading, sections, setSections }) {
   //Add section to list, up to max constant
   function addSection() {
     sections.length < DataFields.SECTIONS_LIST_MAX &&
@@ -63,7 +63,9 @@ export default function SectionsForm({ sections, setSections }) {
           }
           startContent={<FontAwesomeIcon icon={faPlus} />}
           onPress={() => addSection()}
-          isDisabled={sections.length >= DataFields.SECTIONS_LIST_MAX}
+          isDisabled={
+            sections.length >= DataFields.SECTIONS_LIST_MAX || loading
+          }
         >
           Add Section
         </Button>
@@ -89,6 +91,7 @@ export default function SectionsForm({ sections, setSections }) {
                     index={i}
                     forward={saveInput}
                     value={section[0]}
+                    loading={loading}
                   />
                 </TableCell>
                 <TableCell>
@@ -97,6 +100,7 @@ export default function SectionsForm({ sections, setSections }) {
                     index={i}
                     forward={saveInput}
                     value={section[1]}
+                    loading={loading}
                   />
                 </TableCell>
                 <TableCell>
@@ -111,7 +115,7 @@ export default function SectionsForm({ sections, setSections }) {
                     } transition-all`}
                     size="lg"
                     icon={faTrash}
-                    onClick={() => removeSection(i)}
+                    onClick={() => !loading && removeSection(i)}
                   />
                 </TableCell>
               </TableRow>

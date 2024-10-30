@@ -11,7 +11,7 @@ import { faThumbtack } from "@fortawesome/free-solid-svg-icons";
 import { DataFields } from "src/utils/validations";
 
 //Select field on the new project form for specifying a section
-export default function SectionInput({ index, forward, value }) {
+export default function SectionInput({ loading, index, forward, value }) {
   //Make array of 1 - n for amount of sections allowed in format for nextui to easily map components
   const sections = [...Array(DataFields.SECTIONS_LIST_MAX)].map((_, i) => ({
     value: i + 1,
@@ -24,6 +24,7 @@ export default function SectionInput({ index, forward, value }) {
         label="Section #"
         items={sections}
         selectedKeys={new Set([String(value - 1)])}
+        isDisabled={loading}
         onSelectionChange={(data) => {
           forward(Number(Array.from(new Set(data))[0]) + 1, index); //Update the parent's array with the new section at appropriate index
         }}

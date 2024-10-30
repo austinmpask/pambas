@@ -54,7 +54,7 @@ export default function ProjectDropdown() {
                   <FontAwesomeIcon className="text-danger" icon={faSquare} />
                 }
                 key={index}
-                href={`/projects/${index}`}
+                href={`/projects/${project.id}`}
                 endContent={
                   <p className="text-xs text-default-400">
                     {project.projectType}

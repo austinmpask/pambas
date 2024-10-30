@@ -50,7 +50,7 @@ export default function RegisterForm() {
       "email",
       "username",
       "password",
-      "confirmPassword",
+      "passwordConfirm",
     ],
   });
 

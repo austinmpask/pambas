@@ -9,6 +9,11 @@ function rangeError(field, minL, maxL) {
   )} characters`;
 }
 
+function alphaNumericError(field, type) {
+  //Type = validation pattern (alphanumeric etc.)
+  return `${field} must be ${type}`;
+}
+
 //Data requirements which line up with backend for use in form validation
 export class DataFields {
   static CRED_LABEL = "Username/Email";
@@ -59,19 +64,19 @@ export class DataFields {
 
   //Options for react-select
   static S1T1_NAME = "SOC 1 Type 1";
-  static S1T1_SELECT = { value: this.S1T1_NAME, label: this.S1T1_NAME };
+  static S1T1_SELECT = { value: 0, label: this.S1T1_NAME };
 
   static S1T2_NAME = "SOC 1 Type 2";
-  static S1T2_SELECT = { value: this.S1T2_NAME, label: this.S1T2_NAME };
+  static S1T2_SELECT = { value: 1, label: this.S1T2_NAME };
 
   static S2T1_NAME = "SOC 2 Type 1";
-  static S2T1_SELECT = { value: this.S2T1_NAME, label: this.S2T1_NAME };
+  static S2T1_SELECT = { value: 2, label: this.S2T1_NAME };
 
   static S2T2_NAME = "SOC 2 Type 2";
-  static S2T2_SELECT = { value: this.S2T2_NAME, label: this.S2T2_NAME };
+  static S2T2_SELECT = { value: 3, label: this.S2T2_NAME };
 
   static OTHER_NAME = "Other";
-  static OTHER_SELECT = { value: this.OTHER_NAME, label: this.OTHER_NAME };
+  static OTHER_SELECT = { value: 4, label: this.OTHER_NAME };
 
   static PROJECT_TYPES = [
     this.S1T1_SELECT,
@@ -82,6 +87,34 @@ export class DataFields {
   ];
 
   static DEFAULT_PROJ_TYPE = this.S2T2_SELECT;
+
+  static PROJECT_THEME_LABEL = "Color Theme";
+
+  static THEME_RED_SELECT = {
+    value: 0,
+    label: "Red",
+    thumb: "text-danger",
+  };
+
+  static THEME_GREEN_SELECT = {
+    value: 1,
+    label: "Green",
+    thumb: "text-success",
+  };
+
+  static THEME_BLUE_SELECT = {
+    value: 2,
+    label: "Blue",
+    thumb: "text-primary",
+  };
+
+  static PROJECT_THEME_TYPES = [
+    this.THEME_RED_SELECT,
+    this.THEME_GREEN_SELECT,
+    this.THEME_BLUE_SELECT,
+  ];
+
+  static DEFAULT_PROJECT_THEME = this.THEME_RED_SELECT;
 
   static HEADER_LABEL = "Column Header";
   static HEADER_MIN_LENGTH = 0;
@@ -450,6 +483,10 @@ export class Validators {
         DataFields.BUDGET_MIN,
         DataFields.BUDGET_MAX
       ),
+    },
+    pattern: {
+      value: /[0-9]/,
+      message: alphaNumericError(DataFields.BUDGET_LABEL, "numeric"),
     },
   };
 

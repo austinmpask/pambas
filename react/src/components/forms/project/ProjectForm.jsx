@@ -1,22 +1,18 @@
+//TODO DELETE THIS ONCE NEW ONE IS FINISHED
+
 //React
 import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 //Toasts
-import { ToastContainer } from "react-toastify";
 import { toastError } from "src/styles/toasts";
-
-//Icons
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
-import { Validators, DataFields } from "../../../utils/validations";
+import { DataFields } from "src/utils/validations";
 
 //Form
-import { Controller, useForm } from "react-hook-form";
-import SubmitAlt from "src/components/forms/components/SubmitAlt";
+import { useForm } from "react-hook-form";
 
 //Contexts
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";

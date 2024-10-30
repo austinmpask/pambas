@@ -40,7 +40,7 @@ export default function ProjectDropdown() {
       {/* Menu itsself */}
       <DropdownMenu
         aria-label="Projects"
-        className="w-[230px]"
+        // className="w-[230px]"
         itemClasses={{
           base: "gap-4",
         }}
@@ -55,6 +55,11 @@ export default function ProjectDropdown() {
                 }
                 key={index}
                 href={`/projects/${index}`}
+                endContent={
+                  <p className="text-xs text-default-400">
+                    {project.projectType}
+                  </p>
+                }
               >
                 {project.title}
               </DropdownItem>
@@ -63,7 +68,8 @@ export default function ProjectDropdown() {
         </DropdownSection>
         <DropdownSection>
           <DropdownItem
-            description="Not enough work?"
+            className="text-default-500"
+            description={<p className="text-default-400">Not enough work?</p>}
             startContent={
               // TODO: Add the project color to the line item once color themes added
               <FontAwesomeIcon size="lg" icon={faCirclePlus} />

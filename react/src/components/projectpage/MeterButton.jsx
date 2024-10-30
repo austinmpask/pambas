@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 //Children
 import CircleMeter from "./CircleMeter";
 import { Input, Button } from "@nextui-org/react";
+import BudgetInput from "src/components/forms/components/BudgetInput";
 
 //Animation
 import { motion, AnimatePresence } from "framer-motion";
@@ -79,34 +80,10 @@ export default function MeterButton({
             exit={{ translateY: "-80px", opacity: 0, height: 0 }}
             transition={{ type: "spring", stiffness: 750, damping: 62 }}
           >
-            <div className="h-16 flex flex-row justify-between items-center mb-2">
-              <Input
-                size="sm"
-                type="number"
-                className="w-1/2"
-                label="Hours to Bill"
-                value={amountToBill === 0 ? "" : amountToBill}
-                onChange={(e) => setAmountToBill(Number(e.target.value))}
-              />
-              <div>
-                <Button
-                  color="success"
-                  isIconOnly
-                  className="mr-2"
-                  onClick={() => setAmountToBill((prev) => Number(prev) + 1)}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </Button>
-
-                <Button
-                  color="danger"
-                  isIconOnly
-                  onClick={() => setAmountToBill((prev) => Number(prev) - 1)}
-                >
-                  <FontAwesomeIcon icon={faMinus} />
-                </Button>
-              </div>
-            </div>
+            <BudgetInput
+              amountToBill={amountToBill}
+              setAmountToBill={setAmountToBill}
+            />
 
             <Button
               startContent={<FontAwesomeIcon icon={faCircleDollarToSlot} />}

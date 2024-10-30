@@ -72,7 +72,16 @@ export default function ControlledInput({
               </button>
             ) : null
           }
-          type={type === "password" && !visible ? "password" : "text"}
+          type={
+            //This is the only way this would work i swear lol
+            type === "password"
+              ? visible
+                ? "text"
+                : "password"
+              : type === "text"
+              ? "text"
+              : "number"
+          }
         />
       )}
     />

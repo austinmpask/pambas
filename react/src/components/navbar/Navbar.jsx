@@ -21,7 +21,7 @@ export default function NavBar() {
       <NavbarContent className="flex gap-4" justify="start">
         {/* Logo */}
         <Image
-          className="hidden sm:flex"
+          className="flex"
           alt="Logo"
           height={35}
           radius="sm"
@@ -43,7 +43,7 @@ export default function NavBar() {
         </NavbarItem>
 
         {/* Project dropdown */}
-        <NavbarItem className="hidden sm:flex">
+        <NavbarItem className="hidden flex">
           <ProjectDropdown />
         </NavbarItem>
       </NavbarContent>

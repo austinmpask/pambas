@@ -19,7 +19,7 @@ export default function SubmitAlt({
         size="md"
         radius="sm"
         type="submit"
-        variant="solid"
+        variant="flat"
         color="primary"
         isLoading={loading}
         isDisabled={loading || disabled}

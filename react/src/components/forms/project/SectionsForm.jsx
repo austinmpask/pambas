@@ -15,10 +15,16 @@ import {
   CardHeader,
   CardBody,
   Divider,
+  Tooltip,
+  Spacer,
 } from "@nextui-org/react";
 
 //Icons
-import { faTrash, faPlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrash,
+  faPlus,
+  faCircleInfo,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 //Utils
@@ -48,10 +54,48 @@ export default function SectionsForm({ loading, sections, setSections }) {
   }
 
   return (
-    <Card className="w-2/5 h-fit transition-all rounded-none sm:rounded-xl">
+    <Card className="w-full md:w-[600px] lg:w-2/5 h-fit transition-all rounded-none sm:rounded-xl">
       {/* Header */}
       <CardHeader className="h-[60px] p-4 flex flex-row justify-between">
-        <p className="text-xl sm:font-semibold">My Assignments</p>
+        <div className="flex flex-row items-center">
+          <p className="text-xl sm:font-semibold">My Assignments</p>
+          <Tooltip
+            delay={250}
+            placement="bottom-start"
+            content={
+              <div className="px-1 py-2 text-default-500">
+                <div className="text-small font-bold text-default-700">
+                  Huh?
+                </div>
+                <Spacer y={2} />
+                <div className="text-tiny">
+                  Your Project will be organized as a table split by Workpaper
+                  Section,
+                </div>
+                <div className="text-tiny">
+                  with each Control being one row.
+                </div>
+                <Spacer y={2} />
+
+                <div className="text-tiny font-bold text-default-700">
+                  For Instance:
+                </div>
+
+                <div className="text-tiny">
+                  If you were assigned Workpaper Section 1, which contains 8
+                  Controls
+                </div>
+
+                <div className="text-tiny">
+                  and Workpaper Section 2, which contains 5 Controls, you would
+                  record that here.
+                </div>
+              </div>
+            }
+          >
+            <FontAwesomeIcon className="py-3 px-2" icon={faCircleInfo} />
+          </Tooltip>
+        </div>
 
         {/* Add section */}
         <Button

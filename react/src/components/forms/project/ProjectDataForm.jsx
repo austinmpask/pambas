@@ -12,7 +12,7 @@ import { Validators, DataFields } from "src/utils/validations";
 import toTitle from "src/utils/toTitle";
 
 //Icons
-import { faBook } from "@fortawesome/free-solid-svg-icons";
+import { faWandMagicSparkles } from "@fortawesome/free-solid-svg-icons";
 
 //Form
 import { useForm, useWatch } from "react-hook-form";
@@ -34,8 +34,7 @@ export default function ProjectDataForm({ submit, loading }) {
 
   return (
     <SettingsCard
-      end
-      icon={faBook}
+      icon={faWandMagicSparkles}
       title={formValues[0] ? toTitle(formValues[0]) : "New Project"}
     >
       {/* Project form */}

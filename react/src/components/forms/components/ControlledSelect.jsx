@@ -35,6 +35,14 @@ export default function ControlledSelect({
           isDisabled={loading}
           selectedKeys={value}
           onSelectionChange={onChange}
+          startContent={
+            color ? (
+              <FontAwesomeIcon
+                className={items[value.values().next().value].thumb}
+                icon={faSquare}
+              /> //thumb = thumbnail color for themes
+            ) : null
+          }
         >
           {items.map((item) => (
             <SelectItem

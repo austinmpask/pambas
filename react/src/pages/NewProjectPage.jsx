@@ -73,9 +73,10 @@ export default function NewProjectPage() {
   }
   return (
     <>
+      <div className="fixed -z-50 w-full h-full bg-projBg bg-proj-img bg-proj-size" />
       <NavBar />
       <PageWrapper title="New Project">
-        <div className="flex flex-row justify-center">
+        <div className="flex flex-col lg:flex-row lg:items-start items-center lg:justify-center">
           {/* Lefthand form */}
           <ProjectDataForm loading={loading} submit={submit} />
           <Spacer x="12" />

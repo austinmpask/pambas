@@ -7,9 +7,6 @@ const colors = {
   danger: "#FF3A85",
   dangerShadow: "#a12554",
 
-  primary: "#11E6FF",
-  primaryShadow: "#128694",
-
   warn: "#FFFF5C",
   warnShadow: "#a6a630",
 

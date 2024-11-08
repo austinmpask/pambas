@@ -6,10 +6,7 @@ import { createPortal } from "react-dom";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFileCirclePlus,
-  faFaceSmile,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCirclePlus, faFaceSmile } from "@fortawesome/free-solid-svg-icons";
 
 //Animation
 import { motion, AnimatePresence } from "framer-motion";
@@ -24,6 +21,7 @@ import {
   CardBody,
   Divider,
   useDisclosure,
+  Button,
 } from "@nextui-org/react";
 
 //Contexts
@@ -82,34 +80,77 @@ export default function PendingItemList({ open }) {
             }}
             className="fixed top-0 right-0 w-full"
           >
-            <Card className="fixed top-0 right-0 mt-[100px] rounded-lg mx-3 sm:mx-5 z-10 w-4/5 sm:w-1/3 lg:w-1/6">
+            <Card className="fixed top-0 right-0 mt-[100px] mx-3 sm:mx-5 z-10 w-4/5 sm:w-1/3 lg:w-1/6 max-h-[800px]">
               {/* Card header */}
-              <CardHeader className="bg-header-img flex flex-row justify-between rounded-lg rounded-b-none h-[40px] px-5 py-3.5">
-                <div className="text-white font-semibold">
-                  <span className="mr-1">{lineState.controlNumber}</span>
-                  <span>Open Items</span>
+              <CardHeader className="bg-slate-700 flex flex-row justify-between h-[52px] px-5 py-3.5">
+                <div className="text-white">
+                  <span className="mr-2 font-semibold">
+                    {lineState.controlNumber}
+                  </span>
+                  <span className="text-small">Open Items</span>
                 </div>
 
                 {/* Button to open new item modal*/}
-                <button className="text-white" onClick={onOpen}>
-                  <FontAwesomeIcon icon={faFileCirclePlus} />
-                </button>
+                <Button
+                  variant="solid"
+                  size="sm"
+                  color="primary"
+                  onClick={onOpen}
+                >
+                  <FontAwesomeIcon size="lg" icon={faCirclePlus} />
+                  New
+                </Button>
               </CardHeader>
               <Divider />
               {/* Card content */}
-              <CardBody className="min-h-[200px] flex flex-col items-center justify-center px-5">
+              <CardBody
+                className={`${
+                  items && items.length
+                    ? "justify-start overflow-auto"
+                    : "justify-center overflow-hidden"
+                } min-h-[200px] max-h-full flex flex-col items-center px-5`}
+              >
                 {/* Populate the list of open items into the card body */}
+
                 {items ? (
                   items.length ? (
                     items.map((item, index) => (
-                      <PendingItem data={item} key={index} />
+                      <motion.div
+                        className="w-full"
+                        key={index}
+                        initial={{ y: 10, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: 0, opacity: 1 }}
+                        transition={{
+                          delay: 0.1 * index,
+                          type: "spring",
+                          stiffness: 750,
+                          mass: 0.2,
+                          damping: 30,
+                        }}
+                      >
+                        <PendingItem data={item} />
+                      </motion.div>
                     ))
                   ) : (
                     // If there are no items, display alternate message
-                    <div className="flex flex-col items-center text-default-400">
-                      <span className="mb-3">Nothing to see here!</span>
-                      <FontAwesomeIcon size="2x" icon={faFaceSmile} />
-                    </div>
+                    <motion.div
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: 0, opacity: 1 }}
+                      transition={{
+                        delay: 0.1,
+                        type: "spring",
+                        stiffness: 750,
+                        mass: 0.6,
+                        damping: 30,
+                      }}
+                    >
+                      <div className="flex flex-col items-center text-default-400">
+                        <span className="mb-3">Nothing to see here!</span>
+                        <FontAwesomeIcon size="2x" icon={faFaceSmile} />
+                      </div>
+                    </motion.div>
                   )
                 ) : (
                   <FancyLoader />

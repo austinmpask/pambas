@@ -11,6 +11,9 @@ import ProjectEditableField from "src/components/projectpage/ProjectEditableFiel
 import { Card, CardHeader, Divider } from "@nextui-org/react";
 import LineItemWrapper from "./lineitem/LineItemWrapper";
 
+//Utils
+import toTitle from "src/utils/toTitle";
+
 //Individual project section within the project grid
 export default function ProjectSection({ contextSlice, sectionData, index }) {
   //Updates project summary context slice with specific key/value
@@ -46,7 +49,7 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
                 return (
                   !index && (
                     <ProjectEditableField
-                      initialContent={header}
+                      initialContent={toTitle(header)}
                       objKey={i}
                       key={i}
                       onSubmit={updateHeaders}

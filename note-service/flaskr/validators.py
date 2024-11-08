@@ -282,7 +282,7 @@ class Validators:
             )
 
         # Sanitize and return
-        return [str(item).strip().upper() for item in val]
+        return [str(item).strip() for item in val]
 
     @staticmethod
     def sectionDict(val) -> DataFields.SECTION_DICT_TYPE:

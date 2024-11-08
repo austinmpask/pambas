@@ -106,6 +106,7 @@ export default function ProjectPage() {
         method: "PUT",
         route: `/project/${projectID}`,
         data: contextSlice,
+        sToastDisabled: true,
         successCB: (data) => {
           setProjectSummaryData((old) => {
             const newContext = [...old];

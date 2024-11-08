@@ -24,7 +24,7 @@ export default function ControlledInput({
   label,
   errors,
   validations,
-  loading,
+  loading = false,
   size = "m",
   placeholder = "",
   defaultValue,

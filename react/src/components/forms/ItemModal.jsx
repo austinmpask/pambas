@@ -25,7 +25,6 @@ import {
   ModalFooter,
   Spacer,
   Divider,
-  Tooltip,
 } from "@nextui-org/react";
 
 //Form
@@ -207,7 +206,7 @@ export default function ItemModal({
               <ModalFooter>
                 <SubmitAlt
                   vals={editing ? [] : formValues}
-                  submitLabel={editing ? "Done" : "Add"}
+                  submitLabel={editing ? "Save" : "Add"}
                   loading={loading}
                 />
               </ModalFooter>

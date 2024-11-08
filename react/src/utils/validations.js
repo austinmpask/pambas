@@ -459,6 +459,37 @@ export class Validators {
         DataFields.PROJECT_TITLE_MAX_LENGTH
       ),
     },
+    pattern: {
+      value: /^[a-zA-Z0-9]*$/,
+      message: alphaNumericError(
+        DataFields.PROJECT_TITLE_LABEL,
+        "alphanumeric"
+      ),
+    },
+  };
+
+  static HeaderName = {
+    required: requiredMsg(DataFields.HEADER_LABEL),
+    minLength: {
+      value: DataFields.HEADER_MIN_LENGTH,
+      message: rangeError(
+        DataFields.HEADER_LABEL,
+        DataFields.HEADER_MIN_LENGTH,
+        DataFields.HEADER_MAX_LENGTH
+      ),
+    },
+    maxLength: {
+      value: DataFields.HEADER_MAX_LENGTH,
+      message: rangeError(
+        DataFields.HEADER_LABEL,
+        DataFields.HEADER_MIN_LENGTH,
+        DataFields.HEADER_MAX_LENGTH
+      ),
+    },
+    pattern: {
+      value: /^[a-zA-Z0-9]*$/,
+      message: alphaNumericError(DataFields.HEADER_LABEL, "alphanumeric"),
+    },
   };
 
   static ProjectType = {

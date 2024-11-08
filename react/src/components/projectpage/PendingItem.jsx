@@ -128,7 +128,7 @@ export default function PendingItem({ data }) {
       />
 
       {/* Actual item card */}
-      <Card className="w-full rounded-md mb-3">
+      <Card className="w-full rounded-md mb-3 drop-shadow-lg">
         {/* Card header */}
         <CardHeader className="text-white flex flex-row justify-between items-center h-[30px] rounded-md rounded-b-none text-sm px-3 py-4 bg-slate-700">
           {/* Title with icon, can be clicked to edit the item's details. Pen icon appears if hovered */}
@@ -156,29 +156,25 @@ export default function PendingItem({ data }) {
         </CardHeader>
         <Divider />
         {/* Card content */}
-        <CardBody className="p-2.5 min-h-[95px] flex flex-col justify-center">
+        <CardBody className="bg-slate-200 p-2.5 min-h-[95px] flex flex-col justify-center">
           {/* Add the item description, or if none, add a larger version of the item's icon */}
           {itemData.description ? (
             <>
               <label className="p-1 text-default-600 text-xs font-semibold">
                 Description
               </label>
-              <div className="rounded-md p-2 pb-4 w-full bg-slate-100 text-default-600 text-xs">
+              <div className="bg-slate-300 rounded-md p-2 pb-4 w-full text-default-600 text-xs">
                 <p>{toTitle(itemData.description, true)}</p>
               </div>
             </>
           ) : (
-            <FontAwesomeIcon
-              className="text-default-200"
-              size="2x"
-              icon={icon}
-            />
+            <FontAwesomeIcon className="text-slate-300" size="3x" icon={icon} />
           )}
         </CardBody>
         <Divider />
-        <CardFooter className="h-8">
+        <CardFooter className="bg-slate-200 rounded-b-md h-9">
           {/* Show owner if recorded, if not just show the followup button */}
-          <div className="text-xs w-full text-default-500 flex flex-end flex-row items-center justify-between">
+          <div className="text-xs w-full text-default-500 flex flex-end flex-row items-center py-2 justify-between">
             {itemData.controlOwner ? (
               <div>
                 <FontAwesomeIcon className="mr-1" icon={faCircleUser} />
@@ -193,8 +189,8 @@ export default function PendingItem({ data }) {
             <div
               className={`${
                 itemData.lastContactDate
-                  ? "bg-slate-100"
-                  : "bg-success text-default-800"
+                  ? "bg-slate-300"
+                  : "bg-green-500 text-default-800"
               } py-1 px-2 rounded text-xs cursor-pointer`}
               onClick={followup}
             >

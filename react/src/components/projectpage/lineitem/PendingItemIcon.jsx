@@ -1,9 +1,22 @@
+//React
+import { useContext } from "react";
+
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile } from "@fortawesome/free-solid-svg-icons";
 
+//Contexts
+import { LineStateContext } from "./LineItemWrapper";
+
 //Dynamic color/type of icon depending on line state and items
-//TODO: reimplement fanciness
 export default function PendingItemIcon() {
-  return <FontAwesomeIcon icon={faFile} className="text-default-300" />;
+  const { lineState } = useContext(LineStateContext);
+  return (
+    <FontAwesomeIcon
+      icon={faFile}
+      className={
+        lineState.pendingItems > 0 ? "text-danger" : "text-default-300"
+      }
+    />
+  );
 }

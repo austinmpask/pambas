@@ -114,6 +114,8 @@ export class DataFields {
     this.THEME_BLUE_SELECT,
   ];
 
+  static LOADER_COLOR = "#94a3b8";
+
   static DEFAULT_PROJECT_THEME = this.THEME_RED_SELECT;
 
   static HEADER_LABEL = "Column Header";
@@ -151,6 +153,19 @@ export class DataFields {
   static PENDING_ITEM_DESC_LABEL = "Pending Item Description";
   static PENDING_ITEM_DESC_MIN_LENGTH = 0;
   static PENDING_ITEM_DESC_MAX_LENGTH = 200;
+
+  static COMPLETION_MESSAGES = [
+    "Finally!",
+    "Ding ding ding!",
+    "Adios!",
+    "Your mess is now marginally smaller!",
+    "That was easy!",
+    "See ya!",
+    "Bye bye!",
+    "Bill that MF!",
+    "Not my problem anymore!",
+    "On to the next...",
+  ];
 
   static QUERY_KEYWORDS = [
     "query",

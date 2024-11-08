@@ -18,6 +18,7 @@ import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 //Render a styled input field which dynamically shows validation errors. Requires react hook form in parent, takes control as prop.
 export default function ControlledInput({
   required = false,
+  focusRef,
   type = "text",
   field,
   label,
@@ -26,6 +27,7 @@ export default function ControlledInput({
   loading,
   size = "m",
   placeholder = "",
+  defaultValue,
   control,
   startIcon = null,
 }) {
@@ -37,6 +39,7 @@ export default function ControlledInput({
       name={field} //Take field from parent form
       control={control} //Take control from parent form
       rules={validations}
+      defaultValue={defaultValue}
       render={({ field: { onChange, value } }) => (
         <Input
           isRequired={required}
@@ -44,6 +47,7 @@ export default function ControlledInput({
           errorMessage={errors[field]?.message}
           className={`w-full ${UIVars.INPUT_SIZE_PRESET_PX[size]}`}
           label={label}
+          ref={focusRef}
           onValueChange={onChange}
           value={value ?? ""}
           variant={errors[field] ? "bordered" : ""}

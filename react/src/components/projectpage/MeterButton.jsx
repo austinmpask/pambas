@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 //Children
 import CircleMeter from "./CircleMeter";
-import { Input, Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import BudgetInput from "src/components/forms/components/BudgetInput";
 
 //Animation
@@ -12,11 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleDollarToSlot,
-  faMinus,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCircleDollarToSlot } from "@fortawesome/free-solid-svg-icons";
 
 //Button which displays a circlemeter on the right side. Can be a dropdown or have no action.
 export default function MeterButton({

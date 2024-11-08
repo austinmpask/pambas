@@ -23,7 +23,7 @@ export default function TextBoxHelpers({ content }) {
   const [initialContent, _setInitialContent] = useState(content);
 
   //CSS template for "hiding"
-  const hidden = "-translate-y-10";
+  const hidden = "-translate-y-10 opacity-0";
 
   //States for position of the helpers
   const [leftY, setLeftY] = useState(false);
@@ -44,7 +44,7 @@ export default function TextBoxHelpers({ content }) {
     }
   }, [lineUIState.writingNote]);
 
-  // If the contents of the field change, drop the save tag down as well. Remove if content becomes same again
+  // If the contents of the field change, drop the save tag down  as well. Remove if content becomes same again
   useEffect(() => {
     if (content !== initialContent) {
       setRightY(true);

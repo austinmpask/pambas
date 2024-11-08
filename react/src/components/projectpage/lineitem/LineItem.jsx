@@ -1,6 +1,6 @@
 /*-------------------Cleaned up 9/10/24-------------------*/
 //React
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, forwardRef } from "react";
 
 //Contexts
 import { LineStateContext } from "./LineItemWrapper";
@@ -16,8 +16,8 @@ import CheckBoxCell from "./CheckBoxCell";
 import NoteBoxCell from "./NoteBoxCell";
 import PendingItemCell from "./PendingItemCell";
 
-// Individual line item for the project grid. Wrapped by a unique context to track state
-export default function LineItem({ lineItemData }) {
+// Individual line item for the project grid. Wrapped by a unique context to track state. Context stores ref for the component
+export const LineItem = forwardRef(({ lineItemData }, ref) => {
   //Setter for project summary info which is affected by line item components
   const { setHeaderStats } = useContext(HeaderStatsContext);
 
@@ -95,6 +95,7 @@ export default function LineItem({ lineItemData }) {
   return (
     // Line item container
     <div
+      ref={ref} //Ref held by context
       className="grid grid-cols-proj w-full"
       // Handle line hovered state change
       onMouseEnter={() => setHovering(true)}
@@ -118,4 +119,7 @@ export default function LineItem({ lineItemData }) {
       <PendingItemCell />
     </div>
   );
-}
+});
+
+LineItem.displayName = "LineItem";
+export default LineItem;

@@ -26,14 +26,19 @@ import {
 
 //Contexts
 import { LineStateContext } from "./lineitem/LineItemWrapper";
+import { HeaderStatsContext } from "src/pages/ProjectPage";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
+import Mousetrap from "mousetrap";
 
 //Menu showing the list of all pending/open items for a given control
-export default function PendingItemList({ open }) {
+export default function PendingItemList() {
   //Consume line context
-  const { lineState } = useContext(LineStateContext);
+  const { lineState, lineUIState, setLineUIState } =
+    useContext(LineStateContext);
+
+  const { setHeaderStats } = useContext(HeaderStatsContext);
 
   //Modal builtins
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -56,18 +61,31 @@ export default function PendingItemList({ open }) {
 
     //Only make the request once the context has data from db (explicit check = undefined bc 0 is acceptable)
     // Also only make request if the menu is actually open to prevent tons of requests when scrolling around
-    open &&
+    lineUIState.menuOpen &&
       lineState.pendingItems !== undefined &&
       lineState.id !== undefined &&
       getItems();
-  }, [open, lineState.pendingItems]);
+  }, [lineUIState.menuOpen, lineState.pendingItems]);
+
+  useEffect(() => {
+    lineUIState.menuOpen &&
+      !lineUIState.writingNote &&
+      Mousetrap.bind("esc", handleEscape);
+  }, [lineUIState.menuOpen, lineUIState.writingNote]);
+
+  function handleEscape() {
+    // De-select the line item and close the menu
+    setHeaderStats((prev) => ({ ...prev, selectedLine: null }));
+    setLineUIState((prev) => ({ ...prev, menuOpen: false }));
+    Mousetrap.unbind("esc");
+  }
 
   return createPortal(
     <>
       {/* Modal for adding pending items */}
       <ItemModal isOpen={isOpen} onOpenChange={onOpenChange} />
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
-        {open && (
+        {lineUIState.menuOpen && (
           <motion.div
             initial={{ x: -80, opacity: 0, zIndex: -10 }}
             animate={{ x: 0, opacity: 1, zIndex: 1 }}

@@ -1,6 +1,6 @@
 /*-------------------Cleaned up 9/11/24-------------------*/
 //React
-import { createContext, useState } from "react";
+import { createContext, useState, useRef } from "react";
 //Children
 import LineItem from "src/components/projectpage/lineitem/LineItem";
 
@@ -19,6 +19,9 @@ export default function LineItemWrapper({ line, index }) {
     controlNumber: "", //String representation of the control the line item is for
   });
 
+  // Ref for the line item. Used for tracking if user is interacting with more than 1 line item at once
+  const lineRef = useRef(null);
+
   //State for line's UI related info, not table data
   const [lineUIState, setLineUIState] = useState({
     writingNote: false, //User has clicked and opened note box
@@ -29,6 +32,7 @@ export default function LineItemWrapper({ line, index }) {
   //Loading for visuals or lockouts
   const [loading, setLoading] = useState(false);
 
+  //State for if user is mousing over a line item
   const [hovering, setHovering] = useState(false);
 
   //Wrap the line item in its unique context
@@ -43,9 +47,10 @@ export default function LineItemWrapper({ line, index }) {
         setLoading,
         hovering,
         setHovering,
+        lineRef,
       }}
     >
-      <LineItem lineItemData={line} />
+      <LineItem ref={lineRef} lineItemData={line} />
     </LineStateContext.Provider>
   );
 }

@@ -14,7 +14,6 @@ import ProjectGrid from "src/components/projectpage/ProjectGrid";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
-import { UIVars } from "src/utils/validations";
 
 //Context to pass updater function to children
 export const ProjectUpdaterContext = createContext();
@@ -53,6 +52,7 @@ export default function ProjectPage() {
     completed: 1,
     total: 1,
     openItems: 0,
+    selectedLine: null, //Keep track of if user is using a particular line or not inorder to lock out too many actions
   });
 
   //When the project summary context list is updated, the context slice is updated to reflect it

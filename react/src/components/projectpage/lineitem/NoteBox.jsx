@@ -11,12 +11,22 @@ import Mousetrap from "mousetrap";
 
 //Contexts
 import { LineStateContext } from "./LineItemWrapper";
+import { HeaderStatsContext } from "src/pages/ProjectPage";
 
 //Text area component for quick notes associated with a line item. Closed with ESC or unfocus, save content w/ enter
 export default function NoteBox() {
   //Access unique line item context
-  const { lineState, lineUIState, setLineState, setLineUIState, setLoading } =
-    useContext(LineStateContext);
+  const {
+    lineRef,
+    lineState,
+    lineUIState,
+    setLineState,
+    setLineUIState,
+    setLoading,
+  } = useContext(LineStateContext);
+
+  //Consume headerStats which stores what line is being used
+  const { headerStats, setHeaderStats } = useContext(HeaderStatsContext);
 
   //Ref for input box for focus
   const noteRef = useRef(null);
@@ -54,10 +64,12 @@ export default function NoteBox() {
       Mousetrap.bind("enter", handleSave);
       Mousetrap.bind("esc", handleEscape);
     }
-  }, [lineUIState.writingNote, handleSave, handleEscape]);
+  }, [lineUIState.writingNote, lineUIState.menuOpen, handleSave, handleEscape]);
 
   //Handle clicking into the note box
   function openNote() {
+    //Select this line globally to prevent other interactions
+    setHeaderStats((prev) => ({ ...prev, selectedLine: lineRef.current }));
     //Reflect in parent line state
     setLineUIState((prev) => ({ ...prev, writingNote: true }));
     setTimeout(() => {
@@ -77,6 +89,9 @@ export default function NoteBox() {
     //Remove keybinds
     Mousetrap.unbind("enter");
     Mousetrap.unbind("esc");
+
+    //Reset line selection
+    setHeaderStats((prev) => ({ ...prev, selectedLine: null }));
   }
 
   return (
@@ -94,12 +109,20 @@ export default function NoteBox() {
         type="text"
         spellCheck="false"
         // Open the note on click if not already open
-        onClick={() => !lineUIState.writingNote && openNote()}
+        onClick={() =>
+          !lineUIState.writingNote && !headerStats.selectedLine && openNote()
+        }
         ref={noteRef}
         //Hold temporary note state
         value={noteState}
         onChange={(e) => setNoteState(e.target.value)}
         onBlur={handleBlur}
+        // Disable the textbox if another line is selected
+        disabled={
+          lineUIState.menuOpen ||
+          (headerStats.selectedLine &&
+            headerStats.selectedLine !== lineRef.current)
+        }
       />
 
       {/* Append helpers to show how to discard or save */}

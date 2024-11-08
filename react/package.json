@@ -19,6 +19,7 @@
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.2",
     "framer-motion": "^11.3.28",
+    "mousetrap": "^1.6.5",
     "patch-package": "^8.0.0",
     "postcss": "^8.4.41",
     "react": "^18.2.0",

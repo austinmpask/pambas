@@ -1,17 +1,18 @@
-/*-------------------Cleaned up 9/12/24-------------------*/
+/*-------------------Cleaned up 11/8/24-------------------*/
 //React
-import { useRef, useState, useEffect, useContext } from "react";
+import { useRef, useState, useEffect, useContext, useCallback } from "react";
 
 //Children
 import TextBoxHelpers from "src/components/TextBoxHelpers";
 
 //Utils
 import { UIVars } from "src/utils/validations";
+import Mousetrap from "mousetrap";
 
 //Contexts
 import { LineStateContext } from "./LineItemWrapper";
 
-//Text area component for quick notes associated with a line item
+//Text area component for quick notes associated with a line item. Closed with ESC or unfocus, save content w/ enter
 export default function NoteBox() {
   //Access unique line item context
   const { lineState, lineUIState, setLineState, setLineUIState, setLoading } =
@@ -31,6 +32,30 @@ export default function NoteBox() {
     setNoteState(lineState.notes);
   }, [lineState.notes]);
 
+  const handleSave = useCallback(() => {
+    //Change linestate which will make request to save notes
+    setLoading(true);
+    setLineState((previous) => ({
+      ...previous,
+      notes: noteState,
+    }));
+    //Remove keybinds & close note
+    noteRef.current.blur();
+  }, [noteState, setLoading, setLineState, setLineUIState, setHelpers]);
+
+  //Blur on escape, need to use this to fix device compatibility issues
+  const handleEscape = useCallback(() => {
+    noteRef.current.blur();
+  }, []);
+
+  //Add keybinds when note is opened
+  useEffect(() => {
+    if (lineUIState.writingNote) {
+      Mousetrap.bind("enter", handleSave);
+      Mousetrap.bind("esc", handleEscape);
+    }
+  }, [lineUIState.writingNote, handleSave, handleEscape]);
+
   //Handle clicking into the note box
   function openNote() {
     //Reflect in parent line state
@@ -40,29 +65,18 @@ export default function NoteBox() {
     }, UIVars.NOTE_HELPER_DELAY_IN_MS);
   }
 
-  function closeNote() {
-    //Remove the helper tags midway thru transition so it looks nice
-    noteRef.current.blur();
+  // Blur used for some devices not escaping when ESC pressed
+  function handleBlur() {
+    //Close note box
+    setNoteState(lineState.notes);
     setLineUIState((prev) => ({ ...prev, writingNote: false }));
     setTimeout(() => {
       setHelpers(false);
     }, UIVars.NOTE_HELPER_DELAY_OUT_MS);
-  }
 
-  //Handle key shortcuts for saving/closing note box
-  function noteKeyDownHandler(event) {
-    //Ctrl enter = save and close
-    if (event.keyCode === 13 && event.ctrlKey) {
-      setLoading(true);
-      setLineState((previous) => {
-        return { ...previous, notes: noteState };
-      });
-      closeNote();
-      //Escape = close
-    } else if (event.keyCode === 27) {
-      setNoteState(lineState.notes);
-      closeNote();
-    }
+    //Remove keybinds
+    Mousetrap.unbind("enter");
+    Mousetrap.unbind("esc");
   }
 
   return (
@@ -73,7 +87,7 @@ export default function NoteBox() {
           helpers && "z-20"
         } bg-inherit outline-none overflow-y-hidden ${
           lineUIState.writingNote &&
-          "overflow-y-scroll border-3 border-blue-500 shadow-2xl rounded-xl bg-slate-50"
+          "mousetrap overflow-y-scroll scrollbar-hidden border-3 border-blue-500 shadow-2xl rounded-xl bg-slate-50"
         }  p-2 text-sm text-default-500 relative resize-none h-full w-full transition-all ${
           lineUIState.complete && !lineUIState.writingNote && "opacity-50"
         }`}
@@ -85,8 +99,7 @@ export default function NoteBox() {
         //Hold temporary note state
         value={noteState}
         onChange={(e) => setNoteState(e.target.value)}
-        //Hotkeys for exiting or saving
-        onKeyDown={noteKeyDownHandler}
+        onBlur={handleBlur}
       />
 
       {/* Append helpers to show how to discard or save */}

@@ -25,7 +25,7 @@ import {
 //Line item parent handles click events due to side effect on sibling component
 export default function ControlNumberCell({ handleClick }) {
   //Consume line unique context
-  const { lineState, lineUIState } = useContext(LineStateContext);
+  const { lineState, lineUIState, end } = useContext(LineStateContext);
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -33,7 +33,7 @@ export default function ControlNumberCell({ handleClick }) {
           //Turn cell green if line is complete
           className={`transition-all border-solid border-r-1 border-inherit flex flex-col justify-center items-center select-none cursor-pointer ${
             lineUIState.complete && "bg-success border-success overflow"
-          }`}
+          } ${end && "rounded-bl-xl"}`}
         >
           {/* Display control number */}
           <p className="text-xs lg:text-small font-semibold text-default-500">

@@ -1,11 +1,9 @@
 //React
 import { useEffect, useContext, useState, createContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CSSTransition } from "react-transition-group";
 
 //Contexts
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
-import { LockoutProvider } from "src/context/LockoutContext";
 
 //Children
 import NavBar from "src/components/navbar/Navbar";
@@ -148,29 +146,27 @@ export default function ProjectPage() {
 
   return (
     <>
-      <LockoutProvider>
-        <div className="fixed -z-50 w-full h-full bg-projBg bg-proj-img bg-proj-size" />
-        <NavBar />
-        <HeaderStatsContext.Provider value={{ headerStats, setHeaderStats }}>
-          <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
-            {/* Slide in project detail header from top */}
+      <div className="fixed -z-50 w-full h-full bg-projBg bg-proj-img bg-proj-size" />
+      <NavBar />
+      <HeaderStatsContext.Provider value={{ headerStats, setHeaderStats }}>
+        <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
+          {/* Slide in project detail header from top */}
 
-            {contextSlice && (
-              <ProjectHeader
-                contextSlice={contextSlice}
-                projectDetails={projectDetails}
-                setProjectDetails={setProjectDetails}
-              />
-            )}
-
-            {/* Component for project sections */}
-            <ProjectGrid
+          {contextSlice && (
+            <ProjectHeader
               contextSlice={contextSlice}
               projectDetails={projectDetails}
+              setProjectDetails={setProjectDetails}
             />
-          </ProjectUpdaterContext.Provider>
-        </HeaderStatsContext.Provider>
-      </LockoutProvider>
+          )}
+
+          {/* Component for project sections */}
+          <ProjectGrid
+            contextSlice={contextSlice}
+            projectDetails={projectDetails}
+          />
+        </ProjectUpdaterContext.Provider>
+      </HeaderStatsContext.Provider>
     </>
   );
 }

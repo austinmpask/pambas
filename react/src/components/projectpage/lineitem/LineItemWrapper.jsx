@@ -8,7 +8,7 @@ import LineItem from "src/components/projectpage/lineitem/LineItem";
 export const LineStateContext = createContext();
 
 //Attach unique context to each line item so that deep children have access to state of that specific line item
-export default function LineItemWrapper({ line, index }) {
+export default function LineItemWrapper({ line, index, end }) {
   //State for the data held by line item
   const [lineState, setLineState] = useState({
     checkBoxes: [0, 0, 0], //Value of the checkboxes (0,1,2)
@@ -48,6 +48,7 @@ export default function LineItemWrapper({ line, index }) {
         hovering,
         setHovering,
         lineRef,
+        end,
       }}
     >
       <LineItem ref={lineRef} lineItemData={line} />

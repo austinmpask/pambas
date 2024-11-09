@@ -1,6 +1,9 @@
 /*-------------------Cleaned up 10/28/24-------------------*/
 //React
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+
+//Utils
+import Mousetrap from "mousetrap";
 
 //Children
 import CircleMeter from "./CircleMeter";
@@ -9,6 +12,9 @@ import BudgetInput from "src/components/forms/components/BudgetInput";
 
 //Animation
 import { motion, AnimatePresence } from "framer-motion";
+
+//Contexts
+import { HeaderStatsContext } from "src/pages/ProjectPage";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -26,19 +32,44 @@ export default function MeterButton({
   objKey, //Key of proj context to update
   onSubmit,
 }) {
+  //Track if collapsed or not
   const [menuOpen, setMenuOpen] = useState(false);
 
+  //State for billing input
   const [amountToBill, setAmountToBill] = useState(0);
+
+  //For discovering if a line is being used
+  const { headerStats } = useContext(HeaderStatsContext);
+
+  //Close if user selects something else
+  useEffect(() => {
+    if (headerStats.selectedLine !== null) {
+      handleClose();
+    }
+  }, [headerStats.selectedLine]);
 
   //Reset the input when menu opens/closes
   useEffect(() => {
     setAmountToBill(0);
   }, [menuOpen]);
 
+  //Make request if there was an amount entered
   function billClient() {
-    //Make request if there was an amount entered
     if (amountToBill !== 0) onSubmit(objKey, Number(amountToBill));
     setMenuOpen(false);
+  }
+
+  // Bind escape back to the button if it is open and nothing else is selected
+  useEffect(() => {
+    menuOpen &&
+      headerStats.selectedLine === null &&
+      Mousetrap.bind("esc", handleClose);
+  }, [menuOpen, headerStats.selectedLine]);
+
+  //Close the menu, unbind key
+  function handleClose() {
+    setMenuOpen(false);
+    Mousetrap.unbind("esc");
   }
 
   return (

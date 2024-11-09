@@ -14,7 +14,7 @@ import PendingItemIcon from "./PendingItemIcon";
 //Cell showing the number of associated pending items if != 0, functions as button to add an item TODO on reimplementing the dynamic icon
 export default function PendingItemCell() {
   //Line item data and setters
-  const { lineRef, lineState, lineUIState, setLineUIState, hovering } =
+  const { end, lineRef, lineState, lineUIState, setLineUIState, hovering } =
     useContext(LineStateContext);
 
   //Consume headerStats which stores what line is being used
@@ -32,7 +32,9 @@ export default function PendingItemCell() {
       <div
         // Change background color to green if  line is complete
         className={`flex w-full h-full justify-center items-center transition-all cursor-pointer border-solid border-b-1 border-inherit
-        ${lineUIState.complete && "bg-success border-success"}`}
+        ${lineUIState.complete && "bg-success border-success"} ${
+          end && "rounded-br-xl"
+        }`}
         // Toggle the menu when clicking
         onClick={() => {
           //If no line is selected, then select this line and open the menu. Close and switch to other line if different one selected

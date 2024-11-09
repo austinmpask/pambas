@@ -1,3 +1,5 @@
+/*-------------------Cleaned up 11/8/24-------------------*/
+
 //React
 import { useContext } from "react";
 
@@ -19,7 +21,11 @@ export default function PendingItemIcon() {
         lineState.pendingItems > 0 && !lineUIState.menuOpen
           ? "text-warning"
           : lineUIState.menuOpen
-          ? "text-danger"
+          ? lineUIState.complete
+            ? "text-dangerShadow"
+            : "text-danger"
+          : lineUIState.complete
+          ? "text-successShadow"
           : "text-default-300"
       }
     />

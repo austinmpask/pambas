@@ -6,9 +6,6 @@ import { useContext } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faRotateLeft } from "@fortawesome/free-solid-svg-icons";
 
-//Children
-import ReactiveButton from "reactive-button";
-
 //Contexts
 import { LineStateContext } from "./LineItemWrapper";
 
@@ -34,13 +31,13 @@ export default function CheckBoxButton({ buttonStyle, i, cbState }) {
   }
 
   return (
-    <ReactiveButton
-      width="100%"
-      height="100%"
+    <div
+      className="relative button-transition w-full h-full flex items-center justify-center cursor-pointer"
       onClick={handleCheckBoxClick}
       style={buttonStyle} //CSS Styles to apply to button based on if hovering/idle/clicked. Controlled by parent
-      idleText={
-        // Display an icon for vals 1/2 or just " " if 0. ReactiveButton autofills "Click Me" if nothing is provided.
+    >
+      {
+        // Display an icon for vals 1/2 or just " " if 0.
         cbState ? (
           <FontAwesomeIcon
             icon={(() => {
@@ -56,6 +53,6 @@ export default function CheckBoxButton({ buttonStyle, i, cbState }) {
           " "
         )
       }
-    />
+    </div>
   );
 }

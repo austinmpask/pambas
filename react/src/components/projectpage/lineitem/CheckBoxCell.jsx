@@ -21,33 +21,21 @@ export default function CheckBoxCell({ i, cbState }) {
   //Button CSS styles for hovering, idle and clicking
   const styles = {
     idle: {
-      marginTop: 0,
-      paddingTop: 0,
-      position: "relative",
-      zIndex: 0,
-      height: "100%",
-      bottom: "0%",
-      color: "#000000",
-      boxShadow: "none",
+      border: "none",
+      paddingTop: "0px",
+      // transitionTimingFunction: "cubic-bezier(.39,.86,.34,1)",
     },
     hover: {
-      marginTop: 0,
-      paddingTop: 0,
-      position: "relative",
-      zIndex: 10,
-      height: "109%",
-      bottom: "9%",
       border: "1px solid ",
-      boxShadow: "0px 3px 10px 0px rgba(0,0,0,0.3), inset 0 -6px 0 ",
+      paddingTop: "0px",
+      backgroundColor: "#F4F4F5",
+      // transitionTimingFunction: "cubic-bezier(0,0,0,0)",
+      // boxShadow: "0px 3px 10px 0px rgba(0,0,0,0.3), inset 0 -6px 0 ",
     },
     clicked: {
-      marginTop: 0,
-      paddingTop: 10,
-      position: "relative",
-      zIndex: 0,
-      height: "100%",
-      bottom: "0%",
-      boxShadow: "0px 0px 0px 0px rgba(0,0,0,0), inset 0 10px 10px ",
+      border: "1px solid ",
+      paddingTop: "15px",
+      // boxShadow: "0px 0px 0px 0px rgba(0,0,0,0), inset 0 10px 10px ",
     },
   };
 
@@ -68,15 +56,13 @@ export default function CheckBoxCell({ i, cbState }) {
         // Combine CSS Styling from mouse interactions + cbState
         buttonStyle={{
           ...buttonStyle,
-          backgroundColor: backgroundColor[cbState],
+          backgroundColor: cbState
+            ? backgroundColor[cbState]
+            : buttonStyle.backgroundColor,
           color: shadowColor[cbState],
           border: buttonStyle.border
-            ? buttonStyle.border + shadowColor[cbState]
+            ? buttonStyle.border + `${shadowColor[cbState]}80`
             : "none",
-          boxShadow:
-            buttonStyle.boxShadow === "none"
-              ? buttonStyle.boxShadow
-              : buttonStyle.boxShadow + shadowColor[cbState],
         }}
         i={i}
         cbState={cbState}

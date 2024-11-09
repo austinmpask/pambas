@@ -105,7 +105,7 @@ export default function NoteBox() {
           "mousetrap overflow-y-scroll scrollbar-hidden border-3 border-blue-500 shadow-2xl rounded-xl bg-slate-50"
         }  p-2 text-sm text-default-500 relative resize-none h-full w-full transition-all ${
           lineUIState.complete && !lineUIState.writingNote && "opacity-50"
-        }`}
+        } ${!lineUIState.writingNote && "no-select"}`}
         type="text"
         spellCheck="false"
         // Open the note on click if not already open

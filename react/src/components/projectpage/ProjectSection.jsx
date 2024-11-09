@@ -70,7 +70,12 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
 
       {/* Section card content (line items) */}
       {sectionData.lineItems.map((line, index) => (
-        <LineItemWrapper key={index} line={line} index={index} />
+        <LineItemWrapper
+          key={index}
+          line={line}
+          index={index}
+          end={index === sectionData.lineItems.length - 1}
+        />
       ))}
     </Card>
   );

@@ -19,6 +19,7 @@ import {
   faPaperclip,
   faGaugeHigh,
   faCirclePlus,
+  faSliders,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -57,10 +58,10 @@ export default function DashCard() {
       <div className="select-none m-9 flex flex-col items-center">
         <Card className="rounded-3xl w-7/8 h-[700px]">
           <CardHeader
-            className={`bg-header-img text-xl px-8 py-4 flex flex-row justify-between items-center text-white`}
+            className={`bg-header-img text-xl px-8 py-4 flex flex-row justify-start items-center text-white`}
           >
-            <p>Dashboard</p>
-            <FontAwesomeIcon size="lg" icon={faGaugeHigh} />
+            <FontAwesomeIcon size="lg" className="mr-3" icon={faGaugeHigh} />
+            <p>Project Dashboard</p>
           </CardHeader>
           <Divider />
           <CardBody className="p-8 grid grid-cols-5 gap-8">
@@ -92,19 +93,32 @@ export default function DashCard() {
               </div>
               {/* Scrollable list of project summary information */}
               <DashProjectScrollable />
-              <Link className="w-full" href="/new">
-                <Button
-                  size="lg"
-                  variant="flat"
-                  className="font-semibold w-full"
-                  startContent={
-                    <FontAwesomeIcon size="lg" icon={faCirclePlus} />
-                  }
-                  color="secondary"
-                >
-                  New Project
-                </Button>
-              </Link>
+              <div className="flex flex-row items-center w-full">
+                <Link className="w-full" href="/new">
+                  <Button
+                    size="lg"
+                    variant="flat"
+                    className="font-semibold w-full mr-4"
+                    startContent={
+                      <FontAwesomeIcon size="lg" icon={faCirclePlus} />
+                    }
+                    color="secondary"
+                  >
+                    New Project
+                  </Button>
+                </Link>
+                <Link href="/settings">
+                  <Button
+                    isIconOnly
+                    size="lg"
+                    variant="flat"
+                    startContent={
+                      <FontAwesomeIcon size="lg" icon={faSliders} />
+                    }
+                    // color="secondary"
+                  />
+                </Link>
+              </div>
             </div>
 
             {/* COLUMN 2 */}

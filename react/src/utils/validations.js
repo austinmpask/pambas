@@ -356,6 +356,8 @@ export class Validators {
         DataFields.CRED_MAX
       ),
     },
+    // Not adding pattern because email could contain symbols that username wouldnt. Can change later for better validation but acceptable for now.
+    // Also usernames and emails are handled separately following submission
   };
 
   static Password = {
@@ -396,6 +398,10 @@ export class Validators {
         DataFields.NAME_SINGLE_MAX
       ),
     },
+    pattern: {
+      value: /^[a-zA-Z ]*$/,
+      message: alphaNumericError(DataFields.FIRST_NAME_LABEL, "letters only"),
+    },
   };
 
   static LastName = {
@@ -415,6 +421,10 @@ export class Validators {
         DataFields.NAME_SINGLE_MIN,
         DataFields.NAME_SINGLE_MAX
       ),
+    },
+    pattern: {
+      value: /^[a-zA-Z ]*$/,
+      message: alphaNumericError(DataFields.LAST_NAME_LABEL, "letters only"),
     },
   };
 
@@ -456,6 +466,13 @@ export class Validators {
         DataFields.USER_MAX
       ),
     },
+    pattern: {
+      value: /^[A-Za-z0-9._]*$/,
+      message: alphaNumericError(
+        DataFields.USER_LABEL,
+        "alphanumeric ('.' and '_' allowed)"
+      ),
+    },
   };
 
   static ProjectName = {
@@ -477,7 +494,7 @@ export class Validators {
       ),
     },
     pattern: {
-      value: /^[a-zA-Z0-9]*$/,
+      value: /^[a-zA-Z0-9 ]*$/,
       message: alphaNumericError(
         DataFields.PROJECT_TITLE_LABEL,
         "alphanumeric"
@@ -504,7 +521,7 @@ export class Validators {
       ),
     },
     pattern: {
-      value: /^[a-zA-Z0-9]*$/,
+      value: /^[a-zA-Z0-9 ]*$/,
       message: alphaNumericError(DataFields.HEADER_LABEL, "alphanumeric"),
     },
   };
@@ -526,6 +543,10 @@ export class Validators {
         DataFields.PROJECT_TYPE_MIN_LENGTH,
         DataFields.PROJECT_TYPE_MAX_LENGTH
       ),
+    },
+    pattern: {
+      value: /^[a-zA-Z0-9 ]*$/,
+      message: alphaNumericError(DataFields.PROJECT_TYPE_LABEL, "alphanumeric"),
     },
   };
 
@@ -571,6 +592,10 @@ export class Validators {
         DataFields.FULL_NAME_MAX_LENGTH
       ),
     },
+    pattern: {
+      value: /^[a-zA-Z ]*$/,
+      message: alphaNumericError(DataFields.FULL_NAME_LABEL, "letters only"),
+    },
   };
 
   static PendingItemName = {
@@ -589,6 +614,13 @@ export class Validators {
         DataFields.PENDING_ITEM_NAME_LABEL,
         DataFields.PENDING_ITEM_NAME_MIN_LENGTH,
         DataFields.PENDING_ITEM_NAME_MAX_LENGTH
+      ),
+    },
+    pattern: {
+      value: /^[a-zA-Z0-9 ]*$/,
+      message: alphaNumericError(
+        DataFields.PENDING_ITEM_NAME_LABEL,
+        "alphanumeric"
       ),
     },
   };
@@ -610,6 +642,10 @@ export class Validators {
         DataFields.FULL_NAME_MAX_LENGTH
       ),
     },
+    pattern: {
+      value: /^[a-zA-Z ]*$/,
+      message: alphaNumericError(DataFields.FULL_NAME_LABEL, "letters only"),
+    },
   };
 
   static PendingItemDesc = {
@@ -630,4 +666,5 @@ export class Validators {
       ),
     },
   };
+  //There are not constraints on backend beyond length, can reconsider in future
 }

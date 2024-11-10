@@ -27,6 +27,9 @@ import {
 import { Validators, DataFields } from "src/utils/validations";
 import toastRequest from "src/utils/toastRequest";
 
+//Toasts
+import { toastError } from "src/styles/toasts";
+
 //User registration form
 export default function RegisterForm() {
   const navigate = useNavigate();
@@ -56,18 +59,21 @@ export default function RegisterForm() {
 
   //Submit form and register user
   async function registerUser(data) {
-    await toastRequest({
-      method: "POST",
-      route: "/register",
-      data,
-      setLoading,
-      success: "Success! Redirecting to login...",
-      successCB: () => {
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000);
-      },
-    });
+    //Make sure that confirmed password matches original
+    data.password === data.passwordConfirm
+      ? await toastRequest({
+          method: "POST",
+          route: "/register",
+          data,
+          setLoading,
+          success: "Success! Redirecting to login...",
+          successCB: () => {
+            setTimeout(() => {
+              navigate("/login");
+            }, 2000);
+          },
+        })
+      : toastError("Passwords must match"); //Password mismatch
   }
 
   return (

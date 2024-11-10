@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+//Children
+import Navbar from "src/components/navbar/Navbar";
+
 //Contexts
 import { UserProvider } from "src/context/UserContext";
 import { ProjectSummaryProvider } from "src/context/ProjectSummaryContext";
@@ -63,7 +66,12 @@ export default function AuthWrapper({ children }) {
     <>
       <ToastContainer />
       <ProjectSummaryProvider initialData={projectSummaryData}>
-        <UserProvider initialData={userData} children={children} />
+        <UserProvider initialData={userData}>
+          <>
+            <Navbar />
+            {children}
+          </>
+        </UserProvider>
       </ProjectSummaryProvider>
     </>
   ) : null;

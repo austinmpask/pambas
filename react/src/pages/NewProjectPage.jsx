@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import PageWrapper from "src/components/PageWrapper";
 import ProjectDataForm from "src/components/forms/project/ProjectDataForm";
 import SectionsForm from "src/components/forms/project/SectionsForm";
-import NavBar from "src/components/navbar/Navbar";
 import { Spacer } from "@nextui-org/react";
 
 //Contexts
@@ -74,7 +73,6 @@ export default function NewProjectPage() {
   return (
     <>
       <div className="fixed -z-50 w-full h-full bg-projBg bg-proj-img bg-proj-size" />
-      <NavBar />
       <PageWrapper title="New Project">
         <div className="flex flex-col lg:flex-row lg:items-start items-center lg:justify-center">
           {/* Lefthand form */}

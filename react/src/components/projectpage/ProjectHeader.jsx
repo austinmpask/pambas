@@ -36,6 +36,7 @@ export default function ProjectHeader({ contextSlice }) {
       <CardHeader className="bg-header-img flex flex-row justify-between px-5 py-3.5">
         <ProjectEditableField
           initialContent={contextSlice.title}
+          id={contextSlice.id}
           objKey="title"
           onSubmit={updateContext}
           title={true}

@@ -2,10 +2,14 @@
 
 //React
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquarePen } from "@fortawesome/free-solid-svg-icons";
+import { faSquarePen, faTrash } from "@fortawesome/free-solid-svg-icons";
+
+//Utils
+import toastRequest from "src/utils/toastRequest";
 
 //Children
 import ControlledInput from "src/components/forms/components/ControlledInput";
@@ -26,13 +30,17 @@ import { Validators, DataFields } from "src/utils/validations";
 //Form
 import { useForm, useWatch } from "react-hook-form";
 
-//Title or header text which opens an edit modal when clicked
+//Title or header text which opens an edit modal when clicked. Title modal includes option to delete project
 export default function ProjectEditableField({
   initialContent,
   objKey,
   onSubmit,
   title = false,
+  id,
 }) {
+  //For redirect upon proj. deletion
+  const navigate = useNavigate();
+
   //Track if mouse is over component for edit icon
   const [hovering, setHovering] = useState(false);
 
@@ -56,6 +64,25 @@ export default function ProjectEditableField({
     name: ["input"],
   });
 
+  /*Delete the project if user confirms.
+  Originally this component was going to have "altaction" used more frequently
+  but it only ended up being used for the project deletion.*/
+  async function handleDelete(onClose) {
+    await toastRequest({
+      method: "DELETE",
+      route: `/projects`,
+      data: { id },
+
+      //Close modal and redirect to dashboard
+      errorCB: () => {
+        onClose();
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 300);
+      },
+    });
+  }
+
   useEffect(() => {
     //When closing the modal, reset the form. Maybe not best implementation but there was a bug
     !isOpen && setTimeout(() => reset(), 120);
@@ -75,9 +102,7 @@ export default function ProjectEditableField({
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-row items-center text-default-700 bg-slate-100">
-                {title
-                  ? `New ${DataFields.PROJECT_TITLE_LABEL}`
-                  : `Edit ${DataFields.HEADER_LABEL}`}
+                {`Edit ${title ? "Project" : DataFields.HEADER_LABEL}`}
               </ModalHeader>
               <Divider className="mb-4" />
               <form
@@ -105,8 +130,15 @@ export default function ProjectEditableField({
                     type="text"
                   />
                 </ModalBody>
-                <ModalFooter>
-                  <SubmitAlt vals={formValues} submitLabel={"Save"} />
+                <ModalFooter className="flex flex row items-center">
+                  <SubmitAlt
+                    vals={formValues}
+                    altLabel={title && "Delete"} //Delete only available if editing project title not column headers
+                    altIcon={faTrash}
+                    submitLabel="Save"
+                    confirmThing={initialContent} //Pass title of project in for confirmation popover
+                    altAction={() => handleDelete(onClose)} //Deletion will be alt action button
+                  />
                 </ModalFooter>
               </form>
             </>
@@ -121,7 +153,7 @@ export default function ProjectEditableField({
         onClick={onOpen}
       >
         {/* Actual text */}
-        <p
+        <div
           className={`relative text-white ${
             title ? "text-xl font-semibold " : "text-small"
           }`}
@@ -136,7 +168,7 @@ export default function ProjectEditableField({
               <FontAwesomeIcon className="" icon={faSquarePen} />
             </div>
           )}
-        </p>
+        </div>
       </div>
     </>
   );

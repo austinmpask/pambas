@@ -16,7 +16,7 @@ export default function PendingItemIcon() {
   return (
     <FontAwesomeIcon
       icon={lineUIState.menuOpen ? faCircleXmark : faFile}
-      size={lineUIState.menuOpen ? "lg" : "md"}
+      size={lineUIState.menuOpen ? "lg" : undefined}
       className={
         lineState.pendingItems > 0 && !lineUIState.menuOpen
           ? "text-warning"

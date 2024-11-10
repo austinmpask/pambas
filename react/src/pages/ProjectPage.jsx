@@ -6,7 +6,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
 
 //Children
-import NavBar from "src/components/navbar/Navbar";
 import ProjectHeader from "src/components/projectpage/ProjectHeader";
 import ProjectGrid from "src/components/projectpage/ProjectGrid";
 
@@ -147,7 +146,6 @@ export default function ProjectPage() {
   return (
     <>
       <div className="fixed -z-50 w-full h-full bg-projBg bg-proj-img bg-proj-size" />
-      <NavBar />
       <HeaderStatsContext.Provider value={{ headerStats, setHeaderStats }}>
         <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
           {/* Slide in project detail header from top */}

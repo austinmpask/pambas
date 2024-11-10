@@ -14,6 +14,13 @@ function alphaNumericError(field, type) {
   return `${field} must be ${type}`;
 }
 
+//Bounds for analyzing project progress
+export class Insights {
+  static GOOD_CEILING = 0.8;
+  static ON_TRACK_CEILING = 1.16;
+  static WARN_CEILING = 1.25;
+}
+
 //Data requirements which line up with backend for use in form validation
 export class DataFields {
   static CRED_LABEL = "Username/Email";
@@ -299,6 +306,12 @@ export const Colors = {
   lightShadow: "#CED6D6",
 
   turquoise: "#00D1B2",
+
+  text: {
+    dark: "text-default-700",
+    med: "text-default-600",
+    light: "text-default-300",
+  },
 };
 
 //Template for user settings key/value

@@ -26,7 +26,7 @@ export default function CircleMeter({
         strokeWidth={10}
         styles={buildStyles({
           textSize: percentage ? "1.8em" : "2em",
-          textColor: fill === "white" ? "#ffffff" : "#595959",
+          textColor: fill === "white" ? "#ffffff" : "#71717A",
           pathColor: Colors[color],
           trailColor: fill,
         })}

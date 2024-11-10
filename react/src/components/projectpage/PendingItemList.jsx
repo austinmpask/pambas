@@ -98,7 +98,10 @@ export default function PendingItemList() {
             }}
             className="fixed top-0 right-0 w-full"
           >
-            <Card className="fixed top-0 right-0 mt-[100px] mx-3 sm:mx-5 z-10 w-4/5 sm:w-1/3 lg:w-1/6 max-h-85vh">
+            <Card
+              isHoverable
+              className="fixed top-0 right-0 mt-[100px] mx-3 sm:mx-5 z-10 w-4/5 sm:w-1/3 lg:w-1/6 max-h-85vh"
+            >
               {/* Card header */}
               <CardHeader className="bg-slate-700 flex flex-row justify-between h-[52px] px-5 py-3.5">
                 <div className="text-white">

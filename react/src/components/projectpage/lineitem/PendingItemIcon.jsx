@@ -5,7 +5,14 @@ import { useContext } from "react";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFile, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleXmark,
+  faPaperclip,
+  faFile,
+} from "@fortawesome/free-solid-svg-icons";
+
+//Children
+import { Badge } from "@nextui-org/react";
 
 //Contexts
 import { LineStateContext } from "./LineItemWrapper";
@@ -14,20 +21,41 @@ import { LineStateContext } from "./LineItemWrapper";
 export default function PendingItemIcon() {
   const { lineState, lineUIState } = useContext(LineStateContext);
   return (
-    <FontAwesomeIcon
-      icon={lineUIState.menuOpen ? faCircleXmark : faFile}
-      size={lineUIState.menuOpen ? "lg" : undefined}
-      className={
-        lineState.pendingItems > 0 && !lineUIState.menuOpen
-          ? "text-warning"
-          : lineUIState.menuOpen
-          ? lineUIState.complete
-            ? "text-dangerShadow"
-            : "text-danger"
-          : lineUIState.complete
-          ? "text-successShadow"
-          : "text-default-300"
-      }
-    />
+    <Badge
+      content={lineState.pendingItems}
+      size="sm"
+      isOneChar
+      showOutline={false}
+      color={lineUIState.complete ? "success" : "warning"}
+      placement="bottom-right"
+      className={`${
+        lineUIState.complete ? "text-successShadow" : "text-white"
+      } "font-semibold"`}
+      isInvisible={lineState.pendingItems <= 1 || lineUIState.menuOpen}
+    >
+      <FontAwesomeIcon
+        icon={
+          lineUIState.menuOpen
+            ? faCircleXmark
+            : lineState.pendingItems === 0
+            ? faPaperclip
+            : faFile
+        }
+        size={lineUIState.menuOpen ? "lg" : undefined}
+        className={
+          lineState.pendingItems > 0 && !lineUIState.menuOpen
+            ? lineUIState.complete
+              ? "text-successShadow"
+              : "text-warning"
+            : lineUIState.menuOpen
+            ? lineUIState.complete
+              ? "text-dangerShadow"
+              : "text-danger"
+            : lineUIState.complete
+            ? "text-successShadow"
+            : "text-default-300"
+        }
+      />
+    </Badge>
   );
 }

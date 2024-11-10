@@ -4,7 +4,7 @@ import RegisterForm from "src/components/forms/RegisterForm";
 
 export default function RegisterPage() {
   return (
-    <PageWrapper title="Register">
+    <PageWrapper margin>
       <RegisterForm />
     </PageWrapper>
   );

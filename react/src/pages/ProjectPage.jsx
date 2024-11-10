@@ -8,6 +8,7 @@ import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
 //Children
 import ProjectHeader from "src/components/projectpage/ProjectHeader";
 import ProjectGrid from "src/components/projectpage/ProjectGrid";
+import PageWrapper from "src/components/PageWrapper";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
@@ -144,8 +145,7 @@ export default function ProjectPage() {
   }
 
   return (
-    <>
-      <div className="fixed -z-50 w-full h-full bg-projBg bg-proj-img bg-proj-size" />
+    <PageWrapper>
       <HeaderStatsContext.Provider value={{ headerStats, setHeaderStats }}>
         <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
           {/* Slide in project detail header from top */}
@@ -165,6 +165,6 @@ export default function ProjectPage() {
           />
         </ProjectUpdaterContext.Provider>
       </HeaderStatsContext.Provider>
-    </>
+    </PageWrapper>
   );
 }

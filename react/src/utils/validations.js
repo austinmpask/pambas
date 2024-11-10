@@ -226,6 +226,10 @@ export class DataFields {
 }
 
 export class UIVars {
+  //Animation stuff
+  static DASH_STAT_CARD_INITIAL_SCALE = 0.85;
+  static DASH_STAT_CARD_INITIAL_OPACITY = 0.2;
+
   static LINE_ANIM_WAIT_MS = 260;
   static LINE_HOVER_DELAY_MS = 50;
   static HANGING_FLAG_ANIM_MS = 330;

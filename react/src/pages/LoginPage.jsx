@@ -4,7 +4,7 @@ import LoginForm from "../components/forms/LoginForm";
 
 export default function LoginPage() {
   return (
-    <PageWrapper title="Login">
+    <PageWrapper margin>
       <LoginForm />
     </PageWrapper>
   );

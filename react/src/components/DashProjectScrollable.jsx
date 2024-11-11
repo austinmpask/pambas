@@ -1,4 +1,5 @@
 /*-------------------Cleaned up 11/10/24-------------------*/
+//RESPONSIVE 11/10/24
 
 //React
 import { useContext } from "react";
@@ -19,8 +20,8 @@ export default function DashProjectScrollable() {
   const { projectSummaryData } = useContext(ProjectSummaryContext);
 
   return (
-    <div className="w-full h-[300px] border-t border-b">
-      <ScrollShadow className="w-full h-[300px] overflow-auto py-3 scrollbar-hidden">
+    <div className="w-screen h-full sm:w-full">
+      <ScrollShadow className="h-full py-3 scrollbar-hidden">
         {projectSummaryData &&
           projectSummaryData.map((project, i) => (
             <motion.div

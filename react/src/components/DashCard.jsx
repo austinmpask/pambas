@@ -1,4 +1,5 @@
 /*-------------------Cleaned up 11/10/24-------------------*/
+//RESPONSIVE 11/10/24
 
 //React
 import { useContext } from "react";
@@ -55,19 +56,19 @@ export default function DashCard() {
         damping: 100,
       }}
     >
-      <div className="select-none m-9 flex flex-col items-center">
-        <Card className="rounded-3xl w-7/8 h-[700px]">
+      <div className="select-none sm:m-9 flex flex-col h-mobile sm:h-auto items-center">
+        <Card className="rounded-none sm:rounded-3xl">
           <CardHeader
-            className={`bg-header-img text-xl px-8 py-4 flex flex-row justify-start items-center text-white`}
+            className={`invisible sm:visible bg-header-img fixed sm:static rounded-none sm:rounded-t-3xl text-xl px-8 py-4 flex flex-row justify-center sm:justify-start items-center text-white`}
           >
             <FontAwesomeIcon size="lg" className="mr-3" icon={faGaugeHigh} />
-            <p>Project Dashboard</p>
+            <p>Dashboard</p>
           </CardHeader>
-          <Divider />
-          <CardBody className="p-8 grid grid-cols-5 gap-8">
+          <Divider className="invisible sm:visible" />
+          <CardBody className="w-screen p-0 sm:p-3 sm:w-auto sm:mt-0 md:p-6 lg:p-8 md:grid md:grid-cols-5 md:gap-4 lg:gap-8">
             {/* COLUMN 1 */}
-            <div className="col-span-3 flex flex-col items-center justify-between">
-              <div className="h-[180px] w-full flex flex-row items-center justify-between">
+            <div className="sm:col-span-3 h-mobile sm:h-full flex flex-col items-center justify-between xl:h-70vh md:h-60vh">
+              <div className="mt-4 sm:mt-0 h-[120px] md:h-[140px] lg:h-[180px] w-screen sm:w-full flex flex-row items-center justify-between px-3 sm:px-0">
                 <DashStatCard
                   stat={projectSummaryData.length}
                   icon={faListCheck}
@@ -92,8 +93,10 @@ export default function DashCard() {
                 />
               </div>
               {/* Scrollable list of project summary information */}
-              <DashProjectScrollable />
-              <div className="flex flex-row items-center w-full">
+              <div className="flex-grow overflow-y-hidden">
+                <DashProjectScrollable />
+              </div>
+              <div className="flex flex-row items-center w-full mb-6 px-4 sm:px-0 sm:mb-0">
                 <Link className="w-full" href="/new">
                   <Button
                     size="lg"
@@ -122,7 +125,7 @@ export default function DashCard() {
             </div>
 
             {/* COLUMN 2 */}
-            <div className="col-span-2">
+            <div className="h-0 sm:h-[450px] xl:h-70vh md:h-60vh invisible sm:visible sm:col-span-2">
               <DashOpenItemList />
             </div>
           </CardBody>

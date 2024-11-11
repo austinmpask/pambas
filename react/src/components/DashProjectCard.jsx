@@ -1,4 +1,5 @@
 /*-------------------Cleaned up 11/10/24-------------------*/
+//RESPONSIVE 11/10/24
 
 //Children
 import { Card, CardBody, Link, Chip, Spacer } from "@nextui-org/react";
@@ -19,16 +20,16 @@ export default function DashProjectCard({ project }) {
 
   return (
     <Link className="w-full" href={`/projects/${project.id}`}>
-      <div className="w-full select-none h-[90px] px-5 py-2 flex items-center justify-center">
+      <div className="w-full select-none h-[90px] px-1 sm:px-3 md:px-5 py-2 flex items-center justify-center">
         <Card
           isPressable
           isHoverable
           disableRipple
-          className="rounded-2xl w-full h-full"
+          className="rounded-2xl mx-3 sm:mx-0 w-full h-full"
         >
-          <CardBody className="grid grid-cols-9 gap-3">
+          <CardBody className="grid grid-cols-7 sm:grid-cols-11 lg:grid-cols-9 gap-1 sm:gap-3">
             {/* PROJECT COMPLETION */}
-            <div className="col-span-1">
+            <div className="col-span-1 sm:col-span-2 lg:col-span-1">
               <CircleMeter
                 val={Math.round((project.completed / project.total) * 100)}
                 displayVal={Math.round(
@@ -41,20 +42,27 @@ export default function DashProjectCard({ project }) {
             </div>
             {/* TITLE */}
             <div
-              className={`col-span-3 flex font-semibold items-center ${Colors.text.med}`}
+              className={`col-span-2 sm:col-span-4 lg:col-span-3 flex font-semibold ml-2 sm:ml-0 items-center ${Colors.text.med}`}
             >
               {project.title}
             </div>
             {/* PROJECT INSIGHT */}
             <div
-              className={`col-span-2 flex text-sm font-semibold items-center justify-start ${status.textColor}`}
+              className={`col-span-1 lg:col-span-2 flex md:text-xs lg:text-sm font-semibold items-center sm:justify-start ${status.textColor}`}
             >
-              <FontAwesomeIcon className="mr-2" icon={status.icon} />
-              {status.message}
+              <FontAwesomeIcon
+                className="ml-6 sm:ml-3 lg:ml-0 sm:mr-2 sm:text-sm"
+                icon={status.icon}
+              />
+              {
+                <div className="invisible lg:visible md:text-xs lg:text-sm">
+                  {status.message}
+                </div>
+              }
             </div>
             {/* BUDGET */}
             <div
-              className={`col-span-2 text-lg flex items-center justify-start font-semibold ${Colors.text.med}`}
+              className={`col-span-2 text-lg flex items-center ml-2 sm:ml-0 justify-start font-semibold ${Colors.text.med}`}
             >
               <Chip
                 color={status.color}
@@ -73,7 +81,7 @@ export default function DashProjectCard({ project }) {
             </div>
             {/* OPEN ITEMS */}
             <div
-              className={`col-span-1 text-lg flex items-center justify-start font-semibold ${Colors.text.med}`}
+              className={`col-span-1 sm:col-span-2 lg:col-span-1 text-lg flex items-center justify-end lg:justify-start font-semibold ${Colors.text.med}`}
             >
               {project.openItems ? (
                 <Chip

@@ -17,6 +17,18 @@
     max-height: 85vh;
   }
 
+  .h-70vh {
+    height: 70vh;
+  }
+
+  .h-60vh {
+    height: 60vh;
+  }
+
+  .h-mobile {
+    height: calc(100dvh - 64px);
+  }
+
   .button-transition {
     transition: padding-top 0.2s cubic-bezier(0.58, 1.04, 0.26, 1.12),
       background-color 0.5s cubic-bezier(0.21, 1.05, 0, 1);

@@ -1,4 +1,5 @@
 /*-------------------Cleaned up 11/10/24-------------------*/
+//RESPONSIVE 11/10/24
 
 //Children
 import { Card, CardBody, Skeleton } from "@nextui-org/react";
@@ -32,12 +33,12 @@ export default function DashStatCard({ stat, icon, label, color, delay = 0 }) {
       <Card
         isPressable
         disableRipple
-        className={`select-none drop-shadow-xl rounded-3xl h-[180px] w-[180px] ${
+        className={`select-none drop-shadow-xl rounded-3xl h-[120px] w-[120px] md:h-[140px] md:w-[140px] lg:h-[180px] lg:w-[180px] ${
           color && "bg-" + color
         }`}
       >
         <CardBody
-          className={`rounded-3xl relative p-5 ${
+          className={`rounded-3xl relative p-3 sm:p-4 lg:p-5 ${
             color ? "text-" + color + "Shadow" : Colors.text.dark
           }`}
         >
@@ -47,7 +48,7 @@ export default function DashStatCard({ stat, icon, label, color, delay = 0 }) {
               isLoaded={stat !== undefined}
               className="rounded-lg"
             >
-              <p className="font-bold text-7xl">
+              <p className="font-bold text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
                 {stat < 0 ? stat * -1 : stat}
               </p>
             </Skeleton>
@@ -56,7 +57,7 @@ export default function DashStatCard({ stat, icon, label, color, delay = 0 }) {
               isLoaded={stat !== undefined}
               className="rounded-lg"
             >
-              <p className="text-lg font-semibold">{label}</p>
+              <p className="text-base sm:text-lg font-semibold">{label}</p>
             </Skeleton>
           </div>
           <FontAwesomeIcon

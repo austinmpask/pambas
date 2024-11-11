@@ -320,7 +320,7 @@ export const Colors = {
 
 //Template for user settings key/value
 export const UserSettings = {
-  darkMode: false,
+  // darkMode: false,
   tooltips: true,
   fancyVisuals: true,
   confirmDelOpenItem: true,
@@ -333,7 +333,8 @@ export const UserSettings = {
   rowExpandedPreset: 1,
   defaultProjectType: 3,
   defaultColorTheme: 0,
-  defaultManager: "",
+  useDefaultManager: true,
+  defaultManagerName: "joe",
 };
 
 //React hook form validators for use in forms

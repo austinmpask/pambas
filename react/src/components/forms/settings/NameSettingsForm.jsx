@@ -13,6 +13,9 @@ import { useForm, useWatch } from "react-hook-form";
 import ControlledInput from "src/components/forms/components/ControlledInput";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
 
+//Toasts
+import { ToastContainer } from "react-toastify";
+
 //Utils
 import toastRequest from "src/utils/toastRequest";
 import { Validators, DataFields } from "src/utils/validations";
@@ -61,6 +64,7 @@ export default function NameSettingsForm() {
 
   return (
     <>
+      <ToastContainer />
       <form onSubmit={handleSubmit((data) => updateData(data))}>
         <ControlledInput
           required

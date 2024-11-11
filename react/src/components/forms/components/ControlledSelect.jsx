@@ -20,12 +20,14 @@ export default function ControlledSelect({
   items,
   defaultSelection,
   color = false, //For when this is used to select theme, show the theme thumbnail color on the option
+  callback,
 }) {
   return (
     <Controller
       name={field} //Take field from parent form
       control={control} //Take control from parent form
       defaultValue={new Set(String(defaultSelection.value))}
+      onSelectionChange={callback}
       render={({ field: { onChange, value } }) => (
         <Select
           className="w-[200px]"
@@ -34,7 +36,11 @@ export default function ControlledSelect({
           isRequired={required}
           isDisabled={loading}
           selectedKeys={value}
-          onSelectionChange={onChange}
+          onSelectionChange={(val) => {
+            onChange(val);
+            callback &&
+              callback(field, Number(new Set(val).values().next().value));
+          }}
           startContent={
             color ? (
               <FontAwesomeIcon

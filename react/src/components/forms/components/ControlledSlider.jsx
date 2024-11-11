@@ -51,7 +51,9 @@ export default function ControlledSlider({
       defaultValue={defaultValue}
       value={value}
       onChange={setValue}
-      onChangeEnd={() => callback(dataKey, value)} //Execute the callback function when user is done dragging
+      onChangeEnd={(v) => {
+        callback(dataKey, v);
+      }} //Execute the callback function when user is done dragging
       className="max-w-md sm:ml-5"
     />
   );

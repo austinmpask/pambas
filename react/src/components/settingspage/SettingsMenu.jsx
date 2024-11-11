@@ -1,80 +1,33 @@
+/*-------------------Cleaned up 11/10/24-------------------*/
+
 //React
-import { useContext, useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Divider,
-  Image,
-  Tabs,
-  Tab,
-  Spacer,
-} from "@nextui-org/react";
+import { useState } from "react";
+
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
   faGear,
   faUniversalAccess,
-  faCode,
 } from "@fortawesome/free-solid-svg-icons";
 
+//Children
 import ProfileSettings from "src/components/settingspage/submenus/ProfileSettings";
 import AccessibilitySettings from "src/components/settingspage/submenus/AccessibilitySettings";
-
 import PreferencesSettings from "src/components/settingspage/submenus/PreferencesSettings";
-//Contexts
-import { UserContext } from "src/context/UserContext";
+import { Tabs, Tab } from "@nextui-org/react";
 
-//Toasts
-import { ToastContainer } from "react-toastify";
-
-//Form
-import { useForm } from "react-hook-form";
-import SubmitAlt from "src/components/forms/components/SubmitAlt";
-
-//Utils
-import toastRequest from "src/utils/toastRequest";
-import { Validators, DataFields, UIVars } from "src/utils/validations";
-
-//Form for changing user info && viewing login credentials
+// Menu linking to different settings forms. Handles requests for most settings options
 export default function SettingsMenu() {
-  //Subscribe to user context
-  const { userData, setUserData } = useContext(UserContext);
-
   //Loading state for visuals
   const [loading, setLoading] = useState(false);
 
-  //Form setup
-  const { control, handleSubmit, reset } = useForm();
-
-  //Whenever user data is updated, reset the form
-  useEffect(() => {
-    reset();
-  }, [userData]);
-
-  //Make request to update user information
-  async function updateData(data) {
-    await toastRequest({
-      method: "PUT",
-      route: "/userdata",
-      data: { first_name: data.firstName, last_name: data.lastName },
-      setLoading,
-      success: "Profile updated!",
-      successCB: (message) => {
-        //If successful, update user context
-        reset();
-        console.log(message.first_name);
-        setUserData((prev) => ({
-          ...prev,
-          firstName: message.first_name,
-          lastName: message.last_name,
-        }));
-      },
-    });
+  //TODO Make actual request
+  function makeRequest(dataKey, value) {
+    console.log({ dataKey, value });
   }
 
+  // Setting pages
   const tabs = [
     {
       id: "account",
@@ -85,26 +38,19 @@ export default function SettingsMenu() {
     {
       id: "preferences",
       label: "Preferences",
-      content: <PreferencesSettings />,
+      content: <PreferencesSettings request={makeRequest} loading={loading} />,
       icon: <FontAwesomeIcon icon={faGear} />,
     },
     {
       id: "accessibility",
       label: "Accessibility",
-      content: <AccessibilitySettings />,
+      content: <AccessibilitySettings request={makeRequest} />,
       icon: <FontAwesomeIcon icon={faUniversalAccess} />,
-    },
-    {
-      id: "advanced",
-      label: "Advanced Settings",
-      content: "",
-      icon: <FontAwesomeIcon icon={faCode} />,
     },
   ];
 
   return (
     <>
-      <ToastContainer />
       {/* DESKTOP */}
       <div className="hidden sm:flex sm:flex-col">
         <Tabs

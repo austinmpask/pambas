@@ -1,17 +1,11 @@
+/*-------------------Cleaned up 11/10/24-------------------*/
+
 //React
-import { useContext, useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Divider,
-  Image,
-  Tabs,
-  Tab,
-  Spacer,
-  Tooltip,
-} from "@nextui-org/react";
+import { useContext } from "react";
+
+//Children
+import { Spacer, Tooltip } from "@nextui-org/react";
+
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
@@ -19,25 +13,17 @@ import { faLock } from "@fortawesome/free-solid-svg-icons";
 //Contexts
 import { UserContext } from "src/context/UserContext";
 
-//Toasts
-import { ToastContainer } from "react-toastify";
-
-import SettingsCard from "src/components/settingspage/SettingsCard";
-
-//Form
-import { useForm } from "react-hook-form";
-import SubmitAlt from "src/components/forms/components/SubmitAlt";
-
 //Utils
-import toastRequest from "../../utils/toastRequest";
-import { Validators, DataFields, UIVars } from "../../utils/validations";
+import { UIVars } from "src/utils/validations";
 
+//Display users login credentials
 export default function UserInfo() {
+  //Consume user info
   const { userData } = useContext(UserContext);
   return (
     <Tooltip
       placement="top-start"
-      content="Username/email can not be changed at this time"
+      content="Login and Password can not be changed at this time"
       delay={UIVars.TOOLTIP_DELAY_MS}
     >
       <div className="flex flex-row mb-4">

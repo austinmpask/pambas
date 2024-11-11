@@ -1,44 +1,9 @@
-//React
-import { useContext, useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Divider,
-  Image,
-  Tabs,
-  Tab,
-  Spacer,
-} from "@nextui-org/react";
-//Icons
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faGear,
-  faUniversalAccess,
-  faCode,
-} from "@fortawesome/free-solid-svg-icons";
+/*-------------------Cleaned up 11/10/24-------------------*/
 
-import ProfileSettings from "src/components/settingspage/submenus/ProfileSettings";
+//Children
+import { Spacer } from "@nextui-org/react";
 
-import SettingsCard from "src/components/settingspage/SettingsCard";
-
-import PreferencesSettings from "src/components/settingspage/submenus/PreferencesSettings";
-//Contexts
-import { UserContext } from "src/context/UserContext";
-
-//Toasts
-import { ToastContainer } from "react-toastify";
-
-//Form
-import { useForm } from "react-hook-form";
-import SubmitAlt from "src/components/forms/components/SubmitAlt";
-
-//Utils
-import toastRequest from "src/utils/toastRequest";
-import { Validators, DataFields, UIVars } from "src/utils/validations";
-
+//Divider component for sections form layout
 export default function SettingsCardSection({ title, children = null }) {
   return (
     <>

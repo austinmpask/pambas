@@ -20,6 +20,7 @@ export default function SubmitAlt({
   confirmThing = "", //Name of thing deleted for confirmation message
   altIcon,
   loading,
+  isDisabled,
   vals = [], //React hook form values from parent. Buttons are disabled until all fields passed here have data
 }) {
   //Enable button once all fields have some value in them
@@ -72,12 +73,10 @@ export default function SubmitAlt({
         variant="flat"
         color="primary"
         isLoading={loading}
-        isDisabled={loading || disabled}
+        isDisabled={loading || disabled || isDisabled}
       >
         {submitLabel}
       </Button>
-
-      {/* Optional alt action button, not present unless explicitly provided for */}
     </div>
   );
 }

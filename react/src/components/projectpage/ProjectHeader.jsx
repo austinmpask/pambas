@@ -22,6 +22,9 @@ import {
   Divider,
 } from "@nextui-org/react";
 
+//Utils
+import { DataFields } from "src/utils/validations";
+
 // Project stats header containing editable project info. Uses slice of context provided by page wrapper parent
 export default function ProjectHeader({ contextSlice }) {
   //Upate project summary context via key/val pair
@@ -33,7 +36,13 @@ export default function ProjectHeader({ contextSlice }) {
   return createPortal(
     <Card className="fixed top-0 mt-[100px] mx-3 sm:mx-5 z-10 w-4/5 sm:w-1/3 lg:w-1/6">
       {/* Card header */}
-      <CardHeader className="bg-header-img flex flex-row justify-between px-5 py-3.5">
+      <CardHeader
+        className={`${
+          DataFields.PROJECT_THEME_TYPES.find(
+            (theme) => theme.value === contextSlice.theme
+          ).header
+        } flex flex-row justify-between px-5 py-3.5`}
+      >
         <ProjectEditableField
           initialContent={contextSlice.title}
           id={contextSlice.id}

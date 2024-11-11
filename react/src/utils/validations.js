@@ -97,33 +97,66 @@ export class DataFields {
 
   static PROJECT_THEME_LABEL = "Color Theme";
 
-  static THEME_RED_SELECT = {
+  static THEME_REDAPPLE_SELECT = {
     value: 0,
-    label: "Red",
-    thumb: "text-danger",
+    label: "Red Apple",
+    thumb: "thumb-redapple",
+    header: "header-bg-redapple",
+    contrast: "header-hc-redapple",
   };
 
-  static THEME_GREEN_SELECT = {
+  static THEME_RUST_SELECT = {
     value: 1,
-    label: "Green",
-    thumb: "text-success",
+    label: "Rust",
+    thumb: "thumb-rust",
+    header: "header-bg-rust",
+    contrast: "header-hc-rust",
   };
 
-  static THEME_BLUE_SELECT = {
+  static THEME_METRO_SELECT = {
     value: 2,
-    label: "Blue",
-    thumb: "text-primary",
+    label: "Metro",
+    thumb: "thumb-metro",
+    header: "header-bg-metro",
+    contrast: "header-hc-metro",
+  };
+
+  static THEME_LAVENDER_SELECT = {
+    value: 3,
+    label: "Lavender",
+    thumb: "thumb-lavender",
+    header: "header-bg-lavender",
+    contrast: "header-hc-lavender",
+  };
+
+  static THEME_SKY_SELECT = {
+    value: 4,
+    label: "Sky",
+    thumb: "thumb-sky",
+    header: "header-bg-sky",
+    contrast: "header-hc-sky",
+  };
+
+  static THEME_BUBBLEGUM_SELECT = {
+    value: 5,
+    label: "Bubblegum",
+    thumb: "thumb-bubblegum",
+    header: "header-bg-bubblegum",
+    contrast: "header-hc-bubblegum",
   };
 
   static PROJECT_THEME_TYPES = [
-    this.THEME_RED_SELECT,
-    this.THEME_GREEN_SELECT,
-    this.THEME_BLUE_SELECT,
+    this.THEME_REDAPPLE_SELECT,
+    this.THEME_RUST_SELECT,
+    this.THEME_METRO_SELECT,
+    this.THEME_LAVENDER_SELECT,
+    this.THEME_SKY_SELECT,
+    this.THEME_BUBBLEGUM_SELECT,
   ];
 
   static LOADER_COLOR = "#94a3b8";
 
-  static DEFAULT_PROJECT_THEME = this.THEME_RED_SELECT;
+  static DEFAULT_PROJECT_THEME = this.THEME_METRO_SELECT;
 
   static HEADER_LABEL = "Column Header";
   static HEADER_MIN_LENGTH = 0;

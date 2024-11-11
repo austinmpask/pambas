@@ -10,6 +10,8 @@ import ProjectHeader from "src/components/projectpage/ProjectHeader";
 import ProjectGrid from "src/components/projectpage/ProjectGrid";
 import PageWrapper from "src/components/PageWrapper";
 
+import { DataFields } from "src/utils/validations";
+
 //Utils
 import toastRequest from "src/utils/toastRequest";
 
@@ -57,11 +59,13 @@ export default function ProjectPage() {
   useEffect(() => {
     //Isolate the relevant project details from the context based on
     //the ID prop for current project
-    setContextSlice(
-      projectSummaryData.find((project) => {
+    setContextSlice({
+      ...projectSummaryData.find((project) => {
         return project.id === projectID;
-      })
-    );
+      }),
+      theme: 3,
+      //TODO: implement
+    });
 
     //Find the index of the project with regard to the project summary context
     setProjectIndex(

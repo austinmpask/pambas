@@ -1,6 +1,6 @@
-from flaskr.config import DataFields
 import uuid
 
+from flaskr.config import DataFields
 
 # ----- Generic error message builders ----- #
 
@@ -231,6 +231,16 @@ class Validators:
         Validators.validateRange(val, n, DataFields.BILLED_MIN, DataFields.BILLED_MAX)
         Validators.validateIncremental(val, n, DataFields.BILLED_INCREMENTAL)
         return DataFields.BILLED_TYPE(val)
+
+    @staticmethod
+    def theme(val) -> DataFields.THEME_TYPE:
+        n = "Theme"
+        # Tests
+        Validators.validateExists(val, n)
+        val = DataFields.THEME_TYPE(val)
+        Validators.validateType(val, n, (DataFields.THEME_TYPE))
+        Validators.validateRange(val, n, DataFields.THEME_MIN, DataFields.THEME_MAX)
+        return DataFields.THEME_TYPE(val)
 
     @staticmethod
     def projectManager(val) -> DataFields.FULL_NAME_TYPE:

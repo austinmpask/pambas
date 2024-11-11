@@ -13,6 +13,8 @@ import LineItemWrapper from "./lineitem/LineItemWrapper";
 
 //Utils
 import toTitle from "src/utils/toTitle";
+//Utils
+import { DataFields } from "src/utils/validations";
 
 //Individual project section within the project grid
 export default function ProjectSection({ contextSlice, sectionData, index }) {
@@ -36,7 +38,13 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
       className="m-6 mb-0 w-full sm:w-11/12 lg:w-3/5 overflow-visible"
     >
       {/* Header for section card */}
-      <CardHeader className="px-0 py-3 bg-header-img">
+      <CardHeader
+        className={`px-0 py-3 ${
+          DataFields.PROJECT_THEME_TYPES.find(
+            (theme) => theme.value === contextSlice.theme
+          ).header
+        }`}
+      >
         {/* Column headers shown on only on first card (index === 0) */}
         {index ? (
           // Rest of cards headers

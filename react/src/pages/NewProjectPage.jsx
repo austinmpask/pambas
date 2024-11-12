@@ -73,7 +73,7 @@ export default function NewProjectPage() {
   return (
     <>
       <PageWrapper noGrid>
-        <div className="flex flex-col-reverse lg:flex-row lg:items-start items-center lg:justify-center">
+        <div className="flex flex-col-reverse lg:flex-row lg:items-start sm:mt-6 items-center lg:justify-center">
           {/* Lefthand form */}
           <ProjectDataForm loading={loading} submit={submit} />
           <Spacer x="12" />

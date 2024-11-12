@@ -30,6 +30,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //Utils
 import { DataFields } from "src/utils/validations";
 
+import { motion, AnimatePresence } from "framer-motion";
 //Dynamic form allowing user to input the sections they are assigned, along with control amounts per section
 export default function SectionsForm({ loading, sections, setSections }) {
   //Add section to list, up to max constant
@@ -130,40 +131,75 @@ export default function SectionsForm({ loading, sections, setSections }) {
           <TableBody>
             {sections.map((section, i) => (
               // Table row
-
               <TableRow key={i}>
                 {/* Section Input Cell */}
                 <TableCell className="w-1/2">
-                  <SectionInput
-                    index={i}
-                    forward={saveInput}
-                    value={section[0]}
-                    loading={loading}
-                  />
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    // className="w-full flex flex-col items-center"
+                    transition={{
+                      type: "spring",
+                      stiffness: 120,
+                      mass: 1,
+                      damping: 20,
+                    }}
+                  >
+                    <SectionInput
+                      index={i}
+                      forward={saveInput}
+                      value={section[0]}
+                      loading={loading}
+                    />
+                  </motion.div>
                 </TableCell>
                 <TableCell>
                   {/* Control Input Cell */}
-                  <ControlInput
-                    index={i}
-                    forward={saveInput}
-                    value={section[1]}
-                    loading={loading}
-                  />
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    // className="w-full flex flex-col items-center"
+                    transition={{
+                      type: "spring",
+                      stiffness: 120,
+                      mass: 1,
+                      damping: 20,
+                    }}
+                  >
+                    <ControlInput
+                      index={i}
+                      forward={saveInput}
+                      value={section[1]}
+                      loading={loading}
+                    />
+                  </motion.div>
                 </TableCell>
                 <TableCell>
                   {/* Trash can icon, color is red if there is more than 1 row */}
-                  <FontAwesomeIcon
-                    className={`${
-                      i
-                        ? "text-danger cursor-pointer"
-                        : sections.length > 1
-                        ? "text-danger cursor-pointer"
-                        : "text-default-200"
-                    } transition-all`}
-                    size="lg"
-                    icon={faTrash}
-                    onClick={() => !loading && removeSection(i)}
-                  />
+                  <motion.div
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    // className="w-full flex flex-col items-center"
+                    transition={{
+                      type: "spring",
+                      stiffness: 120,
+                      mass: 1,
+                      damping: 20,
+                    }}
+                  >
+                    <FontAwesomeIcon
+                      className={`${
+                        i
+                          ? "text-danger cursor-pointer"
+                          : sections.length > 1
+                          ? "text-danger cursor-pointer"
+                          : "text-default-200"
+                      } transition-all`}
+                      size="lg"
+                      icon={faTrash}
+                      onClick={() => !loading && removeSection(i)}
+                    />
+                  </motion.div>
                 </TableCell>
               </TableRow>
             ))}

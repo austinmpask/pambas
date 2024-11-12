@@ -45,7 +45,8 @@ export default function ProjectDropdown() {
       {/* Menu itsself */}
       <DropdownMenu
         aria-label="Projects"
-        className="min-w-[230px]"
+        className="min-w-[250px]"
+        placement="bottom-start"
         itemClasses={{
           base: "gap-4",
         }}

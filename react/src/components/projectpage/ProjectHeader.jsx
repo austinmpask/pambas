@@ -4,6 +4,10 @@
 import { useContext } from "react";
 import { createPortal } from "react-dom";
 
+//Icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDesktop } from "@fortawesome/free-solid-svg-icons";
+
 //Contexts
 import {
   ProjectUpdaterContext,
@@ -34,14 +38,14 @@ export default function ProjectHeader({ contextSlice }) {
   const { headerStats } = useContext(HeaderStatsContext);
 
   return createPortal(
-    <Card className="fixed top-0 mt-[100px] mx-3 sm:mx-5 z-10 w-4/5 sm:w-1/3 lg:w-1/6">
+    <Card className="fixed rounded-none sm:rounded-2xl top-0 mt-[64px] sm:mt-[72px] lg:mt-[90px] sm:mx-3 sm:mx-5 z-9 w-full sm:w-1/2 top-split-mobile sm:h-[300px] xl:h-auto lg:w-1/6">
       {/* Card header */}
       <CardHeader
         className={`${
           DataFields.PROJECT_THEME_TYPES.find(
             (theme) => theme.value === contextSlice.theme
-          ).header
-        } flex flex-row justify-between px-5 py-3.5`}
+          ).uniHeader
+        } flex rounded-none sm:rounded-t-2xl flex-row justify-between px-5 h-[64px] py-3.5`}
       >
         <ProjectEditableField
           initialContent={contextSlice.title}
@@ -61,29 +65,42 @@ export default function ProjectHeader({ contextSlice }) {
       </CardHeader>
       <Divider />
       {/* Card content */}
-      <CardBody>
+      <CardBody className="py-0 sm:py-3 overflow-hidden">
         <MeterButton
           val={contextSlice.billed}
-          displayVal={contextSlice.budget - contextSlice.billed}
+          displayVal={String(contextSlice.budget - contextSlice.billed)}
           max={contextSlice.budget}
-          color="primary"
+          color={
+            contextSlice.budget - contextSlice.billed > 0 ? "primary" : "danger"
+          }
           label="Budget Hours Remaining"
           dropdown
           objKey="billed"
           onSubmit={updateContext}
         />
 
-        <MeterButton
-          val={headerStats.openItems}
-          max={1}
-          color="danger"
-          label="Open Items"
-        />
+        <div className="hidden sm:flex">
+          <MeterButton
+            val={headerStats.openItems}
+            max={1}
+            color="danger"
+            label="Open Items"
+          />
+        </div>
+        <div className="sm:hidden h-full w-full flex flex-row items-center justify-center text-sm text-default-400">
+          <FontAwesomeIcon
+            className="mr-2 text-sm"
+            size="xs"
+            icon={faDesktop}
+          />
+
+          <p>Use Pambas on desktop for full functionality</p>
+        </div>
       </CardBody>
       <Divider />
 
       {/* Card footer */}
-      <CardFooter className="card-footer">
+      <CardFooter className="bg-slate-200 sm:bg-inherit h-[20px] sm:h-auto rounded-none sm:rounded-b-2xl">
         <div className="text-xs text-default-500 flex w-full justify-between">
           <span>{contextSlice.projectType}</span>
           <span>{contextSlice.projectManager}</span>

@@ -84,6 +84,14 @@ export default function ItemModal({
     isOpen && inputRef.current && inputRef.current.focus();
   }, [isOpen]);
 
+  //Different modal size for mobile
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Set to mobile or not on first render
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 640);
+  }, []);
+
   //Loading state for visuals
   const [loading, setLoading] = useState(false);
 
@@ -143,6 +151,8 @@ export default function ItemModal({
       isOpen={isOpen}
       onOpenChange={onOpenChange}
       shouldBlockScroll={false}
+      placement="top"
+      size={isMobile ? "full" : "md"}
     >
       <ModalContent>
         {(onClose) => (
@@ -157,7 +167,7 @@ export default function ItemModal({
             <Divider className="mb-4" />
             <form onSubmit={handleSubmit((data) => itemRequest(data, onClose))}>
               <ModalBody>
-                <div className="flex flex-row items-center justify-start mb-10">
+                <div className="flex flex-row items-center justify-start mb-0 sm:mb-10">
                   <div>
                     <ControlledInput
                       focusRef={inputRef}

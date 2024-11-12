@@ -27,7 +27,7 @@ export default function NoteBoxCell() {
   }px`;
   return (
     <div
-      className={`transition-all border-solid border-x-1 border-b-1 border-inherit ${
+      className={`invisible w-0 sm:w-full sm:visible transition-all sm:border-solid sm:border-x-1 sm:border-b-1 ${
         lineUIState.complete && "bg-success border-success"
       } ${lineUIState.writingNote && "p-2"}`}
       // Add the users set height

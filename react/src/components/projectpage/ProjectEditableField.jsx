@@ -83,6 +83,14 @@ export default function ProjectEditableField({
     });
   }
 
+  //Different modal size for mobile
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Set to mobile or not on first render
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 640);
+  }, []);
+
   useEffect(() => {
     //When closing the modal, reset the form. Maybe not best implementation but there was a bug
     !isOpen && setTimeout(() => reset(), 120);
@@ -97,6 +105,8 @@ export default function ProjectEditableField({
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         shouldBlockScroll={false}
+        placement="top"
+        size={isMobile ? "full" : "md"}
       >
         <ModalContent>
           {(onClose) => (
@@ -130,7 +140,7 @@ export default function ProjectEditableField({
                     type="text"
                   />
                 </ModalBody>
-                <ModalFooter className="flex flex row items-center">
+                <ModalFooter className="flex flex-row items-center">
                   <SubmitAlt
                     vals={formValues}
                     altLabel={title && "Delete"} //Delete only available if editing project title not column headers
@@ -155,7 +165,7 @@ export default function ProjectEditableField({
         {/* Actual text */}
         <div
           className={`relative text-white ${
-            title ? "text-xl font-semibold " : "text-small"
+            title ? "text-xl font-semibold " : "text-xs sm:text-small"
           }`}
         >
           {initialContent}

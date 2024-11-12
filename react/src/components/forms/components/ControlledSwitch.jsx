@@ -34,7 +34,7 @@ export default function ControlledSwitch({
           classNames={{
             base: cn(
               "inline-flex flex-row-reverse w-full max-w-md bg-content1 hover:bg-content2 items-center",
-              "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent"
+              "justify-between cursor-pointer rounded-lg gap-2 p-4 border-2 border-transparent touch-pan-y overscroll-y-contain"
             ),
             wrapper: "p-0 h-4 overflow-visible",
             thumb: cn(

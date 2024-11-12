@@ -128,9 +128,9 @@ export default function PendingItem({ data }) {
       />
 
       {/* Actual item card */}
-      <Card className="w-full rounded-md mb-3 drop-shadow-lg">
+      <Card className="w-full rounded-xl mb-3 drop-shadow-lg overflow-hidden">
         {/* Card header */}
-        <CardHeader className="text-white flex flex-row justify-between items-center h-[30px] rounded-md rounded-b-none text-sm px-3 py-4 bg-slate-700">
+        <CardHeader className="text-white flex flex-row justify-between items-center h-[30px] rounded-md rounded-b-none text-sm lg:text-xs xl:text-sm px-4 lg:px-2 xl:px-4 py-5 bg-slate-700">
           {/* Title with icon, can be clicked to edit the item's details. Pen icon appears if hovered */}
           <div
             className="cursor-pointer flex flex-row items-center"
@@ -149,7 +149,7 @@ export default function PendingItem({ data }) {
 
           {/* Delete button */}
           <FontAwesomeIcon
-            className="text-danger cursor-pointer"
+            className="text-danger cursor-pointer sm:text-base text-lg"
             onClick={deleteItem}
             icon={faCircleXmark}
           />
@@ -191,12 +191,14 @@ export default function PendingItem({ data }) {
                 itemData.lastContactDate
                   ? "bg-slate-300"
                   : "bg-green-500 text-default-800"
-              } py-1 px-2 rounded text-xs cursor-pointer`}
+              } py-1 px-2 rounded-lg text-xs cursor-pointer flex flex-row items-center`}
               onClick={followup}
             >
-              {itemData.lastContactDate
-                ? shortDate(itemData.lastContactDate)
-                : "Note followup date"}
+              <p className="flex lg:hidden xl:flex">
+                {itemData.lastContactDate
+                  ? shortDate(itemData.lastContactDate)
+                  : "Note followup date"}
+              </p>
 
               <FontAwesomeIcon className="ml-1" icon={contactIcon} />
             </div>

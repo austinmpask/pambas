@@ -52,6 +52,10 @@ export default {
       backgroundSize: {
         "proj-size": "20px 20px",
       },
+      screens: {
+        lg: "1220px",
+        xl: "1424px",
+      },
     },
   },
   darkMode: "class",

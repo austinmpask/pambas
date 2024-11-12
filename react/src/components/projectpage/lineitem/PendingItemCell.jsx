@@ -1,7 +1,7 @@
 /*-------------------Cleaned up 9/12/24-------------------*/
 
 //React
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 
 //Contexts
 import { LineStateContext } from "./LineItemWrapper";
@@ -10,6 +10,9 @@ import { HeaderStatsContext } from "src/pages/ProjectPage";
 //Children
 import PendingItemList from "src/components/projectpage/PendingItemList";
 import PendingItemIcon from "./PendingItemIcon";
+
+//Utils
+import { Colors } from "src/utils/validations";
 
 //Cell showing the number of associated pending items if != 0, functions as button to add an item TODO on reimplementing the dynamic icon
 export default function PendingItemCell() {
@@ -27,14 +30,29 @@ export default function PendingItemCell() {
     }
   }, [headerStats.selectedLine]);
 
+  //Mobile border
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Set to mobile or not on first render
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 640);
+  }, []);
+
   return (
     <>
       <div
         // Change background color to green if  line is complete
         className={`flex w-full h-full justify-center items-center transition-all cursor-pointer border-solid border-b-1 border-inherit
         ${lineUIState.complete && "bg-success border-success"} ${
-          end && "rounded-br-xl"
+          end && "sm:rounded-br-3xl"
         }`}
+        style={
+          isMobile && lineUIState.complete
+            ? {
+                borderBottom: `1px solid ${Colors.successShadow}80`,
+              }
+            : {}
+        }
         // Toggle the menu when clicking
         onClick={() => {
           //If no line is selected, then select this line and open the menu. Close and switch to other line if different one selected

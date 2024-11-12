@@ -96,7 +96,7 @@ export const LineItem = forwardRef(({ lineItemData }, ref) => {
     // Line item container
     <div
       ref={ref} //Ref held by context
-      className="grid grid-cols-proj w-full"
+      className="grid mobile-grid-template sm:grid-cols-proj w-full"
       // Handle line hovered state change
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}

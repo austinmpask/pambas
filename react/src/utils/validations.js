@@ -101,7 +101,8 @@ export class DataFields {
     value: 0,
     label: "Red Apple",
     thumb: "thumb-redapple",
-    header: "header-bg-redapple",
+    header: "sm:header-bg-redapple",
+    uniHeader: "header-bg-redapple",
     contrast: "header-hc-redapple",
   };
 
@@ -109,40 +110,45 @@ export class DataFields {
     value: 1,
     label: "Rust",
     thumb: "thumb-rust",
-    header: "header-bg-rust",
-    contrast: "header-hc-rust",
+    header: "sm:header-bg-rust",
+    uniHeader: "header-bg-rust",
+    contrast: "sm:header-hc-rust",
   };
 
   static THEME_METRO_SELECT = {
     value: 2,
     label: "Metro",
     thumb: "thumb-metro",
-    header: "header-bg-metro",
-    contrast: "header-hc-metro",
+    header: "sm:header-bg-metro",
+    uniHeader: "header-bg-metro",
+    contrast: "sm:header-hc-metro",
   };
 
   static THEME_LAVENDER_SELECT = {
     value: 3,
     label: "Lavender",
     thumb: "thumb-lavender",
-    header: "header-bg-lavender",
-    contrast: "header-hc-lavender",
+    header: "sm:header-bg-lavender",
+    uniHeader: "header-bg-lavender",
+    contrast: "sm:eader-hc-lavender",
   };
 
   static THEME_SKY_SELECT = {
     value: 4,
     label: "Sky",
     thumb: "thumb-sky",
-    header: "header-bg-sky",
-    contrast: "header-hc-sky",
+    header: "sm:header-bg-sky",
+    uniHeader: "header-bg-sky",
+    contrast: "sm:header-hc-sky",
   };
 
   static THEME_BUBBLEGUM_SELECT = {
     value: 5,
     label: "Bubblegum",
     thumb: "thumb-bubblegum",
-    header: "header-bg-bubblegum",
-    contrast: "header-hc-bubblegum",
+    header: "sm:header-bg-bubblegum",
+    uniHeader: "header-bg-bubblegum",
+    contrast: "sm:header-hc-bubblegum",
   };
 
   static PROJECT_THEME_TYPES = [

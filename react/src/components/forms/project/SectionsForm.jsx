@@ -54,11 +54,11 @@ export default function SectionsForm({ loading, sections, setSections }) {
   }
 
   return (
-    <Card className="w-full md:w-[600px] lg:w-2/5 h-fit transition-all rounded-none sm:rounded-xl">
+    <Card className="w-full mb-4 sm:w-5/6 lg:w-2/5 h-fit transition-all rounded-none sm:rounded-xl">
       {/* Header */}
       <CardHeader className="h-[60px] p-4 flex flex-row justify-between">
         <div className="flex flex-row items-center">
-          <p className="text-xl sm:font-semibold">My Assignments</p>
+          <p className=" font-semibold">My Assignments</p>
           <Tooltip
             delay={250}
             placement="bottom-start"
@@ -93,7 +93,10 @@ export default function SectionsForm({ loading, sections, setSections }) {
               </div>
             }
           >
-            <FontAwesomeIcon className="py-3 px-2" icon={faCircleInfo} />
+            <FontAwesomeIcon
+              className="py-3 px-2 text-default-300"
+              icon={faCircleInfo}
+            />
           </Tooltip>
         </div>
 

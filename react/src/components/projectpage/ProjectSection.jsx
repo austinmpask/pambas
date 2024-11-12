@@ -35,11 +35,11 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
     // Section card
     <Card
       isHoverable
-      className="m-6 mb-0 w-full sm:w-11/12 lg:w-3/5 overflow-visible"
+      className="sm:m-6 mb-0 w-full sm:w-11/12 rounded-none sm:rounded-3xl lg:w-3/5 overflow-visible"
     >
       {/* Header for section card */}
       <CardHeader
-        className={`px-0 py-3 ${
+        className={`px-0 py-3 z-1 rounded-none  bg-slate-700 h-[52px] sm:rounded-t-3xl ${
           DataFields.PROJECT_THEME_TYPES.find(
             (theme) => theme.value === contextSlice.theme
           ).header
@@ -48,12 +48,12 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
         {/* Column headers shown on only on first card (index === 0) */}
         {index ? (
           // Rest of cards headers
-          <p className="pl-4 text-large text-white font-semibold">{`Section ${sectionData.sectionNumber}`}</p>
+          <p className="pl-2 sm:pl-4 sm:text-lg text-white font-semibold">{`Section ${sectionData.sectionNumber}`}</p>
         ) : (
           // First card header
           <>
-            <div className="grid grid-cols-proj w-full">
-              <p className="pl-4  truncate text-large text-white font-semibold">{`Sec. ${sectionData.sectionNumber}`}</p>
+            <div className="grid mobile-grid-template sm:grid-cols-proj w-full">
+              <p className="pl-2 sm:pl-4 sm:text-base md:text-lg text-lg text-white font-semibold">{`S ${sectionData.sectionNumber}`}</p>
 
               {/* Map checkbox headers to checkbox columns */}
               {contextSlice.checkBoxHeaders.map((header, i) => {
@@ -70,7 +70,7 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
                 );
               })}
               {/* Label notes column */}
-              <p className="flex flex-col items-center justify-center text-small text-white">
+              <p className="hidden sm:flex sm:visible flex flex-col items-center justify-center text-xs sm:text-small text-white">
                 Notes
               </p>
             </div>

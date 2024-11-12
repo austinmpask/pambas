@@ -73,6 +73,18 @@ export default function PendingItemList() {
       Mousetrap.bind("esc", handleEscape);
   }, [lineUIState.menuOpen, lineUIState.writingNote]);
 
+  //Animate from y axis on mobile, x axis on desktop. Not going to check for window resizes, can add later if needed
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Set to mobile or not on first render
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 640);
+  }, []);
+
+  // Different entry/exits
+  const mobileEntryPoint = { y: 40, opacity: 0, zIndex: -10 };
+  const desktopEntryPoint = { x: -80, opacity: 0, zIndex: -10 };
+
   function handleEscape() {
     // De-select the line item and close the menu
     setHeaderStats((prev) => ({ ...prev, selectedLine: null }));
@@ -87,9 +99,9 @@ export default function PendingItemList() {
       <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
         {lineUIState.menuOpen && (
           <motion.div
-            initial={{ x: -80, opacity: 0, zIndex: -10 }}
-            animate={{ x: 0, opacity: 1, zIndex: 1 }}
-            exit={{ x: -80, opacity: 0, zIndex: -10 }}
+            initial={isMobile ? mobileEntryPoint : desktopEntryPoint}
+            animate={{ x: 0, y: 0, opacity: 1, zIndex: 1 }}
+            exit={isMobile ? mobileEntryPoint : desktopEntryPoint}
             transition={{
               type: "spring",
               stiffness: 750,
@@ -100,15 +112,15 @@ export default function PendingItemList() {
           >
             <Card
               isHoverable
-              className="fixed top-0 right-0 mt-[100px] mx-3 sm:mx-5 z-10 w-4/5 sm:w-1/3 lg:w-1/6 max-h-85vh"
+              className="fixed sm:top-0 rounded-none sm:rounded-2xl sm:right-0 mt-[64px] sm:mt-[72px] lg:mt-[90px] sm:mx-5 z-10 w-full sm:w-2/5 lg:w-1/6 top-split-mobile sm:h-[300px] lg:h-auto lg:max-h-85vh"
             >
               {/* Card header */}
-              <CardHeader className="bg-slate-700 flex flex-row justify-between h-[52px] px-5 py-3.5">
+              <CardHeader className="bg-slate-700 rounded-none sm:rounded-t-2xl flex flex-row justify-between h-[52px] md:h-[64px] lg:h-[52px] px-5 py-3.5">
                 <div className="text-white">
                   <span className="mr-2 font-semibold">
                     {lineState.controlNumber}
                   </span>
-                  <span className="text-small">Open Items</span>
+                  <span className="lg:hidden inline xl:inline">Open Items</span>
                 </div>
 
                 {/* Button to open new item modal*/}
@@ -129,7 +141,7 @@ export default function PendingItemList() {
                   items && items.length
                     ? "justify-start overflow-auto"
                     : "justify-center overflow-hidden"
-                } min-h-[200px] max-h-full flex flex-col items-center px-5 scrollbar-hidden`}
+                } min-h-[200px] max-h-full flex flex-col pt-1 sm:pt-3 items-center px-8 sm:px-5 scrollbar-hidden`}
               >
                 {/* Populate the list of open items into the card body */}
 
@@ -168,7 +180,7 @@ export default function PendingItemList() {
                       }}
                     >
                       <div className="flex flex-col items-center text-default-400">
-                        <span className="mb-3">Nothing to see here!</span>
+                        <span className="mb-3">Nothing here!</span>
                         <FontAwesomeIcon size="2x" icon={faFaceSmile} />
                       </div>
                     </motion.div>

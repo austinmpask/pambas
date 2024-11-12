@@ -56,7 +56,7 @@ export default function DashCard() {
         damping: 100,
       }}
     >
-      <div className="select-none sm:m-9 flex flex-col h-mobile sm:h-auto items-center">
+      <div className="select-none sm:m-9 flex flex-col h-mobile sm:h-auto w-screen sm:w-auto items-center">
         <Card className="rounded-none sm:rounded-3xl">
           <CardHeader
             className={`invisible sm:visible bg-header-img fixed sm:static rounded-none sm:rounded-t-3xl text-xl px-8 py-4 flex flex-row justify-center sm:justify-start items-center text-white`}

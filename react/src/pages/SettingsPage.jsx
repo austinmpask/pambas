@@ -4,7 +4,7 @@ import SettingsMenu from "src/components/settingspage/SettingsMenu";
 
 export default function SettingsPage() {
   return (
-    <PageWrapper noGrid margin>
+    <PageWrapper noGrid>
       <SettingsMenu />
     </PageWrapper>
   );

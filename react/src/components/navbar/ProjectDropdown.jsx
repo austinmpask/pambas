@@ -15,7 +15,11 @@ import {
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSquare, faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+import {
+  faSquare,
+  faCirclePlus,
+  faAngleDown,
+} from "@fortawesome/free-solid-svg-icons";
 
 //Contexts
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
@@ -32,7 +36,8 @@ export default function ProjectDropdown() {
           radius="sm"
           variant="light"
           disableRipple
-          className="text-base font-semibold"
+          className="text-sm text-default-700 font-semibold"
+          endContent={<FontAwesomeIcon icon={faAngleDown} />}
         >
           Projects
         </Button>
@@ -40,7 +45,7 @@ export default function ProjectDropdown() {
       {/* Menu itsself */}
       <DropdownMenu
         aria-label="Projects"
-        // className="w-[230px]"
+        className="min-w-[230px]"
         itemClasses={{
           base: "gap-4",
         }}

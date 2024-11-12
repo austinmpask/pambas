@@ -74,9 +74,9 @@ export default function MeterButton({
 
   return (
     <div
-      className={`px-3 py-2 transition-all rounded-2xl select-none w-full flex flex-col mb-2 ${
+      className={`px-3 shadow-xl sm:shadow-none py-2 transition-all rounded-2xl select-none w-full flex flex-col mb-0 sm:mb-2 ${
         dropdown && "hover:shadow-xl hover:mb-4 hover:mt-1"
-      } ${menuOpen && "header-button-menu-open shadow-xl mb-4 mt-1"}`}
+      } ${menuOpen && "header-button-menu-open shadow-xl"}`}
     >
       <div
         className={`h-16 w-full flex flex-row justify-start items-center ${
@@ -95,7 +95,9 @@ export default function MeterButton({
             color={color}
           />
         </div>
-        <p className="font-semibold text-default-600">{label}</p>
+        <p className="font-semibold text-base lg:text-sm xl:text-base text-default-600">
+          {label}
+        </p>
       </div>
 
       {/* Secondary menu for billing button */}
@@ -107,20 +109,22 @@ export default function MeterButton({
             exit={{ translateY: "-80px", opacity: 0, height: 0 }}
             transition={{ type: "spring", stiffness: 750, damping: 62 }}
           >
-            <BudgetInput
-              amountToBill={amountToBill}
-              setAmountToBill={setAmountToBill}
-            />
+            <div className="flex flex-row sm:flex-col items-center w-full h-full">
+              <BudgetInput
+                amountToBill={amountToBill}
+                setAmountToBill={setAmountToBill}
+              />
 
-            <Button
-              startContent={<FontAwesomeIcon icon={faCircleDollarToSlot} />}
-              onClick={billClient}
-              isDisabled={amountToBill === 0}
-              className="w-full"
-              color={amountToBill === 0 ? "" : "success"}
-            >
-              <p className="font-semibold">Bill it!</p>
-            </Button>
+              <Button
+                startContent={<FontAwesomeIcon icon={faCircleDollarToSlot} />}
+                onClick={billClient}
+                isDisabled={amountToBill === 0}
+                className="sm:w-full"
+                color={amountToBill === 0 ? "" : "success"}
+              >
+                <p className="font-semibold">Bill it!</p>
+              </Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

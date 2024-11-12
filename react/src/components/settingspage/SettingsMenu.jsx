@@ -54,6 +54,7 @@ export default function SettingsMenu() {
       {/* DESKTOP */}
       <div className="hidden sm:flex sm:flex-col">
         <Tabs
+          className="mt-5 ml-2"
           isVertical
           variant="light"
           aria-label="Settings tabs"
@@ -70,26 +71,33 @@ export default function SettingsMenu() {
                 </div>
               }
             >
-              {item.content}
+              <div className="px-5 pt-5 pb-10 overflow-y-auto scrollbar-hidden max-h-screen-nav">
+                {item.content}
+              </div>
             </Tab>
           )}
         </Tabs>
       </div>
       {/* MOBILE */}
-      <div className="flex flex-col sm:hidden">
-        <Tabs aria-label="Settings tabs" items={tabs}>
+      <div className="flex flex-col sm:hidden w-screen">
+        <Tabs
+          className="justify-center mt-2"
+          aria-label="Settings tabs"
+          items={tabs}
+          variant="light"
+        >
           {(item) => (
             <Tab
-              className="w-full h-[60px]"
+              className="h-[40px]"
               key={item.id}
               title={
-                <div className="flex w-full flex-row justify-start items-center space-x-2">
+                <div className="flex flex-row justify-start items-center space-x-2">
                   {item.icon}
                   <span>{item.label}</span>
                 </div>
               }
             >
-              <div className="w-full">{item.content}</div>
+              {item.content}
             </Tab>
           )}
         </Tabs>

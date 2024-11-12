@@ -1,6 +1,6 @@
 /*-------------------Cleaned up 9/10/24-------------------*/
 //React
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 //Children
 import CheckBoxButton from "./CheckBoxButton";
@@ -10,6 +10,13 @@ import { Colors } from "src/utils/validations";
 
 //Container cell for the checkbox button. Handles styling based on mouse events w/ cell
 export default function CheckBoxCell({ i, cbState }) {
+  //Different modal size for mobile
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Set to mobile or not on first render
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 640);
+  }, []);
   //Map button color and shadow to cbState value (0,1,2)
   const backgroundColor = [Colors.lightBg, Colors.success, Colors.warn];
   const shadowColor = [
@@ -26,9 +33,9 @@ export default function CheckBoxCell({ i, cbState }) {
       // transitionTimingFunction: "cubic-bezier(.39,.86,.34,1)",
     },
     hover: {
-      border: "1px solid ",
+      border: isMobile ? "none" : "1px solid ",
       paddingTop: "0px",
-      backgroundColor: "#F4F4F5",
+      backgroundColor: isMobile ? "" : "#F4F4F5",
       // transitionTimingFunction: "cubic-bezier(0,0,0,0)",
       // boxShadow: "0px 3px 10px 0px rgba(0,0,0,0.3), inset 0 -6px 0 ",
     },
@@ -51,6 +58,13 @@ export default function CheckBoxCell({ i, cbState }) {
       onMouseLeave={() => setButtonStyle(styles.idle)}
       key={i}
       className="flex flex-col items-center justify-center"
+      style={
+        isMobile
+          ? {
+              borderBottom: `1px solid ${shadowColor[cbState]}80`,
+            }
+          : {}
+      }
     >
       <CheckBoxButton
         // Combine CSS Styling from mouse interactions + cbState

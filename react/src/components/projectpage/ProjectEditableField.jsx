@@ -1,7 +1,7 @@
 /*-------------------Cleaned up 11/7/24-------------------*/
 
 //React
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 //Icons
@@ -10,6 +10,9 @@ import { faSquarePen, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
+
+//Contexts
+import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
 
 //Children
 import ControlledInput from "src/components/forms/components/ControlledInput";
@@ -41,6 +44,11 @@ export default function ProjectEditableField({
   //For redirect upon proj. deletion
   const navigate = useNavigate();
 
+  //Context for updating upon delete
+  const { projectSummaryData, setProjectSummaryData } = useContext(
+    ProjectSummaryContext
+  );
+
   //Track if mouse is over component for edit icon
   const [hovering, setHovering] = useState(false);
 
@@ -68,16 +76,20 @@ export default function ProjectEditableField({
   Originally this component was going to have "altaction" used more frequently
   but it only ended up being used for the project deletion.*/
   async function handleDelete(onClose) {
+    console.log(id);
     await toastRequest({
       method: "DELETE",
-      route: `/projects`,
-      data: { id },
+      route: `/project/${id}`,
 
       //Close modal and redirect to dashboard
-      errorCB: () => {
+      successCB: () => {
+        // console.log(projectSummaryData);
         onClose();
         setTimeout(() => {
           navigate("/dashboard");
+          setProjectSummaryData((prev) =>
+            prev.filter((project) => project.id !== id)
+          );
         }, 300);
       },
     });

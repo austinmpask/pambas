@@ -15,4 +15,11 @@ projectRouter.post("/project", verifyJWT, simpleRequest("POST", "/notes"));
 //Get all projects by UUID
 projectRouter.get("/project", verifyJWT, simpleRequest("GET", "/notes"));
 
+//Delete a project and all children
+projectRouter.delete(
+  "/project/:id",
+  verifyJWT,
+  simpleRequest("DELETE", "/notes")
+);
+
 module.exports = projectRouter;

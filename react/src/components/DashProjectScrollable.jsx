@@ -8,6 +8,10 @@ import { useContext } from "react";
 import DashProjectCard from "src/components/DashProjectCard";
 import { ScrollShadow } from "@nextui-org/react";
 
+//Icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFaceSmile } from "@fortawesome/free-solid-svg-icons";
+
 //Animation
 import { motion } from "framer-motion";
 
@@ -22,7 +26,7 @@ export default function DashProjectScrollable() {
   return (
     <div className="w-screen h-full sm:w-full">
       <ScrollShadow className="h-full py-3 scrollbar-hidden">
-        {projectSummaryData &&
+        {projectSummaryData && projectSummaryData.length ? (
           projectSummaryData.map((project, i) => (
             <motion.div
               key={i}
@@ -39,7 +43,13 @@ export default function DashProjectScrollable() {
             >
               <DashProjectCard project={project} />
             </motion.div>
-          ))}
+          ))
+        ) : (
+          <div className="text-slate-300 font-semibold text-lg flex flex-col gap-3 items-center justify-center h-full">
+            <FontAwesomeIcon size="xl" icon={faFaceSmile} />
+            <p>No projects yet!</p>
+          </div>
+        )}
       </ScrollShadow>
     </div>
   );

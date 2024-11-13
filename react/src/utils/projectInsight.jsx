@@ -26,7 +26,7 @@ export default function projectInsight(project) {
       textColor: "text-success-300",
       color: "success",
     };
-  } else if (ratio < Insights.ON_TRACK_CEILING) {
+  } else if (ratio < Insights.ON_TRACK_CEILING || !project.billed) {
     return {
       code: 1,
       icon: faCheck,

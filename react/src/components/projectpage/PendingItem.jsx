@@ -60,6 +60,7 @@ export default function PendingItem({ data }) {
   //Reflect any updates from db in item state
   useEffect(() => {
     setItemData({ ...data });
+    console.log(data);
   }, [data]);
 
   //Assign appropriate icons for the type of request/contact date

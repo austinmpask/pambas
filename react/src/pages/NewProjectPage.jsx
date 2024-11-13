@@ -9,6 +9,7 @@ import PageWrapper from "src/components/PageWrapper";
 import ProjectDataForm from "src/components/forms/project/ProjectDataForm";
 import SectionsForm from "src/components/forms/project/SectionsForm";
 import { Spacer } from "@nextui-org/react";
+import FunBackground from "src/components/funbackground/FunBackground";
 
 //Contexts
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
@@ -73,6 +74,9 @@ export default function NewProjectPage() {
   return (
     <>
       <PageWrapper noGrid>
+        <div className="invisible sm:visible">
+          <FunBackground opacity={0.1} />
+        </div>
         <div className="flex flex-col-reverse lg:flex-row lg:items-start sm:mt-6 items-center lg:justify-center">
           {/* Lefthand form */}
           <ProjectDataForm loading={loading} submit={submit} />

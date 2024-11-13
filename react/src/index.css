@@ -156,6 +156,39 @@
   .header-hc-bubblegum {
     background-color: #992f7b;
   }
+
+  .login-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .register-grid {
+    grid-template-columns: 5fr 2fr;
+  }
+
+  .login-grid-sm {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+.Toastify__toast-container {
+  font-weight: 600;
+}
+
+.Toastify__close-button {
+  display: none;
+}
+
+:root {
+  --toastify-color-success: theme("colors.success");
+  --toastify-color-error: theme("colors.red.500");
+
+  /* Text colors */
+  --toastify-text-color-success: #006b40;
+  --toastify-text-color-error: #6e0018;
+
+  /* Progress bar colors */
+  --toastify-color-progress-success: #006b40;
+  --toastify-color-progress-error: #6e0018;
 }
 /* 
 * {

@@ -1,11 +1,15 @@
 //Children
 import PageWrapper from "src/components/PageWrapper";
-import LoginForm from "../components/forms/LoginForm";
+import LoginForm from "src/components/forms/LoginForm";
+import FunBackground from "src/components/funbackground/FunBackground";
 
 export default function LoginPage() {
   return (
-    <PageWrapper margin>
-      <LoginForm />
+    <PageWrapper>
+      <FunBackground />
+      <div className="h-dvh">
+        <LoginForm />
+      </div>
     </PageWrapper>
   );
 }

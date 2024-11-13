@@ -26,7 +26,7 @@ export default function SubmitAlt({
   //Enable button once all fields have some value in them
   const disabled = vals.some((value) => !value);
   return (
-    <div className="mt-6 mb-3 w-full flex flex-row items-center sm:w-fit">
+    <div className="mt-6 mb-3 w-full flex flex-row items-center sm:w-full">
       {altLabel && (
         <>
           {/* Alt action acts as a delete button w/confirmation popover. Only used for project deletion */}
@@ -66,8 +66,7 @@ export default function SubmitAlt({
         </>
       )}
       <Button
-        className="font-semibold sm:mr-1 w-full"
-        size="md"
+        className="font-semibold w-full"
         radius="sm"
         type="submit"
         variant="flat"

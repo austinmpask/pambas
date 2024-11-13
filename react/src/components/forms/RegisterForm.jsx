@@ -6,6 +6,9 @@ import { useNavigate } from "react-router-dom";
 //Toasts
 import { ToastContainer } from "react-toastify";
 
+//Animation
+import { motion } from "framer-motion";
+
 //Form
 import { useForm, useWatch } from "react-hook-form";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";
@@ -80,9 +83,12 @@ export default function RegisterForm() {
     <>
       <ToastContainer />
 
-      <div className="flex justify-center">
-        <Card className="rounded-none sm:rounded-xl">
-          <CardHeader className="flex gap-3">
+      <div className="h-full sm:py-12">
+        <Card
+          isBlurred
+          className="w-full rounded-b-3xl rounded-t-none sm:rounded-l-3xl sm:rounded-r-none h-full"
+        >
+          {/* <CardHeader className="flex gap-3">
             <Image
               alt="Logo"
               height={40}
@@ -103,132 +109,166 @@ export default function RegisterForm() {
             </div>
           </CardHeader>
 
-          <Divider />
+          <Divider /> */}
 
-          <CardBody className="p-6">
-            <form
-              className="flex flex-col items-start"
-              onSubmit={handleSubmit((data) => registerUser(data))}
-            >
-              <p className="text-l font-semibold">Personal Information</p>
-              <Spacer y={4} />
-
-              <div className="flex flex-row">
-                <ControlledInput
-                  required
-                  field="firstName"
-                  errors={errors}
-                  label={DataFields.FIRST_NAME_LABEL}
-                  validations={Validators.FirstName}
-                  loading={loading}
-                  control={control}
-                  size="s"
-                  type="text"
-                />
-                <Spacer x={4} />
-
-                <ControlledInput
-                  required
-                  field="lastName"
-                  errors={errors}
-                  label={DataFields.LAST_NAME_LABEL}
-                  validations={Validators.LastName}
-                  loading={loading}
-                  control={control}
-                  size="s"
-                  type="text"
-                />
-              </div>
-
-              <Spacer y={4} />
-
-              <ControlledInput
-                required
-                field="email"
-                errors={errors}
-                label={DataFields.EMAIL_LABEL}
-                validations={Validators.Email}
-                loading={loading}
-                control={control}
-                size="l"
-                type="text"
-              />
-
-              <Spacer y={8} />
-
-              <p className="text-l font-semibold">Account Credentials</p>
-              <Spacer y={4} />
-              <ControlledInput
-                required
-                field="username"
-                errors={errors}
-                label={DataFields.USER_LABEL}
-                validations={Validators.Username}
-                loading={loading}
-                control={control}
-                size="l"
-                type="text"
-              />
-              <Spacer y={4} />
-
-              <Tooltip
-                delay={250}
-                className="px-6"
-                placement="right"
-                content={
-                  <div className="px-1 py-2">
-                    <div className="text-small font-bold">
-                      Password Requirements
-                    </div>
-
-                    <ul className="list-disc">
-                      <li className="text-tiny">Atleast 8 characters</li>
-                      <li className="text-tiny">
-                        Contains both letters and numbers
-                      </li>
-                      <li className="text-tiny">
-                        Contains special character (!@#$... etc.)
-                      </li>
-                    </ul>
-                  </div>
-                }
+          <CardBody className="h-full p-6 flex flex-col justify-center items-center">
+            <div className="flex flex-col items-center gap-10">
+              {/* <motion.div
+                className="w-[80px] h-[80px]"
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                transition={{
+                  delay: 0.1,
+                  duration: 0.7,
+                  ease: [0.22, 0.13, 0.16, 1],
+                }}
               >
+                <Image
+                  alt="Logo"
+                  height={80}
+                  radius="none"
+                  src="/rings.png"
+                  width={80}
+                />
+              </motion.div> */}
+
+              <p className="text-3xl font-semibold w-full text-slate-800">
+                New here?
+              </p>
+
+              <form
+                className="flex flex-col items-start"
+                onSubmit={handleSubmit((data) => registerUser(data))}
+              >
+                <p className="text-l font-semibold">Personal Information</p>
+                <Spacer y={4} />
+
                 <div className="flex flex-row">
                   <ControlledInput
                     required
-                    field="password"
+                    field="firstName"
                     errors={errors}
-                    label={DataFields.PASS_LABEL}
-                    validations={Validators.Password}
+                    label={DataFields.FIRST_NAME_LABEL}
+                    validations={Validators.FirstName}
                     loading={loading}
                     control={control}
                     size="s"
-                    type="password"
+                    type="text"
                   />
-
                   <Spacer x={4} />
 
                   <ControlledInput
                     required
-                    field="passwordConfirm"
+                    field="lastName"
                     errors={errors}
-                    label="Confirm New Password"
-                    validations={Validators.Password}
+                    label={DataFields.LAST_NAME_LABEL}
+                    validations={Validators.LastName}
                     loading={loading}
                     control={control}
                     size="s"
-                    type="password"
+                    type="text"
                   />
                 </div>
-              </Tooltip>
-              <Spacer y={4} />
 
-              <SubmitAlt
-                vals={formValues}
-                submitLabel="Register"
-                loading={loading}
-              />
-            </form>
+                <Spacer y={4} />
+
+                <ControlledInput
+                  required
+                  field="email"
+                  errors={errors}
+                  label={DataFields.EMAIL_LABEL}
+                  validations={Validators.Email}
+                  loading={loading}
+                  control={control}
+                  size="l"
+                  type="text"
+                />
+
+                <Spacer y={8} />
+
+                <p className="text-l font-semibold">Account Credentials</p>
+                <Spacer y={4} />
+                <ControlledInput
+                  required
+                  field="username"
+                  errors={errors}
+                  label={DataFields.USER_LABEL}
+                  validations={Validators.Username}
+                  loading={loading}
+                  control={control}
+                  size="l"
+                  type="text"
+                />
+                <Spacer y={4} />
+
+                <Tooltip
+                  delay={250}
+                  className="px-6"
+                  placement="right"
+                  content={
+                    <div className="px-1 py-2">
+                      <div className="text-small font-bold">
+                        Password Requirements
+                      </div>
+
+                      <ul className="list-disc">
+                        <li className="text-tiny">Atleast 8 characters</li>
+                        <li className="text-tiny">
+                          Contains both letters and numbers
+                        </li>
+                        <li className="text-tiny">
+                          Contains special character (!@#$... etc.)
+                        </li>
+                      </ul>
+                    </div>
+                  }
+                >
+                  <div className="flex flex-row">
+                    <ControlledInput
+                      required
+                      field="password"
+                      errors={errors}
+                      label={DataFields.PASS_LABEL}
+                      validations={Validators.Password}
+                      loading={loading}
+                      control={control}
+                      size="s"
+                      type="password"
+                    />
+
+                    <Spacer x={4} />
+
+                    <ControlledInput
+                      required
+                      field="passwordConfirm"
+                      errors={errors}
+                      label="Confirm Password"
+                      validations={Validators.Password}
+                      loading={loading}
+                      control={control}
+                      size="s"
+                      type="password"
+                    />
+                  </div>
+                </Tooltip>
+                <Spacer y={4} />
+
+                <SubmitAlt
+                  vals={formValues}
+                  submitLabel="Register"
+                  loading={loading}
+                />
+              </form>
+
+              <div className="flex mt-4">
+                <p className="text-sm text-default-500">
+                  Already a member?&nbsp;
+                </p>
+                <Link className="text-sm" href="/login">
+                  Login
+                </Link>
+              </div>
+            </div>
           </CardBody>
         </Card>
       </div>

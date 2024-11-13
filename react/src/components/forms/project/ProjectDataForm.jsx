@@ -1,7 +1,6 @@
 /*-------------------Cleaned up 10/29/24-------------------*/
 
 //Children
-import SettingsCard from "src/components/settingspage/SettingsCard";
 import ControlledInput from "src/components/forms/components/ControlledInput";
 import ControlledSelect from "src/components/forms/components/ControlledSelect";
 import SubmitAlt from "src/components/forms/components/SubmitAlt";

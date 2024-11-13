@@ -6,7 +6,6 @@ import {
   NavbarContent,
   NavbarItem,
   Link,
-  Button,
   Image,
 } from "@nextui-org/react";
 import ProjectDropdown from "./ProjectDropdown";
@@ -40,7 +39,6 @@ export default function NavBar() {
 
         {/* Project dropdown */}
         <motion.div
-          className="w-[35px] h-[35px]"
           initial={{ x: -8, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{

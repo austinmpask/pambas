@@ -12,7 +12,7 @@ import { Card, CardHeader, Divider } from "@nextui-org/react";
 import LineItemWrapper from "./lineitem/LineItemWrapper";
 
 //Animation
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 //Utils
 import toTitle from "src/utils/toTitle";

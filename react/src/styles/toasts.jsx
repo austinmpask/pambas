@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 //Custom global toast styles
 const defaultDark = {
   position: "top-center",
-  autoClose: 4000,
-  hideProgressBar: false,
+  autoClose: 2000,
+  hideProgressBar: true,
   newestOnTop: false,
   closeOnClick: true,
   rtl: false,

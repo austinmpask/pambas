@@ -1,15 +1,18 @@
-from sqlalchemy.schema import Column, ForeignKey
-from sqlalchemy import CheckConstraint
-from sqlalchemy.types import (
-    String,
-    Integer,
-    Text,
-    DateTime,
-)
-from sqlalchemy.orm import validates
 from datetime import datetime
+
+from sqlalchemy import CheckConstraint
+from sqlalchemy.orm import validates
+from sqlalchemy.schema import Column, ForeignKey
+from sqlalchemy.types import (
+    DateTime,
+    Integer,
+    String,
+    Text,
+)
+
 from flaskr.config import DataFields
 from flaskr.validators import Validators
+
 from .base import Base
 
 

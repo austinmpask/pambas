@@ -128,6 +128,7 @@ class Project(Base):
         completedRows = 0
 
         openItems = 0
+        openItemDetail = []
 
         for section in self.sections:
             for line in section.line_items:
@@ -138,6 +139,9 @@ class Project(Base):
                     completedRows += cAdd
                 total += tAdd
                 openItems += len(line.pending_items)
+                # Add all open item details for use on dashboard
+                for item in line.pending_items:
+                    openItemDetail.append(item.toDict())
 
         return {
             "id": self.id,
@@ -152,4 +156,5 @@ class Project(Base):
             "total": total,
             "openItems": openItems,
             "theme": self.theme,
+            "openItemDetail": openItemDetail,
         }

@@ -43,7 +43,7 @@ export default function PreferencesSettings({ request }) {
 
         <ControlledSwitch
           title="Only Count Complete Rows as Progress"
-          desc="Project progress will not be incremented unless the entire Control Row is complete"
+          desc="Project completion on the dashboard won't increase until a whole Control Row is complete"
           dataKey="complete_progress"
           defaultValue={userData.complete_progress}
           callback={request}

@@ -10,8 +10,6 @@ import ProjectHeader from "src/components/projectpage/ProjectHeader";
 import ProjectGrid from "src/components/projectpage/ProjectGrid";
 import PageWrapper from "src/components/PageWrapper";
 
-import { DataFields } from "src/utils/validations";
-
 //Utils
 import toastRequest from "src/utils/toastRequest";
 
@@ -63,8 +61,6 @@ export default function ProjectPage() {
       ...projectSummaryData.find((project) => {
         return project.id === projectID;
       }),
-      theme: 3,
-      //TODO: implement
     });
 
     //Find the index of the project with regard to the project summary context
@@ -97,8 +93,10 @@ export default function ProjectPage() {
         ...prev,
         openItems: contextSlice.openItems,
         completed: contextSlice.completed,
+        completedRows: contextSlice.completedRows,
         total: contextSlice.total,
       }));
+    console.log(contextSlice);
   }, [contextSlice]);
 
   //Whenever context slice is updated, make request to update project in DB **IF** user triggered the update (loading)

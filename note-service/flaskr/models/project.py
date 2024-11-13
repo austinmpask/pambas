@@ -1,18 +1,20 @@
-from sqlalchemy.schema import Column
-from sqlalchemy import CheckConstraint
-from sqlalchemy.types import (
-    String,
-    Integer,
-    Float,
-    DateTime,
-    UUID,
-    ARRAY,
-)
-from sqlalchemy.orm import relationship, validates
-
 from datetime import datetime
+
+from sqlalchemy import CheckConstraint
+from sqlalchemy.orm import relationship, validates
+from sqlalchemy.schema import Column
+from sqlalchemy.types import (
+    ARRAY,
+    UUID,
+    DateTime,
+    Float,
+    Integer,
+    String,
+)
+
 from flaskr.config import DataFields
 from flaskr.validators import Validators
+
 from .base import Base
 
 
@@ -32,6 +34,7 @@ class Project(Base):
         nullable=False,
         default=["Prep", "Inquiry", "Inspection"],
     )
+    theme = Column(Integer, nullable=False, default=0)
 
     created_at = Column(DateTime, nullable=False, default=datetime.now())
 
@@ -72,6 +75,10 @@ class Project(Base):
     def varCheckHeaders(self, _key, val):
         return Validators.checkboxHeaders(val)
 
+    @validates("theme")
+    def varTheme(self, _key, val):
+        return Validators.theme(val)
+
     # ----- Constraints ----- #
 
     __table_args__ = (
@@ -99,6 +106,10 @@ class Project(Base):
             f"array_length(checkbox_headers, 1) = {DataFields.NUM_CHECKBOX}",
             name="check_checkbox_headers",
         ),
+        CheckConstraint(
+            f"{DataFields.THEME_MIN} <= theme AND theme <= {DataFields.THEME_MAX}",
+            name="check_theme",
+        ),
     )
 
     # ----- Instance Methods ----- #
@@ -111,10 +122,10 @@ class Project(Base):
 
     # Return dictionary of project summary details
     def toSummaryDict(self):
-
         # Calculate a total completion score based on all line items, sum up all open items
         completed = 0
         total = 0
+        completedRows = 0
 
         openItems = 0
 
@@ -122,6 +133,9 @@ class Project(Base):
             for line in section.line_items:
                 (cAdd, tAdd) = line.progress()
                 completed += cAdd
+                # Add to completed rows for if user has enabled stricter completion calculation
+                if cAdd == tAdd:
+                    completedRows += cAdd
                 total += tAdd
                 openItems += len(line.pending_items)
 
@@ -134,6 +148,8 @@ class Project(Base):
             "projectType": self.project_type,
             "checkBoxHeaders": self.checkbox_headers,
             "completed": completed,
+            "completedRows": completedRows,
             "total": total,
             "openItems": openItems,
+            "theme": self.theme,
         }

@@ -26,6 +26,7 @@ export const LineItem = forwardRef(({ lineItemData }, ref) => {
   const {
     lineState,
     setLineState,
+    lineUIState,
     setLineUIState,
     loading,
     setLoading,

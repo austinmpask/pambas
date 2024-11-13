@@ -57,7 +57,6 @@ export default function NewProjectPage() {
       setLoading,
       successCB: (message) => {
         //Update summary context
-        console.log(message);
         setProjectSummaryData((prev) => {
           const newContext = [...prev];
           newContext.push(message);

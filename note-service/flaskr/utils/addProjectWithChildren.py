@@ -1,10 +1,11 @@
-from flaskr.models import db, Project, Section, LineItem
+from flaskr.models import LineItem, Project, Section, db
 
 
 # Helper to create a full project with all of its child elements in the db tables
 # Data should be validated by route handler before processing
-def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectionsList):
-
+def addProjectWithChildren(
+    userUUID, title, projectType, manager, budget, sectionsList, theme
+):
     # Create and add the PROJECT
     try:
         userProject = Project(
@@ -13,6 +14,7 @@ def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectio
             budget=budget,
             project_manager=manager,
             project_type=projectType,
+            theme=theme,
         )
 
         db.session.add(userProject)
@@ -77,7 +79,6 @@ def addProjectWithChildren(userUUID, title, projectType, manager, budget, sectio
 
     # Manually clean up anything added to DB prior to breakage if necessary
     if dbError:
-
         # Delete project, cascades to children
         db.session.delete(userProject)
 

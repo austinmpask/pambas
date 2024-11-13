@@ -12,10 +12,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 //Compare the progress reported to how many hours have been billed to assess if the project is dragging
-export default function projectInsight(project) {
+export default function projectInsight(project, strict) {
   //Under 1 = GOOD, ahead of schedule, ~1 = ON TRACK, >> 1 = BLOWING BUDGET
   const ratio =
-    project.billed / project.budget / (project.completed / project.total);
+    project.billed /
+    project.budget /
+    (strict ? project.completeRows : project.completed / project.total);
 
   // Return correct info for component based on rating
   if (ratio < Insights.GOOD_CEILING) {

@@ -17,6 +17,7 @@ import {
   ProjectUpdaterContext,
   HeaderStatsContext,
 } from "src/pages/ProjectPage";
+import { UserContext } from "src/context/UserContext";
 
 //Children
 import ProjectEditableField from "./ProjectEditableField";
@@ -37,6 +38,9 @@ import { DataFields } from "src/utils/validations";
 export default function ProjectHeader({ contextSlice }) {
   //Upate project summary context via key/val pair
   const updateContext = useContext(ProjectUpdaterContext);
+
+  //For high contrast theme or not
+  const { userData } = useContext(UserContext);
 
   //Consume context which has stats which are affected by project components
   const { headerStats } = useContext(HeaderStatsContext);
@@ -62,7 +66,7 @@ export default function ProjectHeader({ contextSlice }) {
             className={`${
               DataFields.PROJECT_THEME_TYPES.find(
                 (theme) => theme.value === contextSlice.theme
-              ).uniHeader
+              )[userData.high_contrast ? "contrast" : "uniHeader"]
             } flex rounded-none sm:rounded-t-2xl flex-row justify-between px-5 h-[64px] py-3.5`}
           >
             <motion.div

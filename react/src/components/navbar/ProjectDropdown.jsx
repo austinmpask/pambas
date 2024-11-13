@@ -21,6 +21,9 @@ import {
   faAngleDown,
 } from "@fortawesome/free-solid-svg-icons";
 
+//Utils
+import { DataFields } from "src/utils/validations";
+
 //Contexts
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
 
@@ -57,7 +60,14 @@ export default function ProjectDropdown() {
               <DropdownItem
                 startContent={
                   // TODO: Add the project color to the line item once color themes added
-                  <FontAwesomeIcon className="text-danger" icon={faSquare} />
+                  <FontAwesomeIcon
+                    className={
+                      DataFields.PROJECT_THEME_TYPES.find(
+                        (theme) => theme.value === project.theme
+                      ).thumb
+                    }
+                    icon={faSquare}
+                  />
                 }
                 key={index}
                 href={`/projects/${project.id}`}

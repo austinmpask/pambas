@@ -14,15 +14,20 @@ import LineItemWrapper from "./lineitem/LineItemWrapper";
 //Animation
 import { motion } from "framer-motion";
 
+//Contexts
+import { UserContext } from "src/context/UserContext";
+
 //Utils
 import toTitle from "src/utils/toTitle";
-//Utils
 import { DataFields } from "src/utils/validations";
 
 //Individual project section within the project grid
 export default function ProjectSection({ contextSlice, sectionData, index }) {
   //Updates project summary context slice with specific key/value
   const updateProjectSummaryContext = useContext(ProjectUpdaterContext);
+
+  //For high contrast theme or not
+  const { userData } = useContext(UserContext);
 
   //Apply a change to whatever index of the header array the user edited, then use context updater
   function updateHeaders(i, value) {
@@ -58,7 +63,7 @@ export default function ProjectSection({ contextSlice, sectionData, index }) {
           className={`px-0 py-3 z-1 rounded-none  bg-slate-700 h-[52px] sm:rounded-t-3xl ${
             DataFields.PROJECT_THEME_TYPES.find(
               (theme) => theme.value === contextSlice.theme
-            ).header
+            )[userData.high_contrast ? "contrast" : "header"]
           }`}
         >
           {/* Column headers shown on only on first card (index === 0) */}

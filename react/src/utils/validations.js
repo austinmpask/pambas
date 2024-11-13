@@ -112,7 +112,7 @@ export class DataFields {
     thumb: "thumb-rust",
     header: "sm:header-bg-rust",
     uniHeader: "header-bg-rust",
-    contrast: "sm:header-hc-rust",
+    contrast: "header-hc-rust",
   };
 
   static THEME_METRO_SELECT = {
@@ -121,7 +121,7 @@ export class DataFields {
     thumb: "thumb-metro",
     header: "sm:header-bg-metro",
     uniHeader: "header-bg-metro",
-    contrast: "sm:header-hc-metro",
+    contrast: "header-hc-metro",
   };
 
   static THEME_LAVENDER_SELECT = {
@@ -130,7 +130,7 @@ export class DataFields {
     thumb: "thumb-lavender",
     header: "sm:header-bg-lavender",
     uniHeader: "header-bg-lavender",
-    contrast: "sm:eader-hc-lavender",
+    contrast: "header-hc-lavender",
   };
 
   static THEME_SKY_SELECT = {
@@ -139,7 +139,7 @@ export class DataFields {
     thumb: "thumb-sky",
     header: "sm:header-bg-sky",
     uniHeader: "header-bg-sky",
-    contrast: "sm:header-hc-sky",
+    contrast: "header-hc-sky",
   };
 
   static THEME_BUBBLEGUM_SELECT = {
@@ -148,7 +148,7 @@ export class DataFields {
     thumb: "thumb-bubblegum",
     header: "sm:header-bg-bubblegum",
     uniHeader: "header-bg-bubblegum",
-    contrast: "sm:header-hc-bubblegum",
+    contrast: "header-hc-bubblegum",
   };
 
   static PROJECT_THEME_TYPES = [

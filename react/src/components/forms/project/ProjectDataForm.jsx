@@ -1,5 +1,11 @@
 /*-------------------Cleaned up 10/29/24-------------------*/
 
+//React
+import { useContext } from "react";
+
+//Contexts
+import { UserContext } from "src/context/UserContext";
+
 //Children
 import ControlledInput from "src/components/forms/components/ControlledInput";
 import ControlledSelect from "src/components/forms/components/ControlledSelect";
@@ -19,6 +25,7 @@ import { useForm, useWatch } from "react-hook-form";
 
 // Part of the new project form which gathers high level details, not sections/controls etc.
 export default function ProjectDataForm({ submit, loading }) {
+  const { userData } = useContext(UserContext);
   //Form setup
   const {
     control,
@@ -81,7 +88,9 @@ export default function ProjectDataForm({ submit, loading }) {
             loading={loading}
             control={control}
             items={DataFields.PROJECT_TYPES}
-            defaultSelection={DataFields.DEFAULT_PROJ_TYPE}
+            defaultSelection={DataFields.PROJECT_TYPES.find(
+              (type) => type.value === userData.default_project_type
+            )}
             required
           />
           <Spacer y={8} />
@@ -91,7 +100,9 @@ export default function ProjectDataForm({ submit, loading }) {
             loading={loading}
             control={control}
             items={DataFields.PROJECT_THEME_TYPES}
-            defaultSelection={DataFields.DEFAULT_PROJECT_THEME}
+            defaultSelection={DataFields.PROJECT_THEME_TYPES.find(
+              (type) => type.value === userData.default_project_theme
+            )}
             color
             required
           />

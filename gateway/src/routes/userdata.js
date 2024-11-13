@@ -26,9 +26,8 @@ userDataRouter.get("/userdata", verifyJWT, async (req, res) => {
   //Successful api responses, send gateway response
   //Response includes first/last name, email, username
   return sendJsonResponse(res, 200, {
-    firstName: userResp.message.first_name,
-    lastName: userResp.message.last_name,
     ...authResp.message,
+    ...userResp.message,
   });
 });
 

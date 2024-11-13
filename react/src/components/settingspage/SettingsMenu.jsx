@@ -1,7 +1,7 @@
 /*-------------------Cleaned up 11/10/24-------------------*/
 
 //React
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,6 +10,11 @@ import {
   faGear,
   faUniversalAccess,
 } from "@fortawesome/free-solid-svg-icons";
+//Utils
+import toastRequest from "src/utils/toastRequest";
+
+//Contexts
+import { UserContext } from "src/context/UserContext";
 
 //Children
 import ProfileSettings from "src/components/settingspage/submenus/ProfileSettings";
@@ -22,9 +27,35 @@ export default function SettingsMenu() {
   //Loading state for visuals
   const [loading, setLoading] = useState(false);
 
-  //TODO Make actual request
-  function makeRequest(dataKey, value) {
-    console.log({ dataKey, value });
+  // Consume/update user context
+  const { userData, setUserData } = useContext(UserContext);
+
+  async function makeRequest(dataKey, value) {
+    //Fix my name mismatching... lol
+    const newData = {
+      ...userData,
+      first_name: userData.firstName,
+      last_name: userData.lastName,
+    };
+    newData[dataKey] = value;
+
+    await toastRequest({
+      method: "PUT",
+      route: "/userdata",
+      data: newData,
+      setLoading,
+      sToastDisabled: true,
+      successCB: (message) => {
+        //If successful, update user context
+        setUserData((prev) => ({
+          ...message,
+          firstName: message.first_name,
+          lastName: message.last_name,
+          username: prev.username,
+          email: prev.email,
+        }));
+      },
+    });
   }
 
   // Setting pages
@@ -38,7 +69,7 @@ export default function SettingsMenu() {
     {
       id: "preferences",
       label: "Preferences",
-      content: <PreferencesSettings request={makeRequest} loading={loading} />,
+      content: <PreferencesSettings request={makeRequest} />,
       icon: <FontAwesomeIcon icon={faGear} />,
     },
     {

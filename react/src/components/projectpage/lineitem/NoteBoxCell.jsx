@@ -9,21 +9,24 @@ import NoteBox from "./NoteBox";
 import { LineStateContext } from "./LineItemWrapper";
 
 //Utils
-import { UIVars, UserSettings } from "src/utils/validations";
+import { UIVars } from "src/utils/validations";
+
+//Contexts
+import { UserContext } from "src/context/UserContext";
 
 //Container for note input box. This controls the line height, since the line height is relative to the notebox size.
 export default function NoteBoxCell() {
   const { lineUIState } = useContext(LineStateContext);
 
-  //TODO: Adjust once settings context & backend implemented
+  const { userData } = useContext(UserContext);
 
   //Grab the user's collapsed row and expanded settings
   const collapsed = `${
-    UIVars.ROW_HEIGHT_PX_OPTIONS[UserSettings.rowHeightPreset]
+    UIVars.ROW_HEIGHT_PX_OPTIONS[userData.row_height_preset]
   }px`;
 
   const expanded = `${
-    UIVars.ROW_EXPANDED_PX_OPTIONS[UserSettings.rowExpandedPreset]
+    UIVars.ROW_EXPANDED_PX_OPTIONS[userData.row_expanded_preset]
   }px`;
   return (
     <div

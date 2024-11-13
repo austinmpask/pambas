@@ -1,5 +1,8 @@
 /*-------------------Cleaned up 11/10/24-------------------*/
 
+//React
+import { useContext } from "react";
+
 //Icons
 import {
   faUniversalAccess,
@@ -13,18 +16,20 @@ import SettingsCard from "src/components/settingspage/SettingsCard";
 import ControlledSwitch from "src/components/forms/components/ControlledSwitch";
 import ControlledSlider from "src/components/forms/components/ControlledSlider";
 
-//Utils
-import { UserSettings } from "src/utils/validations";
+//Context
+import { UserContext } from "src/context/UserContext";
 
 // Options for accessibility settings
 export default function AccessibilitySettings({ request }) {
+  const { userData } = useContext(UserContext);
+
   return (
     <SettingsCard title="Accessibility" icon={faUniversalAccess}>
       <ControlledSwitch
         title="Use High Contrast Themes"
         desc="Increase visibility by increasing contrast between colored UI components"
-        dataKey="highContrast"
-        defaultValue={UserSettings.highContrast}
+        dataKey="high_contrast"
+        defaultValue={userData.high_contrast}
         callback={request}
       />
       <Spacer y={4} />
@@ -34,8 +39,8 @@ export default function AccessibilitySettings({ request }) {
       <ControlledSlider
         title="Tooltip Activation Delay"
         desc="Adjust the time it takes for a tooltip popup to appear after hovering a UI component"
-        dataKey="tooltipHoverDelayPreset"
-        defaultValue={UserSettings.tooltipHoverDelayPreset}
+        dataKey="tooltip_delay"
+        defaultValue={userData.tooltip_delay}
         startIcon={faHourglassHalf}
         endIcon={faBolt}
         numSteps={5}

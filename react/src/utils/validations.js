@@ -93,7 +93,7 @@ export class DataFields {
     this.OTHER_SELECT,
   ];
 
-  static DEFAULT_PROJ_TYPE = this.S2T2_SELECT;
+  // static DEFAULT_PROJ_TYPE = this.S2T2_SELECT;
 
   static PROJECT_THEME_LABEL = "Color Theme";
 
@@ -358,23 +358,23 @@ export const Colors = {
 };
 
 //Template for user settings key/value
-export const UserSettings = {
-  // darkMode: false,
-  tooltips: true,
-  fancyVisuals: true,
-  confirmDelOpenItem: true,
-  completeProgress: false,
-  autoFillManager: false,
-  highContrast: false,
-  rowHoverDelayPreset: 1,
-  tooltipHoverDelayPreset: 2,
-  rowHeightPreset: 1,
-  rowExpandedPreset: 1,
-  defaultProjectType: 3,
-  defaultColorTheme: 0,
-  useDefaultManager: true,
-  defaultManagerName: "joe",
-};
+// export const UserSettings = {
+//   // darkMode: false,
+//   tooltips: true,
+//   fancyVisuals: true,
+//   confirmDelOpenItem: true,
+//   completeProgress: false,
+//   autoFillManager: false,
+//   highContrast: false,
+//   rowHoverDelayPreset: 1,
+//   tooltipHoverDelayPreset: 2,
+//   rowHeightPreset: 1,
+//   rowExpandedPreset: 1,
+//   defaultProjectType: 3,
+//   defaultColorTheme: 0,
+//   useDefaultManager: true,
+//   defaultManagerName: "joe",
+// };
 
 //React hook form validators for use in forms
 export class Validators {

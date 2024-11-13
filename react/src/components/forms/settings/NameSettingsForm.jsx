@@ -47,7 +47,11 @@ export default function NameSettingsForm() {
     await toastRequest({
       method: "PUT",
       route: "/userdata",
-      data: { first_name: data.firstName, last_name: data.lastName },
+      data: {
+        ...userData,
+        first_name: data.firstName,
+        last_name: data.lastName,
+      },
       setLoading,
       success: "Profile updated!",
       successCB: (message) => {

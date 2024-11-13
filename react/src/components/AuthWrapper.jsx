@@ -39,7 +39,12 @@ export default function AuthWrapper({ children }) {
         method: "GET",
         route: "/userdata",
         successCB: (data) => {
-          setUserData(data);
+          //Need to clean up these naming conventions... wrote backend months ago then had to add to it months later and got mixed up
+          setUserData({
+            ...data,
+            firstName: data.first_name,
+            lastName: data.last_name,
+          });
         },
         errorCB: () => navigate("/login"),
         sToastDisabled: true,

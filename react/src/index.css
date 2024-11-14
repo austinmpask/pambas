@@ -1,4 +1,200 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hidden {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+
+  .mobile-grid-template {
+    grid-template-columns: 0.6fr 1fr 1fr 1fr 0fr 0.6fr;
+  }
+
+  .max-h-85vh {
+    max-height: 85vh;
+  }
+
+  .top-split-mobile {
+    height: calc(45dvh - 65px);
+    overflow-y: hidden;
+  }
+
+  .bottom-split-mobile {
+    margin-top: calc(45dvh - 65px);
+    overflow-y: scroll;
+    height: 55vh;
+  }
+
+  .bottom-split-desktop {
+    height: calc(100dvh - 385px);
+  }
+
+  .h-70vh {
+    height: 70vh;
+  }
+
+  .h-60vh {
+    height: 60vh;
+  }
+
+  .h-mobile {
+    height: calc(100dvh - 65px);
+  }
+
+  .max-h-screen-nav {
+    max-height: calc(100dvh - 65px);
+  }
+
+  .button-transition {
+    transition: padding-top 0.2s cubic-bezier(0.58, 1.04, 0.26, 1.12),
+      background-color 0.5s cubic-bezier(0.21, 1.05, 0, 1);
+  }
+
+  .no-select::selection {
+    background: transparent;
+  }
+
+  .header-bg-redapple {
+    background-image: linear-gradient(
+      72deg,
+      hsl(0, 59%, 54%) 0%,
+      hsl(0, 67%, 43%) 100%
+    );
+  }
+
+  .header-hc-redapple {
+    background: #920b3a;
+  }
+
+  .thumb-redapple {
+    color: hsl(0, 59%, 54%);
+  }
+
+  .header-bg-rust {
+    background-image: linear-gradient(
+      72deg,
+      hsl(32, 59%, 58%) 0%,
+      hsl(32, 67%, 47%) 100%
+    );
+  }
+
+  .header-hc-rust {
+    background: #936316;
+  }
+
+  .thumb-rust {
+    color: hsl(32, 59%, 58%);
+  }
+
+  .header-bg-metro {
+    background-image: linear-gradient(
+      72deg,
+      hsl(216, 45%, 43%) 0%,
+      hsl(241, 33%, 36%) 100%
+    );
+  }
+
+  .thumb-metro {
+    color: hsl(216, 45%, 43%);
+  }
+
+  .header-hc-metro {
+    background-color: #002e62;
+  }
+
+  .header-bg-lavender {
+    background-image: linear-gradient(
+      72deg,
+      hsl(270, 59%, 58%) 0%,
+      hsl(270, 67%, 47%) 100%
+    );
+  }
+
+  .thumb-lavender {
+    color: hsl(270, 59%, 58%);
+  }
+
+  .header-hc-lavender {
+    background-color: #481878;
+  }
+
+  .header-bg-sky {
+    background-image: linear-gradient(
+      72deg,
+      hsl(194, 59%, 58%) 0%,
+      hsl(187, 67%, 47%) 100%
+    );
+  }
+
+  .thumb-sky {
+    color: hsl(194, 59%, 58%);
+  }
+
+  .header-hc-sky {
+    background-color: #004493;
+  }
+
+  .header-bg-bubblegum {
+    background-image: linear-gradient(
+      72deg,
+      hsl(310, 76%, 55%) 0%,
+      hsl(310, 59%, 58%) 100%
+    );
+  }
+
+  .thumb-bubblegum {
+    color: hsl(310, 76%, 55%);
+  }
+
+  .header-hc-bubblegum {
+    background-color: #992f7b;
+  }
+
+  .login-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .register-grid {
+    grid-template-columns: 5fr 2fr;
+  }
+
+  .login-grid-sm {
+    grid-template-columns: 3fr 2fr;
+  }
+}
+
+.Toastify__toast-container {
+  font-weight: 600;
+}
+
+.Toastify__close-button {
+  display: none;
+}
+
 :root {
+  --toastify-color-success: theme("colors.success");
+  --toastify-color-error: theme("colors.red.500");
+
+  /* Text colors */
+  --toastify-text-color-success: #006b40;
+  --toastify-text-color-error: #6e0018;
+
+  /* Progress bar colors */
+  --toastify-color-progress-success: #006b40;
+  --toastify-color-progress-error: #6e0018;
+}
+/* 
+* {
+  font-family: "Poppins", sans-serif !important;
+} */
+/* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -65,4 +261,4 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */

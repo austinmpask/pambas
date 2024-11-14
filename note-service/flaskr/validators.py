@@ -1,6 +1,6 @@
-from flaskr.config import DataFields
 import uuid
 
+from flaskr.config import DataFields
 
 # ----- Generic error message builders ----- #
 
@@ -233,6 +233,16 @@ class Validators:
         return DataFields.BILLED_TYPE(val)
 
     @staticmethod
+    def theme(val) -> DataFields.THEME_TYPE:
+        n = "Theme"
+        # Tests
+        Validators.validateExists(val, n)
+        val = DataFields.THEME_TYPE(val)
+        Validators.validateType(val, n, (DataFields.THEME_TYPE))
+        Validators.validateRange(val, n, DataFields.THEME_MIN, DataFields.THEME_MAX)
+        return DataFields.THEME_TYPE(val)
+
+    @staticmethod
     def projectManager(val) -> DataFields.FULL_NAME_TYPE:
         n = "Project Manager"
         # Tests
@@ -282,7 +292,7 @@ class Validators:
             )
 
         # Sanitize and return
-        return [str(item).strip().upper() for item in val]
+        return [str(item).strip() for item in val]
 
     @staticmethod
     def sectionDict(val) -> DataFields.SECTION_DICT_TYPE:

@@ -1,20 +1,17 @@
 //React
 import { useEffect, useContext, useState, createContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { CSSTransition } from "react-transition-group";
 
 //Contexts
 import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
-import { LockoutProvider } from "src/context/LockoutContext";
 
 //Children
-import NavBar from "src/components/navbar/Navbar";
 import ProjectHeader from "src/components/projectpage/ProjectHeader";
 import ProjectGrid from "src/components/projectpage/ProjectGrid";
+import PageWrapper from "src/components/PageWrapper";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
-import { UIVars } from "src/utils/validations";
 
 //Context to pass updater function to children
 export const ProjectUpdaterContext = createContext();
@@ -53,17 +50,18 @@ export default function ProjectPage() {
     completed: 1,
     total: 1,
     openItems: 0,
+    selectedLine: null, //Keep track of if user is using a particular line or not inorder to lock out too many actions
   });
 
   //When the project summary context list is updated, the context slice is updated to reflect it
   useEffect(() => {
     //Isolate the relevant project details from the context based on
     //the ID prop for current project
-    setContextSlice(
-      projectSummaryData.find((project) => {
+    setContextSlice({
+      ...projectSummaryData.find((project) => {
         return project.id === projectID;
-      })
-    );
+      }),
+    });
 
     //Find the index of the project with regard to the project summary context
     setProjectIndex(
@@ -95,8 +93,10 @@ export default function ProjectPage() {
         ...prev,
         openItems: contextSlice.openItems,
         completed: contextSlice.completed,
+        completedRows: contextSlice.completedRows,
         total: contextSlice.total,
       }));
+    console.log(contextSlice);
   }, [contextSlice]);
 
   //Whenever context slice is updated, make request to update project in DB **IF** user triggered the update (loading)
@@ -106,6 +106,7 @@ export default function ProjectPage() {
         method: "PUT",
         route: `/project/${projectID}`,
         data: contextSlice,
+        sToastDisabled: true,
         successCB: (data) => {
           setProjectSummaryData((old) => {
             const newContext = [...old];
@@ -146,33 +147,26 @@ export default function ProjectPage() {
   }
 
   return (
-    <>
-      <LockoutProvider>
-        <div className="project-page-background" />
-        <NavBar />
-        <HeaderStatsContext.Provider value={{ headerStats, setHeaderStats }}>
-          <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
-            {/* Slide in project detail header from top */}
-            <CSSTransition
-              in={contextSlice}
-              unmountOnExit
-              timeout={UIVars.HEADER_MENU_IN_ANIM_MS}
-              classNames={"header-card"}
-            >
-              <ProjectHeader
-                contextSlice={contextSlice}
-                projectDetails={projectDetails}
-                setProjectDetails={setProjectDetails}
-              />
-            </CSSTransition>
-            {/* Component for project sections */}
-            <ProjectGrid
+    <PageWrapper>
+      <HeaderStatsContext.Provider value={{ headerStats, setHeaderStats }}>
+        <ProjectUpdaterContext.Provider value={updateProjectSummaryContext}>
+          {/* Slide in project detail header from top */}
+
+          {contextSlice && (
+            <ProjectHeader
               contextSlice={contextSlice}
               projectDetails={projectDetails}
+              setProjectDetails={setProjectDetails}
             />
-          </ProjectUpdaterContext.Provider>
-        </HeaderStatsContext.Provider>
-      </LockoutProvider>
-    </>
+          )}
+
+          {/* Component for project sections */}
+          <ProjectGrid
+            contextSlice={contextSlice}
+            projectDetails={projectDetails}
+          />
+        </ProjectUpdaterContext.Provider>
+      </HeaderStatsContext.Provider>
+    </PageWrapper>
   );
 }

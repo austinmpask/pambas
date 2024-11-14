@@ -1,30 +1,27 @@
+/*-------------------Cleaned up 9/10/24-------------------*/
 //React
-import { useEffect, useRef, useContext } from "react";
+import { useEffect, useState, useContext, forwardRef } from "react";
 
 //Contexts
-import { LockoutContext } from "src/context/LockoutContext";
 import { LineStateContext } from "./LineItemWrapper";
 import { HeaderStatsContext } from "src/pages/ProjectPage";
 
 //Utils
 import toastRequest from "src/utils/toastRequest";
-import { UIVars } from "src/utils/validations";
 
 //Children
-import PendingItemCell from "./PendingItemCell";
 import HangingFlag from "./HangingFlag";
 import ControlNumberCell from "./ControlNumberCell";
-import NoteBoxCell from "./NoteBoxCell";
 import CheckBoxCell from "./CheckBoxCell";
+import NoteBoxCell from "./NoteBoxCell";
+import PendingItemCell from "./PendingItemCell";
 
-// Individual line item for the project grid
-export default function LineItem({ lineItemData }) {
-  //Lock out UI elements if user is interacting with one already
-  const { lockout, setLockout } = useContext(LockoutContext);
-
+// Individual line item for the project grid. Wrapped by a unique context to track state. Context stores ref for the component
+export const LineItem = forwardRef(({ lineItemData }, ref) => {
   //Setter for project summary info which is affected by line item components
   const { setHeaderStats } = useContext(HeaderStatsContext);
 
+  const [close, setClose] = useState(false);
   //Access the particular line context
   const {
     lineState,
@@ -33,20 +30,10 @@ export default function LineItem({ lineItemData }) {
     setLineUIState,
     loading,
     setLoading,
+    setHovering,
   } = useContext(LineStateContext);
 
-  //Activate the line for use if hovered on and there is no lockout.
-  //Check lockout && hoveringHeld due to timing of state updates
-  useEffect(() => {
-    if (lineUIState.hoveringHeld && !lockout) {
-      setLineUIState((prev) => ({
-        ...prev,
-        active: true,
-      }));
-    }
-  }, [lockout, lineUIState.hoveringHeld]);
-
-  //Populate the line with initial line item data once it is fetched
+  //Populate the line with initial line item data once it has been fetched
   useEffect(() => {
     lineItemData &&
       setLineState((prev) => ({
@@ -59,32 +46,6 @@ export default function LineItem({ lineItemData }) {
         id: lineItemData.id,
       }));
   }, [lineItemData]);
-
-  //Handle line activation state and "up" state for animation delay
-  useEffect(() => {
-    //Lockout/allow interactivity immediately
-    setLockout(lineUIState.active);
-
-    //Handle animation delays for "up"
-    if (lineUIState.active) {
-      //Line is immediately "up" when activated
-      setLineUIState((prev) => ({ ...prev, up: true }));
-    } else {
-      //Wait xxx delay to undo "up" when line deactivated
-      setTimeout(() => {
-        setLineUIState((prev) => ({ ...prev, up: false }));
-      }, UIVars.LINE_ANIM_WAIT_MS);
-    }
-  }, [lineUIState.active]);
-
-  //Add the hanging flag marker if appropriate after animation wait time
-  useEffect(() => {
-    //Hanging flag only is present when !up and the line is flagged
-    setLineUIState((prev) => ({
-      ...prev,
-      hangingFlag: !lineUIState.up && lineState.flagMarker,
-    }));
-  }, [lineUIState.up, lineState.flagMarker]);
 
   //When checkboxes update, check if row is now complete
   useEffect(() => {
@@ -125,61 +86,28 @@ export default function LineItem({ lineItemData }) {
 
   //Click flag: update state optimistically, trigger api request
   function handleFlagClick() {
-    if (lineUIState.active) {
-      setLoading(true);
-      //Line state update triggers API req
-      setLineState((prev) => ({
-        ...prev,
-        flagMarker: !prev.flagMarker,
-      }));
-    }
+    setLoading(true);
+    //Close the flag marker
+    lineState.flagMarker
+      ? setClose(true) //This will change the line state from HangingFlag after 200ms delay for animation
+      : setLineState((prev) => ({ ...prev, flagMarker: true })); //Open the flag marker immediately if it doesnt exist
   }
-
-  //Deactivate line and de-hover. Sideeffects for up and lockout handled by useEffects
-  function exitLine() {
-    setLineUIState((prev) => ({
-      ...prev,
-      active: false,
-      hoveringHeld: false,
-    }));
-  }
-
-  //Ref for delay for acive css on lineitem
-  const timeoutRef = useRef(null);
 
   return (
-    // Line item container div
+    // Line item container
     <div
-      //Raise z-index after the animation completes to avoid clipping issues
-      style={lineUIState.up ? { zIndex: "20" } : { zIndex: "0" }}
-      //Border/fill will vary depending on if it is active
-      className={`grid ${
-        lineUIState.active ? "line-raised" : "hoverable-line"
-      }`}
-      onMouseEnter={() => {
-        //If the line is not already activated, prep it for activation after delay
-        if (!lineUIState.active) {
-          timeoutRef.current = setTimeout(() => {
-            setLineUIState((prev) => ({
-              ...prev,
-              hoveringHeld: true,
-            }));
-          }, UIVars.LINE_HOVER_DELAY_MS);
-        }
-      }}
-      onMouseLeave={() => {
-        //Clear the timeout if the mouse ever leaves
-        clearTimeout(timeoutRef.current);
-
-        //If this line is active, and no menus are used, deactivate it and remove lockout
-        if (!lineUIState.writingNote && !lineUIState.menuOpen) {
-          exitLine();
-        }
-      }}
+      ref={ref} //Ref held by context
+      className="grid mobile-grid-template sm:grid-cols-proj w-full"
+      // Handle line hovered state change
+      onMouseEnter={() => setHovering(true)}
+      onMouseLeave={() => setHovering(false)}
     >
-      {/* Hanging flag marker, animated with CSSTransition */}
-      <HangingFlag />
-      {/* lINE ITEM CELLS (CONTROL #, CHECKBOXES, NOTES, PENDING ITEMS) */}
+      {/* Hanging flag marker*/}
+      {lineState.flagMarker && (
+        <HangingFlag close={close} setClose={setClose} />
+      )}
+
+      {/* Cell displaying control number, clicking it toggles the hanging flag marker */}
       <ControlNumberCell handleClick={handleFlagClick} />
 
       {/* Checkbox Cells */}
@@ -187,8 +115,12 @@ export default function LineItem({ lineItemData }) {
         return <CheckBoxCell key={i} i={i} cbState={checkBox} />;
       })}
 
-      <NoteBoxCell exit={exitLine} />
+      {/* Notes and pending item components */}
+      <NoteBoxCell />
       <PendingItemCell />
     </div>
   );
-}
+});
+
+LineItem.displayName = "LineItem";
+export default LineItem;

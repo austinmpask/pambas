@@ -1,15 +1,15 @@
 from flask import Blueprint, request
+
+from flaskr.models import Project, db
 from flaskr.utils import (
-    sendJsonResponse,
     addProjectWithChildren,
-    queryProjectsByUUID,
-    singleLookup,
     jsonRequired,
+    queryProjectsByUUID,
+    sendJsonResponse,
+    singleLookup,
     uuidRequired,
 )
-from flaskr.models import db, Project
 from flaskr.validators import Validators
-
 
 projectBP = Blueprint("project", __name__)
 
@@ -18,7 +18,6 @@ projectBP = Blueprint("project", __name__)
 @projectBP.route("/project/<id>", methods=["GET"])
 @uuidRequired
 def getProject(userUUID, id):
-
     # Lookup the project
     status, response = singleLookup(Project, id, userUUID)
 
@@ -33,7 +32,6 @@ def getProject(userUUID, id):
 @projectBP.route("/project/<id>", methods=["DELETE"])
 @uuidRequired
 def deleteProject(userUUID, id):
-
     # Lookup the project
     status, body = singleLookup(Project, id, userUUID)
 
@@ -60,7 +58,6 @@ def deleteProject(userUUID, id):
 @jsonRequired
 @uuidRequired
 def putProject(userUUID, id):
-
     # Validate req body
     reqBody = request.get_json()
 
@@ -116,7 +113,6 @@ def putProject(userUUID, id):
 @projectBP.route("/project", methods=["GET"])
 @uuidRequired
 def getAllProjects(userUUID):
-
     # Get all the projects for the user
     status, response = queryProjectsByUUID(userUUID)
 
@@ -133,7 +129,6 @@ def getAllProjects(userUUID):
 @jsonRequired
 @uuidRequired
 def postProject(userUUID):
-
     reqBody = request.get_json()
     print(reqBody)
     # Validate the incoming data
@@ -142,6 +137,7 @@ def postProject(userUUID):
         title = Validators.projectTitle(reqBody.get("name"))
         projectManager = Validators.projectManager(reqBody.get("manager"))
         type = Validators.projectType(reqBody.get("type"))
+        theme = Validators.theme(reqBody.get("theme"))
         budget = Validators.budget(reqBody.get("budget"))
 
     # Catch validation errors
@@ -153,7 +149,7 @@ def postProject(userUUID):
 
     # Create the project with all requisite nested table entries
     status, body = addProjectWithChildren(
-        userUUID, title, type, projectManager, budget, sectionsList
+        userUUID, title, type, projectManager, budget, sectionsList, theme
     )
 
     # Helper includes error handling for response

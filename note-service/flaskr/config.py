@@ -28,6 +28,10 @@ class DataFields:
     BILLED_TYPE = float
     BILLED_INCREMENTAL = 0.25
 
+    THEME_MIN = 0
+    THEME_MAX = 5
+    THEME_TYPE = int
+
     FULL_NAME_MIN_LENGTH = 2
     FULL_NAME_MAX_LENGTH = 50
     FULL_NAME_TYPE = str

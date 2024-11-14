@@ -1,16 +1,26 @@
-import { useEffect, useState } from "react";
+/*-------------------Cleaned up 10/28/24-------------------*/
+//React
+import { useEffect, useState, useContext } from "react";
+
+//Utils
+import Mousetrap from "mousetrap";
+
+//Children
 import CircleMeter from "./CircleMeter";
+import { Button } from "@nextui-org/react";
+import BudgetInput from "src/components/forms/components/BudgetInput";
+
+//Animation
+import { motion, AnimatePresence } from "framer-motion";
+
+//Contexts
+import { HeaderStatsContext } from "src/pages/ProjectPage";
 
 //Icons
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleDollarToSlot,
-  faMinus,
-  faPlus,
-} from "@fortawesome/free-solid-svg-icons";
-import { CSSTransition } from "react-transition-group";
+import { faCircleDollarToSlot } from "@fortawesome/free-solid-svg-icons";
 
-//Two types: "bill", and "modal". Bill will open the bill interface within the component, modal will open a list of pending items
+//Button which displays a circlemeter on the right side. Can be a dropdown or have no action.
 export default function MeterButton({
   val,
   displayVal,
@@ -18,35 +28,62 @@ export default function MeterButton({
   color,
   percentage = false,
   label,
-  type,
-  objKey,
+  dropdown = false,
+  objKey, //Key of proj context to update
   onSubmit,
 }) {
+  //Track if collapsed or not
   const [menuOpen, setMenuOpen] = useState(false);
 
+  //State for billing input
   const [amountToBill, setAmountToBill] = useState(0);
+
+  //For discovering if a line is being used
+  const { headerStats } = useContext(HeaderStatsContext);
+
+  //Close if user selects something else
+  useEffect(() => {
+    if (headerStats.selectedLine !== null) {
+      handleClose();
+    }
+  }, [headerStats.selectedLine]);
 
   //Reset the input when menu opens/closes
   useEffect(() => {
     setAmountToBill(0);
   }, [menuOpen]);
 
+  //Make request if there was an amount entered
   function billClient() {
-    //Make request if there was an amount entered
     if (amountToBill !== 0) onSubmit(objKey, Number(amountToBill));
     setMenuOpen(false);
   }
 
+  // Bind escape back to the button if it is open and nothing else is selected
+  useEffect(() => {
+    menuOpen &&
+      headerStats.selectedLine === null &&
+      Mousetrap.bind("esc", handleClose);
+  }, [menuOpen, headerStats.selectedLine]);
+
+  //Close the menu, unbind key
+  function handleClose() {
+    setMenuOpen(false);
+    Mousetrap.unbind("esc");
+  }
+
   return (
     <div
-      className={`box ${type === "bill" ? "header-button" : "header-label"} ${
-        menuOpen && "header-button-menu-open"
-      }`}
+      className={`px-3 shadow-xl sm:shadow-none py-2 transition-all rounded-2xl select-none w-full flex flex-col mb-0 sm:mb-2 ${
+        dropdown && "hover:shadow-xl hover:mb-4 hover:mt-1"
+      } ${menuOpen && "header-button-menu-open shadow-xl"}`}
     >
       <div
-        className="header-button-section click-cell"
+        className={`h-16 w-full flex flex-row justify-start items-center ${
+          dropdown && "cursor-pointer"
+        }`}
         onClick={() => {
-          type === "bill" && setMenuOpen((prev) => !prev);
+          dropdown && setMenuOpen((prev) => !prev);
         }}
       >
         <div className="mr-4">
@@ -58,60 +95,39 @@ export default function MeterButton({
             color={color}
           />
         </div>
-        <h3 className="title is-6 has-text-weight-semibold">{label}</h3>
+        <p className="font-semibold text-base lg:text-sm xl:text-base text-default-600">
+          {label}
+        </p>
       </div>
-      <CSSTransition
-        in={menuOpen}
-        unmountOnExit
-        classNames={"bill-interface"}
-        timeout={250}
-      >
-        <div className="header-button-section">
-          <div className="bill-form">
-            <input
-              className="input bill-input input-outline"
-              type="number"
-              value={amountToBill}
-              onChange={(e) => setAmountToBill(Number(e.target.value))}
-            ></input>
 
-            <button
-              className="button bill-button is-success"
-              onClick={() => setAmountToBill((prev) => Number(prev) + 1)}
-            >
-              <span className="icon">
-                <FontAwesomeIcon icon={faPlus} />
-              </span>
-            </button>
-            <button
-              className="button bill-button is-danger"
-              onClick={() => setAmountToBill((prev) => Number(prev) - 1)}
-            >
-              <span className="icon">
-                <FontAwesomeIcon icon={faMinus} />
-              </span>
-            </button>
-          </div>
-
-          <button
-            className={`button ${
-              amountToBill !== 0 ? "is-dark" : "has-background-light"
-            }`}
-            onClick={billClient}
-            style={{ transitionDuration: "150ms" }}
+      {/* Secondary menu for billing button */}
+      <AnimatePresence initial={false} mode="wait" onExitComplete={() => null}>
+        {menuOpen && (
+          <motion.div
+            initial={{ translateY: "-80px", opacity: 0, height: 0 }}
+            animate={{ opacity: 1, translateY: "0px", height: "auto" }}
+            exit={{ translateY: "-80px", opacity: 0, height: 0 }}
+            transition={{ type: "spring", stiffness: 750, damping: 62 }}
           >
-            <span className="icon-text">
-              <span
-                className="icon mr-1"
-                style={{ transitionDuration: "150ms" }}
+            <div className="flex flex-row sm:flex-col items-center w-full h-full">
+              <BudgetInput
+                amountToBill={amountToBill}
+                setAmountToBill={setAmountToBill}
+              />
+
+              <Button
+                startContent={<FontAwesomeIcon icon={faCircleDollarToSlot} />}
+                onClick={billClient}
+                isDisabled={amountToBill === 0}
+                className="sm:w-full"
+                color={amountToBill === 0 ? "" : "success"}
               >
-                <FontAwesomeIcon icon={faCircleDollarToSlot} />
-              </span>
-            </span>
-            <span>Bill</span>
-          </button>
-        </div>
-      </CSSTransition>
+                <p className="font-semibold">Bill it!</p>
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

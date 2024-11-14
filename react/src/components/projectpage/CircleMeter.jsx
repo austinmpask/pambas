@@ -1,23 +1,22 @@
+/*-------------------Cleaned up 9/17/24-------------------*/
+
+//Children
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
+//Utils
+import { Colors } from "src/utils/validations";
+
+//Circular progress meter component, uses several color options
 export default function CircleMeter({
   val,
   displayVal,
   max,
-  color = "blue",
+  color = "primary",
   fill = "#f0f0f0",
   percentage = false,
   size = 50,
 }) {
-  const colors = {
-    red: "#FF6685",
-    green: "#48C78E",
-    blue: "#66D1FF",
-    orange: "#FFB70F",
-    turquoise: "#00D1B2",
-  };
-
   return (
     <div style={{ width: `${size}px` }}>
       <CircularProgressbar
@@ -27,8 +26,8 @@ export default function CircleMeter({
         strokeWidth={10}
         styles={buildStyles({
           textSize: percentage ? "1.8em" : "2em",
-          textColor: fill === "white" ? "#ffffff" : "#2E333D",
-          pathColor: colors[color],
+          textColor: fill === "white" ? "#ffffff" : "#71717A",
+          pathColor: Colors[color],
           trailColor: fill,
         })}
       />

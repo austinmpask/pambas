@@ -1,9 +1,18 @@
-//Title component/wrapper for labeled pages
-export default function PageWrapper({ title, children }) {
+/*-------------------Cleaned up 11/10/24-------------------*/
+
+//Children
+import GridBackground from "src/components/GridBackground";
+
+//Include background on pages
+export default function PageWrapper({
+  children,
+  noGrid = false,
+  margin = false,
+}) {
   return (
-    <div data-theme="light" className="m-6 page-wrapper">
-      <h1 className="title">{title}</h1>
-      <div className="m-6">{children}</div>
-    </div>
+    <>
+      {!noGrid && <GridBackground />}
+      {margin ? <div className="mt-8">{children}</div> : <>{children}</>}
+    </>
   );
 }

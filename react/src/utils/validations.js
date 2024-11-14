@@ -9,6 +9,18 @@ function rangeError(field, minL, maxL) {
   )} characters`;
 }
 
+function alphaNumericError(field, type) {
+  //Type = validation pattern (alphanumeric etc.)
+  return `${field} must be ${type}`;
+}
+
+//Bounds for analyzing project progress
+export class Insights {
+  static GOOD_CEILING = 0.8;
+  static ON_TRACK_CEILING = 1.16;
+  static WARN_CEILING = 1.25;
+}
+
 //Data requirements which line up with backend for use in form validation
 export class DataFields {
   static CRED_LABEL = "Username/Email";
@@ -59,19 +71,19 @@ export class DataFields {
 
   //Options for react-select
   static S1T1_NAME = "SOC 1 Type 1";
-  static S1T1_SELECT = { value: this.S1T1_NAME, label: this.S1T1_NAME };
+  static S1T1_SELECT = { value: 0, label: this.S1T1_NAME };
 
   static S1T2_NAME = "SOC 1 Type 2";
-  static S1T2_SELECT = { value: this.S1T2_NAME, label: this.S1T2_NAME };
+  static S1T2_SELECT = { value: 1, label: this.S1T2_NAME };
 
   static S2T1_NAME = "SOC 2 Type 1";
-  static S2T1_SELECT = { value: this.S2T1_NAME, label: this.S2T1_NAME };
+  static S2T1_SELECT = { value: 2, label: this.S2T1_NAME };
 
   static S2T2_NAME = "SOC 2 Type 2";
-  static S2T2_SELECT = { value: this.S2T2_NAME, label: this.S2T2_NAME };
+  static S2T2_SELECT = { value: 3, label: this.S2T2_NAME };
 
   static OTHER_NAME = "Other";
-  static OTHER_SELECT = { value: this.OTHER_NAME, label: this.OTHER_NAME };
+  static OTHER_SELECT = { value: 4, label: this.OTHER_NAME };
 
   static PROJECT_TYPES = [
     this.S1T1_SELECT,
@@ -81,7 +93,76 @@ export class DataFields {
     this.OTHER_SELECT,
   ];
 
-  static DEFAULT_PROJ_TYPE = this.S2T2_SELECT;
+  // static DEFAULT_PROJ_TYPE = this.S2T2_SELECT;
+
+  static PROJECT_THEME_LABEL = "Color Theme";
+
+  static THEME_REDAPPLE_SELECT = {
+    value: 0,
+    label: "Red Apple",
+    thumb: "thumb-redapple",
+    header: "sm:header-bg-redapple",
+    uniHeader: "header-bg-redapple",
+    contrast: "header-hc-redapple",
+  };
+
+  static THEME_RUST_SELECT = {
+    value: 1,
+    label: "Rust",
+    thumb: "thumb-rust",
+    header: "sm:header-bg-rust",
+    uniHeader: "header-bg-rust",
+    contrast: "header-hc-rust",
+  };
+
+  static THEME_METRO_SELECT = {
+    value: 2,
+    label: "Metro",
+    thumb: "thumb-metro",
+    header: "sm:header-bg-metro",
+    uniHeader: "header-bg-metro",
+    contrast: "header-hc-metro",
+  };
+
+  static THEME_LAVENDER_SELECT = {
+    value: 3,
+    label: "Lavender",
+    thumb: "thumb-lavender",
+    header: "sm:header-bg-lavender",
+    uniHeader: "header-bg-lavender",
+    contrast: "header-hc-lavender",
+  };
+
+  static THEME_SKY_SELECT = {
+    value: 4,
+    label: "Sky",
+    thumb: "thumb-sky",
+    header: "sm:header-bg-sky",
+    uniHeader: "header-bg-sky",
+    contrast: "header-hc-sky",
+  };
+
+  static THEME_BUBBLEGUM_SELECT = {
+    value: 5,
+    label: "Bubblegum",
+    thumb: "thumb-bubblegum",
+    header: "sm:header-bg-bubblegum",
+    uniHeader: "header-bg-bubblegum",
+    contrast: "header-hc-bubblegum",
+  };
+
+  static PROJECT_THEME_TYPES = [
+    this.THEME_REDAPPLE_SELECT,
+    this.THEME_RUST_SELECT,
+    this.THEME_METRO_SELECT,
+    this.THEME_LAVENDER_SELECT,
+    this.THEME_SKY_SELECT,
+    this.THEME_BUBBLEGUM_SELECT,
+  ];
+
+  static LOADER_COLOR = "#94a3b8";
+
+  static DEFAULT_PROJECT_THEME = this.THEME_METRO_SELECT;
 
   static HEADER_LABEL = "Column Header";
   static HEADER_MIN_LENGTH = 0;
@@ -118,6 +199,19 @@ export class DataFields {
   static PENDING_ITEM_DESC_LABEL = "Pending Item Description";
   static PENDING_ITEM_DESC_MIN_LENGTH = 0;
   static PENDING_ITEM_DESC_MAX_LENGTH = 200;
+
+  static COMPLETION_MESSAGES = [
+    "Finally!",
+    "Ding ding ding!",
+    "Adios!",
+    "Your mess is now marginally smaller!",
+    "That was easy!",
+    "See ya!",
+    "Bye bye!",
+    "Bill that MF!",
+    "Not my problem anymore!",
+    "On to the next...",
+  ];
 
   static QUERY_KEYWORDS = [
     "query",
@@ -171,6 +265,10 @@ export class DataFields {
 }
 
 export class UIVars {
+  //Animation stuff
+  static DASH_STAT_CARD_INITIAL_SCALE = 0.85;
+  static DASH_STAT_CARD_INITIAL_OPACITY = 0.2;
+
   static LINE_ANIM_WAIT_MS = 260;
   static LINE_HOVER_DELAY_MS = 50;
   static HANGING_FLAG_ANIM_MS = 330;
@@ -189,10 +287,13 @@ export class UIVars {
   static BUTTON_ACTIVE_ZINDEX = 0;
   static BUTTON_INACTIVE_ZINDEX = 0;
 
-  static NOTE_EXPANDED_HEIGHT_PX = 100;
-  static NOTE_COLLAPSED_HEIGHT_PX = 56;
+  // static NOTE_EXPANDED_HEIGHT_PX = 100;
+  // static NOTE_COLLAPSED_HEIGHT_PX = 56;
 
-  static NOTE_HELPER_DELAY_MS = 50;
+  static NOTE_HELPER_DELAY_IN_MS = 200;
+  static NOTE_HELPER_DELAY_OUT_MS = 50;
+
+  static TOOLTIP_DELAY_MS = 500;
 
   //UI User settings
 
@@ -216,8 +317,64 @@ export class UIVars {
     this.HIGH_SELECT,
   ];
 
+  static ROW_HEIGHT_PX_OPTIONS = [45, 60, 75];
+  static ROW_EXPANDED_PX_OPTIONS = [90, 120, 170];
+
+  static INPUT_SIZE_PRESET_PX = {
+    xs: "sm:w-[150px]",
+    s: "sm:w-[200px]",
+    m: "sm:w-[250px]",
+    l: "sm:w-[300px]",
+  };
+
   static DEFAULT_LINE_DELAY = this.NORMAL_SELECT;
+
+  static REDIRECT_DELAY_MS = 2000;
 }
+
+export const Colors = {
+  success: "#00FF9B",
+  successShadow: "#0a8f5a",
+
+  danger: "#FF3A85",
+  dangerShadow: "#a12554",
+
+  primary: "#11E6FF",
+  primaryShadow: "#128694",
+
+  warn: "#FFFF5C",
+  warnShadow: "#a6a630",
+
+  lightBg: "#FFFFFF",
+  lightShadow: "#CED6D6",
+
+  turquoise: "#00D1B2",
+
+  text: {
+    dark: "text-default-700",
+    med: "text-default-600",
+    light: "text-default-300",
+  },
+};
+
+//Template for user settings key/value
+// export const UserSettings = {
+//   // darkMode: false,
+//   tooltips: true,
+//   fancyVisuals: true,
+//   confirmDelOpenItem: true,
+//   completeProgress: false,
+//   autoFillManager: false,
+//   highContrast: false,
+//   rowHoverDelayPreset: 1,
+//   tooltipHoverDelayPreset: 2,
+//   rowHeightPreset: 1,
+//   rowExpandedPreset: 1,
+//   defaultProjectType: 3,
+//   defaultColorTheme: 0,
+//   useDefaultManager: true,
+//   defaultManagerName: "joe",
+// };
 
 //React hook form validators for use in forms
 export class Validators {
@@ -239,6 +396,8 @@ export class Validators {
         DataFields.CRED_MAX
       ),
     },
+    // Not adding pattern because email could contain symbols that username wouldnt. Can change later for better validation but acceptable for now.
+    // Also usernames and emails are handled separately following submission
   };
 
   static Password = {
@@ -279,6 +438,10 @@ export class Validators {
         DataFields.NAME_SINGLE_MAX
       ),
     },
+    pattern: {
+      value: /^[a-zA-Z ]*$/,
+      message: alphaNumericError(DataFields.FIRST_NAME_LABEL, "letters only"),
+    },
   };
 
   static LastName = {
@@ -298,6 +461,10 @@ export class Validators {
         DataFields.NAME_SINGLE_MIN,
         DataFields.NAME_SINGLE_MAX
       ),
+    },
+    pattern: {
+      value: /^[a-zA-Z ]*$/,
+      message: alphaNumericError(DataFields.LAST_NAME_LABEL, "letters only"),
     },
   };
 
@@ -339,6 +506,13 @@ export class Validators {
         DataFields.USER_MAX
       ),
     },
+    pattern: {
+      value: /^[A-Za-z0-9._]*$/,
+      message: alphaNumericError(
+        DataFields.USER_LABEL,
+        "alphanumeric ('.' and '_' allowed)"
+      ),
+    },
   };
 
   static ProjectName = {
@@ -358,6 +532,37 @@ export class Validators {
         DataFields.PROJECT_TITLE_MIN_LENGTH,
         DataFields.PROJECT_TITLE_MAX_LENGTH
       ),
+    },
+    pattern: {
+      value: /^[a-zA-Z0-9 ]*$/,
+      message: alphaNumericError(
+        DataFields.PROJECT_TITLE_LABEL,
+        "alphanumeric"
+      ),
+    },
+  };
+
+  static HeaderName = {
+    required: requiredMsg(DataFields.HEADER_LABEL),
+    minLength: {
+      value: DataFields.HEADER_MIN_LENGTH,
+      message: rangeError(
+        DataFields.HEADER_LABEL,
+        DataFields.HEADER_MIN_LENGTH,
+        DataFields.HEADER_MAX_LENGTH
+      ),
+    },
+    maxLength: {
+      value: DataFields.HEADER_MAX_LENGTH,
+      message: rangeError(
+        DataFields.HEADER_LABEL,
+        DataFields.HEADER_MIN_LENGTH,
+        DataFields.HEADER_MAX_LENGTH
+      ),
+    },
+    pattern: {
+      value: /^[a-zA-Z0-9 ]*$/,
+      message: alphaNumericError(DataFields.HEADER_LABEL, "alphanumeric"),
     },
   };
 
@@ -379,6 +584,10 @@ export class Validators {
         DataFields.PROJECT_TYPE_MAX_LENGTH
       ),
     },
+    pattern: {
+      value: /^[a-zA-Z0-9 ]*$/,
+      message: alphaNumericError(DataFields.PROJECT_TYPE_LABEL, "alphanumeric"),
+    },
   };
 
   static Budget = {
@@ -398,6 +607,10 @@ export class Validators {
         DataFields.BUDGET_MIN,
         DataFields.BUDGET_MAX
       ),
+    },
+    pattern: {
+      value: /[0-9]/,
+      message: alphaNumericError(DataFields.BUDGET_LABEL, "numeric"),
     },
   };
 
@@ -419,6 +632,10 @@ export class Validators {
         DataFields.FULL_NAME_MAX_LENGTH
       ),
     },
+    pattern: {
+      value: /^[a-zA-Z ]*$/,
+      message: alphaNumericError(DataFields.FULL_NAME_LABEL, "letters only"),
+    },
   };
 
   static PendingItemName = {
@@ -437,6 +654,13 @@ export class Validators {
         DataFields.PENDING_ITEM_NAME_LABEL,
         DataFields.PENDING_ITEM_NAME_MIN_LENGTH,
         DataFields.PENDING_ITEM_NAME_MAX_LENGTH
+      ),
+    },
+    pattern: {
+      value: /^[a-zA-Z0-9 ]*$/,
+      message: alphaNumericError(
+        DataFields.PENDING_ITEM_NAME_LABEL,
+        "alphanumeric"
       ),
     },
   };
@@ -458,6 +682,10 @@ export class Validators {
         DataFields.FULL_NAME_MAX_LENGTH
       ),
     },
+    pattern: {
+      value: /^[a-zA-Z ]*$/,
+      message: alphaNumericError(DataFields.FULL_NAME_LABEL, "letters only"),
+    },
   };
 
   static PendingItemDesc = {
@@ -478,4 +706,5 @@ export class Validators {
       ),
     },
   };
+  //There are not constraints on backend beyond length, can reconsider in future
 }

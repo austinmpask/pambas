@@ -1,30 +1,20 @@
-//React
-import { useContext, useEffect, useState } from "react";
+/*-------------------Cleaned up 11/10/24-------------------*/
 
-//Contexts
-import { UserContext } from "src/context/UserContext";
-import { ProjectSummaryContext } from "src/context/ProjectSummaryContext";
 //Children
 import PageWrapper from "src/components/PageWrapper";
-import NavBar from "src/components/navbar/Navbar";
+import DashCard from "src/components/DashCard";
+import FunBackground from "src/components/funbackground/FunBackground";
 
+// Shows a set of cards which contain overview information about current projects
 export default function DashboardPage() {
-  const { userData } = useContext(UserContext);
-  const { projectSummaryData } = useContext(ProjectSummaryContext);
-
-  const [projectCount, setProjectCount] = useState(0);
-
-  useEffect(() => {
-    if (projectSummaryData) {
-      setProjectCount(projectSummaryData.length);
-    }
-  }, [projectSummaryData]);
-
   return (
     <>
-      <NavBar />
-      <PageWrapper title={userData.firstName + "'s Dashboard"}>
-        <div>{projectCount} projects</div>
+      <PageWrapper>
+        <div className="invisible sm:visible">
+          <FunBackground opacity={0.1} />
+        </div>
+        <DashCard />
+        {/* More dashboard cards could be added here in future */}
       </PageWrapper>
     </>
   );

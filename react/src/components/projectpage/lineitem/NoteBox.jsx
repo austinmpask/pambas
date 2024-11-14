@@ -1,20 +1,32 @@
+/*-------------------Cleaned up 11/8/24-------------------*/
 //React
-import { useRef, useState, useEffect, useContext } from "react";
+import { useRef, useState, useEffect, useContext, useCallback } from "react";
 
 //Children
 import TextBoxHelpers from "src/components/TextBoxHelpers";
 
 //Utils
 import { UIVars } from "src/utils/validations";
+import Mousetrap from "mousetrap";
 
 //Contexts
 import { LineStateContext } from "./LineItemWrapper";
+import { HeaderStatsContext } from "src/pages/ProjectPage";
 
-//Text area component for quick notes associated with a line item
-export default function NoteBox({ exit }) {
+//Text area component for quick notes associated with a line item. Closed with ESC or unfocus, save content w/ enter
+export default function NoteBox() {
   //Access unique line item context
-  const { lineState, lineUIState, setLineState, setLineUIState, setLoading } =
-    useContext(LineStateContext);
+  const {
+    lineRef,
+    lineState,
+    lineUIState,
+    setLineState,
+    setLineUIState,
+    setLoading,
+  } = useContext(LineStateContext);
+
+  //Consume headerStats which stores what line is being used
+  const { headerStats, setHeaderStats } = useContext(HeaderStatsContext);
 
   //Ref for input box for focus
   const noteRef = useRef(null);
@@ -22,100 +34,99 @@ export default function NoteBox({ exit }) {
   //Temporary state for the text input, will reflect line state by default unless user is changing it
   const [noteState, setNoteState] = useState(lineState.notes || "");
 
+  //Whether keyboard shortcuts should be shown. Accomodates delay for in/out
+  const [helpers, setHelpers] = useState(false);
+
   //Copy/update the existing notes into the temporary note state
   useEffect(() => {
     setNoteState(lineState.notes);
   }, [lineState.notes]);
 
-  //When no longer writing note, return note to normal zindex
+  const handleSave = useCallback(() => {
+    //Change linestate which will make request to save notes
+    setLoading(true);
+    setLineState((previous) => ({
+      ...previous,
+      notes: noteState,
+    }));
+    //Remove keybinds & close note
+    noteRef.current.blur();
+  }, [noteState, setLoading, setLineState, setLineUIState, setHelpers]);
+
+  //Blur on escape, need to use this to fix device compatibility issues
+  const handleEscape = useCallback(() => {
+    noteRef.current.blur();
+  }, []);
+
+  //Add keybinds when note is opened
   useEffect(() => {
-    if (!lineUIState.writingNote) {
-      noteRef.current.classList.remove("top");
+    if (lineUIState.writingNote) {
+      Mousetrap.bind("enter", handleSave);
+      Mousetrap.bind("esc", handleEscape);
     }
-  }, [lineUIState.writingNote]);
+  }, [lineUIState.writingNote, lineUIState.menuOpen, handleSave, handleEscape]);
 
   //Handle clicking into the note box
   function openNote() {
+    //Select this line globally to prevent other interactions
+    setHeaderStats((prev) => ({ ...prev, selectedLine: lineRef.current }));
     //Reflect in parent line state
     setLineUIState((prev) => ({ ...prev, writingNote: true }));
-
-    //Bring note z index above any others
-    noteRef.current.classList.add("top");
-
-    //Focus the note
-    noteRef.current.focus();
-  }
-
-  function closeNote() {
-    //Unfocus the note
-    noteRef.current.blur();
-
-    //Exit the line
-    exit();
-
-    //Remove the helper tags midway thru transition so it looks nice
     setTimeout(() => {
-      setLineUIState((prev) => ({ ...prev, writingNote: false }));
-    }, UIVars.NOTE_HELPER_DELAY_MS);
+      setHelpers(true);
+    }, UIVars.NOTE_HELPER_DELAY_IN_MS);
   }
 
-  //Handle key shortcuts for saving/closing note box
-  function noteKeyDownHandler(event) {
-    //Ctrl enter = save and close
-    if (event.keyCode === 13 && event.ctrlKey) {
-      setLoading(true);
-      setLineState((previous) => {
-        return { ...previous, notes: noteState };
-      });
-      closeNote();
-      //Escape = close
-    } else if (event.keyCode === 27) {
-      setNoteState(lineState.notes);
-      closeNote();
-    }
+  // Blur used for some devices not escaping when ESC pressed
+  function handleBlur() {
+    //Close note box
+    setNoteState(lineState.notes);
+    setLineUIState((prev) => ({ ...prev, writingNote: false }));
+    setTimeout(() => {
+      setHelpers(false);
+    }, UIVars.NOTE_HELPER_DELAY_OUT_MS);
+
+    //Remove keybinds
+    Mousetrap.unbind("enter");
+    Mousetrap.unbind("esc");
+
+    //Reset line selection
+    setHeaderStats((prev) => ({ ...prev, selectedLine: null }));
   }
 
   return (
-    <div
-      className={`note-cell ${lineUIState.active && " note-cell-active "} ${
-        lineUIState.complete && !lineUIState.active && " complete-cell"
-      }`}
-      // Adjust height based on if the note is active or not
-      style={
-        lineUIState.writingNote
-          ? { minHeight: `${UIVars.NOTE_EXPANDED_HEIGHT_PX}px` }
-          : { minHeight: `${UIVars.NOTE_COLLAPSED_HEIGHT_PX}px` }
-      }
-    >
-      <div
-        // Shrink the conatiner slightly from the edges when it is in use
-        className={`note-wrapper ${lineUIState.writingNote && "shrink"}`}
-      >
-        <textarea
-          className={`input is-small notes-input has-text-grey ${
-            lineUIState.active && "active-text"
-          } ${lineUIState.writingNote && " input-attention"} ${
-            lineUIState.complete &&
-            !lineUIState.active &&
-            " complete-cell min-text"
-          }`}
-          type="text"
-          // Open the note if it is not being used and the line is active
-          onClick={() =>
-            lineUIState.active && !lineUIState.writingNote && openNote()
-          }
-          ref={noteRef}
-          //Hold temporary note state
-          value={noteState}
-          onChange={(e) => setNoteState(e.target.value)}
-          //Hotkeys for exiting or saving
-          onKeyDown={noteKeyDownHandler}
-          disabled={!lineUIState.active}
-        />
+    <div className="h-full w-full bg-transparent">
+      <textarea
+        className={`${
+          // Raise note above project content
+          helpers && "z-20"
+        } bg-inherit outline-none overflow-y-hidden ${
+          lineUIState.writingNote &&
+          "mousetrap overflow-y-scroll scrollbar-hidden border-3 border-blue-500 shadow-2xl rounded-xl bg-slate-50"
+        }  p-2 text-sm text-default-500 relative resize-none h-full w-full transition-all ${
+          lineUIState.complete && !lineUIState.writingNote && "opacity-50"
+        } ${!lineUIState.writingNote && "no-select"}`}
+        type="text"
+        spellCheck="false"
+        // Open the note on click if not already open
+        onClick={() =>
+          !lineUIState.writingNote && !headerStats.selectedLine && openNote()
+        }
+        ref={noteRef}
+        //Hold temporary note state
+        value={noteState}
+        onChange={(e) => setNoteState(e.target.value)}
+        onBlur={handleBlur}
+        // Disable the textbox if another line is selected
+        disabled={
+          lineUIState.menuOpen ||
+          (headerStats.selectedLine &&
+            headerStats.selectedLine !== lineRef.current)
+        }
+      />
 
-        {/* Append helpers to show how to discard or save */}
-        {lineUIState.writingNote && <TextBoxHelpers content={noteState} />}
-      </div>
+      {/* Append helpers to show how to discard or save */}
+      {helpers && <TextBoxHelpers content={noteState} />}
     </div>
   );
 }

@@ -1,6 +1,6 @@
-from flaskr.config import DataFields
 import uuid
 
+from flaskr.config import DataFields
 
 # ----- Generic error message builders ----- #
 
@@ -21,8 +21,11 @@ def typeError(name, expected):
     return f"{name} must be {expected.__name__} type"
 
 
-class Validators:
+def rangeError(name, minR, maxR):
+    return f"{name} must be between {minR} and {maxR}"
 
+
+class Validators:
     # ----- Generic validations ----- #
     @staticmethod
     def validateExists(val, prettyName):
@@ -40,6 +43,12 @@ class Validators:
     def validateLength(val, prettyName, minL, maxL):
         if not (minL <= len(val) <= maxL):
             raise ValueError(lengthError(prettyName, minL, maxL))
+        return val
+
+    @staticmethod
+    def validateRange(val, prettyName, minR, maxR):
+        if not (minR <= val <= maxR):
+            raise ValueError(rangeError(prettyName, minR, maxR))
         return val
 
     @staticmethod
@@ -115,3 +124,37 @@ class Validators:
         )
 
         return val.strip().title()
+
+    # settings
+    @staticmethod
+    def boolSetting(val) -> bool:
+        n = "Setting"
+        # Tests
+        Validators.validateExists(val, n)
+        Validators.validateType(val, n, bool)
+
+        return val
+
+    @staticmethod
+    def preset(val, max) -> DataFields.PRESET_TYPE:
+        n = "Preset"
+
+        # Tests
+        Validators.validateExists(val, n)
+        Validators.validateType(val, n, DataFields.PRESET_TYPE)
+        Validators.validateRange(val, n, DataFields.PRESET_MIN, max)
+        return val
+
+    # @staticmethod
+    # def managerName(val) -> DataFields.NAME_TYPE:
+    #     n = "Manager Name"
+    #     # Tests
+    #     Validators.validateExists(val, n)
+    #     Validators.validateType(val, n, DataFields.NAME_TYPE)
+    #     # Alpha only, but spaces allowed
+    #     Validators.validateFullName(val, n)
+    #     Validators.validateLength(
+    #         val, n, DataFields.MANAGER_NAME_MIN, DataFields.MANAGER_NAME_MAX
+    #     )
+
+    #     return val.strip().title()

@@ -19,15 +19,7 @@ import SubmitAlt from "src/components/forms/components/SubmitAlt";
 import { motion } from "framer-motion";
 
 //Children
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  Divider,
-  Image,
-  Spacer,
-  Link,
-} from "@nextui-org/react";
+import { Card, CardBody, Image, Spacer, Link } from "@nextui-org/react";
 
 //Login form
 export default function LoginForm() {
@@ -74,7 +66,7 @@ export default function LoginForm() {
           isBlurred
           className="w-full sm:w-4/5 lg:w-1/3 rounded-b-3xl rounded-t-none sm:rounded-3xl h-full"
         >
-          <CardBody className="h-full p-6 flex flex-col justify-center items-center">
+          <CardBody className="h-full p-6 flex flex-col justify-center items-center scrollbar-hidden">
             <div className="flex flex-col items-center gap-10">
               <motion.div
                 className="w-[80px] h-[80px]"

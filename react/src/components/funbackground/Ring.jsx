@@ -10,8 +10,8 @@ export default function Ring({ opacity = 0.5 }) {
   const colors = ["#00fe9b", "#10e6fe", "#fe3a84", "#ffee60"];
 
   //Randomize ring properties
-  const size = useRef(Math.floor(40 + Math.random() * 20));
-  const border = useRef(10 + Math.floor((size.current - 40) / 4));
+  const size = useRef(Math.floor(45 + Math.random() * 20));
+  const border = useRef(10 + Math.floor((size.current - 45) / 4));
   const color = useRef(colors[Math.floor(Math.random() * colors.length)]);
   const x = useRef(`${Math.floor(Math.random() * 100)}%`);
   const y = useRef(`${Math.floor(Math.random() * 100)}%`);

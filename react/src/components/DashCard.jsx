@@ -65,7 +65,7 @@ export default function DashCard() {
             <p>Dashboard</p>
           </CardHeader>
           <Divider className="invisible sm:visible" />
-          <CardBody className="w-screen p-0 sm:p-3 sm:w-auto sm:mt-0 md:p-6 lg:p-8 md:grid md:grid-cols-5 md:gap-4 lg:gap-8">
+          <CardBody className="w-screen p-0 sm:p-3 sm:w-auto sm:mt-0 md:p-6 lg:p-8 md:grid md:grid-cols-5 md:gap-4 lg:gap-8 overflow-hidden">
             {/* COLUMN 1 */}
             <div className="sm:col-span-3 h-mobile sm:h-full flex flex-col items-center xl:h-70vh md:h-60vh">
               <div className="mt-4 sm:mt-0 h-[120px] md:h-[140px] lg:h-[180px] w-screen sm:w-full flex flex-row items-center justify-between md:justify-center lg:justify-between md:gap-3 px-3 sm:px-0 md:px-5 lg:px-3 sm:px-0">

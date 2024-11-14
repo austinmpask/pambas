@@ -22,14 +22,14 @@
   }
 
   .top-split-mobile {
-    height: calc(38dvh - 65px);
+    height: calc(45dvh - 65px);
     overflow-y: hidden;
   }
 
   .bottom-split-mobile {
-    margin-top: calc(38dvh - 65px);
+    margin-top: calc(45dvh - 65px);
     overflow-y: scroll;
-    height: 62dvh;
+    height: 55vh;
   }
 
   .bottom-split-desktop {

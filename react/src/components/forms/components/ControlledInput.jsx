@@ -43,6 +43,7 @@ export default function ControlledInput({
       render={({ field: { onChange, value } }) => (
         <Input
           isRequired={required}
+          spellCheck={false}
           isInvalid={!!errors[field]}
           errorMessage={errors[field]?.message}
           className={`w-full ${UIVars.INPUT_SIZE_PRESET_PX[size]}`}
@@ -56,7 +57,7 @@ export default function ControlledInput({
           startContent={startIcon ? <FontAwesomeIcon icon={startIcon} /> : null}
           // Password specific additions
           endContent={
-            type === "password" && value ? (
+            type === "password" ? (
               <button
                 className="focus:outline-none"
                 type="button"

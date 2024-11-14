@@ -6,12 +6,14 @@ import { AnimatePresence } from "framer-motion";
 //Children
 import Ring from "./Ring";
 
+import { v4 as uuidv4 } from "uuid";
+
 //Background with rings that appear and disappear
 export default function FunBackground({ opacity }) {
   // Rings stored in array
   const [rings, setRings] = useState([
-    <Ring key={0} opacity={opacity} />,
-    <Ring key={1} opacity={opacity} />,
+    <Ring key={uuidv4()} opacity={opacity} />,
+    <Ring key={uuidv4()} opacity={opacity} />,
   ]);
 
   //Max 20 on screen at a time
@@ -25,9 +27,7 @@ export default function FunBackground({ opacity }) {
         if (p.length === limit) {
           const newRings = [...p];
           newRings.shift();
-          newRings.push(
-            <Ring opacity={opacity} key={Math.floor(Math.random() * 9999)} />
-          );
+          newRings.push(<Ring opacity={opacity} key={uuidv4()} />);
           return newRings;
         }
         // If under limit then just add a ring

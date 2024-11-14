@@ -39,7 +39,7 @@ export default function DashOpenItemList() {
     return acc;
   }, []);
 
-  const items = [<DashOpenItem key={0} />];
+  // const items = [<DashOpenItem key={0} />];
   return (
     <motion.div
       className="w-full h-full"

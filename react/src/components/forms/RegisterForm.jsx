@@ -75,6 +75,7 @@ export default function RegisterForm() {
               navigate("/login");
             }, 2000);
           },
+          error: "Invalid/unavailable username or email",
         })
       : toastError("Passwords must match"); //Password mismatch
   }

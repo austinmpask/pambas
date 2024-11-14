@@ -58,6 +58,7 @@ export default function ProjectDropdown() {
           {projectSummaryData.map((project, index) => {
             return (
               <DropdownItem
+                textValue={project.title}
                 startContent={
                   // TODO: Add the project color to the line item once color themes added
                   <FontAwesomeIcon
@@ -84,6 +85,7 @@ export default function ProjectDropdown() {
         </DropdownSection>
         <DropdownSection>
           <DropdownItem
+            textValue="New Project"
             className="text-default-500"
             description={<p className="text-default-400">Not enough work?</p>}
             startContent={

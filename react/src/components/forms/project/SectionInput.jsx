@@ -21,9 +21,10 @@ export default function SectionInput({ loading, index, forward, value }) {
     <div className="flex flex-row items-center w-full">
       <FontAwesomeIcon className="mr-3 text-default-600" icon={faThumbtack} />
       <Select
+        aria-label="Section Dropdown"
         label="Section #"
         items={sections}
-        selectedKeys={new Set([String(value - 1)])}
+        selectedKeys={value && new Set([String(value - 1)])} //This makes a warning but necessary for now
         isDisabled={loading}
         onSelectionChange={(data) => {
           forward(Number(Array.from(new Set(data))[0]) + 1, index); //Update the parent's array with the new section at appropriate index

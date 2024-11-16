@@ -5,7 +5,7 @@
 [![Docker]][Docker-url]
 
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://pambas.io">
     <img src="https://i.ibb.co/4WKGnf7/logorings.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -14,8 +14,10 @@
   
   <p>Effortlessly track every element of your concurrent projects in high detail without making a mess. (But, like... actually)</p>
   <a href="https://pambas.io">Try it!</a>
-    
-  [<img height="480" alt="mockups" src="https://i.ibb.co/t8cNRRr/Device-Mockups-Community-2.png">](https://pambas.io)
+  
+</div>
+<div align="center">
+  <img width="800" style="max-width: 100%;" alt="mockups" src="https://i.ibb.co/t8cNRRr/Device-Mockups-Community-2.png">
 </div>
 
 ## Track your progress across all of your projects 
@@ -25,21 +27,22 @@
 - "Flag" assigned controls for visual reference as a self-reminder during meetings
 - Easily jot meeting notes which are associated with each control
 
-<p>
-  <img height="280" alt="dashboard" src="https://i.ibb.co/j6vt9r4/pambas2.png">
-  <img height="180" alt="notes" src="https://i.ibb.co/jMXt2Rs/notes.png">
-</p>
+
+  <img width="600" style="max-width: 100%;" alt="dashboard" src="https://i.ibb.co/j6vt9r4/pambas2.png">
+  <img width="400" style="max-width: 100%;" alt="notes" src="https://i.ibb.co/jMXt2Rs/notes.png">
+
 
 ## Never lose track of pending document requests
 - Easily add and edit "Open Items" to any control; with optional client contact information and description
 - Record your most recent client communications for any item with one click
 - View a summary of all open items across your current projects on your dashboard
 - Category icons automatically assigned to open items based on common SOC item keywords
-<p>
-<img height="280" alt="dashboard" src="https://i.ibb.co/zmmTYF7/pambas4.png">
-<img height="280" alt="dashboard" src="https://i.ibb.co/Vt3NyMr/priv.png">
-<img height="280" alt="dashboard" src="https://i.ibb.co/F7CKKxP/openitems.png">
-</p>
+
+
+  <img width="400" style="max-width: 100%;" alt="dashboard" src="https://i.ibb.co/zmmTYF7/pambas4.png">
+  <img width="400" style="max-width: 100%;" alt="dashboard" src="https://i.ibb.co/Vt3NyMr/priv.png">
+  <img width="400" style="max-width: 100%;" alt="dashboard" src="https://i.ibb.co/F7CKKxP/openitems.png">
+
 
 ## Never blow another budget
 - Easily record your hours billed in a few clicks
@@ -47,10 +50,10 @@
 - Based on your tracking progress, project completion estimates are continuously calculated
   - You can choose the default calculation method or a "stricter" method for calculating metrics
 
-<p>
-  <img height="280" width="auto" alt="billing" src="https://i.ibb.co/5Tggnr9/pambas3.png">
-  <img height="280" width="auto" alt="bill component" src="https://i.ibb.co/kyzy5hw/Screenshot-2024-11-15-145902.png">
-</p>
+
+  <img width="400" style="max-width: 100%;" alt="bill component" src="https://i.ibb.co/kyzy5hw/Screenshot-2024-11-15-145902.png">
+  <img width="400" style="max-width: 100%;" alt="billing" src="https://i.ibb.co/5Tggnr9/pambas3.png">
+
 
 ## Take it a step further
 - View performance insights for any of your projects based on your reported progress and project budget.
@@ -65,10 +68,10 @@
 - Edit multi-stage tracker column headers on a per-project basis
 - Use Pambas on your mobile device to access features in a specially adapted mobile-friendly format
 
-<p>
-  <img height="280" width="auto" alt="settings" src="https://i.ibb.co/8BDYLL0/pambas6.png">
-  <img height="280" width="auto" alt="new project" src="https://i.ibb.co/Nn8VpW6/pambas7.png">
-</p>
+
+  <img width="400" style="max-width: 100%;" alt="settings" src="https://i.ibb.co/8BDYLL0/pambas6.png">
+  <img width="400" style="max-width: 100%;" alt="new project" src="https://i.ibb.co/Nn8VpW6/pambas7.png">
+
 
 ## Technical Jargon:
 

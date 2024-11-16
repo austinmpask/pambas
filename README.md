@@ -1,43 +1,95 @@
-# Pamba
+[![React][React.js]][React-url]
+[![Vite]][Vite-url]
+[![Node.js]][Node-url]
+[![Flask]][Flask-url]
+[![Docker]][Docker-url]
 
-## A purpose built, easy to use organization tool for SOC Auditors. The organizer graveyard ends here!!!
+<div align="center">
+  <a href="https://github.com/othneildrew/Best-README-Template">
+    <img src="https://i.ibb.co/4WKGnf7/logorings.png" alt="Logo" width="80" height="80">
+  </a>
 
-Pamba lets you effortlessly track every element of your concurrent engagements in high detail without becoming unorganized. (But, like... **actually**.)
+  <h1 align="center">Pambas</h1>
+  <h3>The Intuitive Project Management Solution for SOC Auditors</h3>
+  
+  <p>Effortlessly track every element of your concurrent projects in high detail without making a mess. (But, like... actually)</p>
+  <a href="https://pambas.io">Try it!</a>
+    
+  [<img height="480" alt="mockups" src="https://i.ibb.co/t8cNRRr/Device-Mockups-Community-2.png">](https://pambas.io)
+</div>
 
-## Track your work progress for each of your assigned controls:
-- Customizable & colorful multi-checkbox progress tracking system
-- Easily flag controls as priority items for easy reference during meetings
-- Jot quick notes for any control to keep note taking inherently organized
-- Quickly view the presence of and status of pending document requests for each control
+## Track your progress across all of your projects 
+- Customizable & colorful multi-stage progress tracking system, optimized for SOC auditing
+- Use your Dashboard to get an overview of all project statuses, budgets, and action items 
+- View and edit all of your workpaper & control assignments in a pre-organized, digestable format
+- "Flag" assigned controls for visual reference as a self-reminder during meetings
+- Easily jot meeting notes which are associated with each control
 
-## Never lose track of pending document requests:
-- Easily add and edit "open items" to any control; containing the requested item, and optional control owner and description
-- Record your subsequent client contact dates with one click, so no items fall through the cracks over time
-- View your most urgent & longest standing open items for any and all projects, automatically prioritizing your outgoing client coorespondance
+<p>
+  <img height="280" alt="dashboard" src="https://i.ibb.co/j6vt9r4/pambas2.png">
+  <img height="180" alt="notes" src="https://i.ibb.co/jMXt2Rs/notes.png">
+</p>
 
-## Never blow another budget:
+## Never lose track of pending document requests
+- Easily add and edit "Open Items" to any control; with optional client contact information and description
+- Record your most recent client communications for any item with one click
+- View a summary of all open items across your current projects on your dashboard
+- Category icons automatically assigned to open items based on common SOC item keywords
+<p>
+<img height="280" alt="dashboard" src="https://i.ibb.co/zmmTYF7/pambas4.png">
+<img height="280" alt="dashboard" src="https://i.ibb.co/Vt3NyMr/priv.png">
+<img height="280" alt="dashboard" src="https://i.ibb.co/F7CKKxP/openitems.png">
+</p>
+
+## Never blow another budget
 - Easily record your hours billed in a few clicks
 - Each project shows how many hours you have billed v.s. your total budgeted hours
 - Based on your tracking progress, project completion estimates are continuously calculated
-- Quickly view where you are over/under billing from your dashboard
+  - You can choose the default calculation method or a "stricter" method for calculating metrics
 
-## Fun and simple:
-- Pamba makes tracking high detail effortless, and is designed to prevent users from becoming disorganized
-- Pamba's UI has been carefully crafted and user tested to make inputting your data feel fluid, fun and tactile
-- Choose from various project specific color themes to easily distinguish multiple concurrent projects
-- Customize key project milestones to make the multi-checkbox system fit your existing workflow
+<p>
+  <img height="280" width="auto" alt="billing" src="https://i.ibb.co/5Tggnr9/pambas3.png">
+  <img height="280" width="auto" alt="bill component" src="https://i.ibb.co/kyzy5hw/Screenshot-2024-11-15-145902.png">
+</p>
 
+## Take it a step further
+- View performance insights for any of your projects based on your reported progress and project budget.
+  - You may choose how insights are generated based on your personal usage of the multi-stage tracker within settings.
+- Differentiate your projects with 6 different color themes
+  - For those with visual impairment or low quality office monitors, high contrast themes can be toggled as well
+- Customize your project layout with multiple options for more a condensed or relaxed interface
+- Choose default project options to best suit your workload
+- Toggle helpful tips throughout the platform for new users
+  - Accessibility options available for tooltip popups as well
+- Use keyboard shortcuts to navigate components of the project page
+- Edit multi-stage tracker column headers on a per-project basis
+- Use Pambas on your mobile device to access features in a specially adapted mobile-friendly format
 
-## Nerd Stuff:
+<p>
+  <img height="280" width="auto" alt="settings" src="https://i.ibb.co/8BDYLL0/pambas6.png">
+  <img height="280" width="auto" alt="new project" src="https://i.ibb.co/Nn8VpW6/pambas7.png">
+</p>
+
+## Technical Jargon:
+
 - Containerized with Docker (Frontend, API Gateway, Microservices)
-- React frontend
+- React + Vite frontend
 - Node.js / Express API gateway
 - Python / Flask microservices (User Service, Auth Service, Note Service)
-- Multi-tenant database design
-- Loosely coupled service specific PostgreSQL datastores
+- Multi-tenant
+- Loosely coupled service specific PostgreSQL DBs
 
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
 
+[Node.js]: https://img.shields.io/badge/Node%20js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white
+[Node-url]: https://nodejs.org/
 
+[Flask]: https://img.shields.io/badge/Flask-000000?style=for-the-badge&logo=flask&logoColor=white
+[Flask-url]: https://flask.palletsprojects.com/en/stable/
 
+[Docker]: https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white
+[Docker-url]: https://www.docker.com/
 
-
+[Vite]: https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E
+[Vite-url]: https://vite.dev/

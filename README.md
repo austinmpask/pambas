@@ -23,7 +23,7 @@
 ## Track your progress across all of your projects 
 - Customizable & colorful multi-stage progress tracking system, optimized for SOC auditing
 - Use your Dashboard to get an overview of all project statuses, budgets, and action items 
-- View and edit all of your workpaper & control assignments in a pre-organized, digestable format
+- View and edit all of your workpaper & control assignments in a pre-organized, digestible format
 - "Flag" assigned controls for visual reference as a self-reminder during meetings
 - Easily jot meeting notes which are associated with each control
 

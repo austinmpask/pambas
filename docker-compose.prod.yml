@@ -3,7 +3,7 @@ version: "3"
 services:
   frontend:
     build:
-      context: .
+      context: ./react
       dockerfile: Dockerfile.prod
     ports:
       - 80:80
@@ -15,17 +15,16 @@ services:
 
   api-gateway:
     env_file:
-        - ./env-templates/prod/gateway.template.env
+      - ./env-templates/prod/.env
     command: ["npm", "run", "start"]
 
   certbot:
     image: certbot/certbot
     container_name: certbot
-    volumes: 
-        - ./certbot/conf:/etc/letsencrypt
-        - ./certbot/www:/var/www/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
     command: certonly --webroot --webroot-path=/var/www/certbot --email ${SSL_EMAIL} -d www.${SSL_DOMAIN} -d ${SSL_DOMAIN} --agree-tos --non-interactive --verbose --debug
-
 
   user-service:
     env_file:

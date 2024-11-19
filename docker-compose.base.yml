@@ -4,7 +4,6 @@ version: "3"
 # DON'T CHANGE
 
 services:
-
   frontend:
     networks:
       - app-network
@@ -17,8 +16,10 @@ services:
       - app-network
     environment:
       - PORT=3000
+      - SECRET_KEY=${SECRET_KEY}
     ports:
       - 8080:3000
+
     depends_on:
       user-service:
         condition: service_healthy
@@ -26,7 +27,6 @@ services:
         condition: service_healthy
       note-service:
         condition: service_healthy
-
 
   user-service:
     build: ./user-service
@@ -44,13 +44,13 @@ services:
       timeout: 5s
       retries: 5
 
-
   auth-service:
     build: ./auth-service
     networks:
       - app-network
     environment:
       - DATABASE_URL=postgresql://auth_service_user:${AUTH_DB_PASSWORD}@auth-db/authdb
+      - SECRET_KEY=${SECRET_KEY}
     depends_on:
       auth-db:
         condition: service_healthy
@@ -60,7 +60,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
 
   note-service:
     build: ./note-service
@@ -77,12 +76,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
-  
-
-    
-  
-  
 
   # Databases
   user-db:
@@ -117,7 +110,6 @@ services:
       timeout: 5s
       retries: 5
 
-
   note-db:
     image: postgres:alpine
     networks:
@@ -133,7 +125,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
 
 # Volumes & Network
 volumes:

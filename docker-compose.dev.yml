@@ -3,7 +3,7 @@ version: "3"
 services:
   frontend:
     build:
-      context: .
+      context: ./react
       dockerfile: Dockerfile.dev
     ports:
       - 80:3000
@@ -11,16 +11,13 @@ services:
       - ./react/src:/usr/src/app/src
     command: ["npm", "run", "dev"]
 
-
-
   api-gateway:
     env_file:
-      - ./env-templates/dev/gateway.template.env
+      - ./env-templates/dev/.env
     volumes:
       - ./gateway:/usr/src/app
       - /usr/src/app/node_modules
     command: ["npm", "run", "dev"]
-
 
   user-service:
     env_file:
@@ -43,7 +40,6 @@ services:
       - ./note-service:/app
 
     command: ["./wait-for", "note-db:5432", "--", "./start-script-dev"]
-
 
   # Databases
   user-db:

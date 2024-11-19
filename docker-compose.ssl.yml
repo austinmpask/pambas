@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    ports:
+      - 80:80
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+    command: certonly --standalone --email ${SSL_EMAIL} -d www.${SSL_DOMAIN} -d ${SSL_DOMAIN} --agree-tos --non-interactive --verbose --debug

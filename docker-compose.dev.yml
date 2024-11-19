@@ -1,0 +1,55 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      context: ./react
+      dockerfile: Dockerfile.dev
+    ports:
+      - 80:3000
+    volumes:
+      - ./react/src:/usr/src/app/src
+    command: ["npm", "run", "dev"]
+
+  api-gateway:
+    env_file:
+      - ./env-templates/dev/.env
+    volumes:
+      - ./gateway:/usr/src/app
+      - /usr/src/app/node_modules
+    command: ["npm", "run", "dev"]
+
+  user-service:
+    env_file:
+      - ./env-templates/dev/flask.template.env
+    volumes:
+      - ./user-service:/app # Live file updates
+    command: ["./wait-for", "user-db:5432", "--", "./start-script-dev"] # Start with flask dev server
+
+  auth-service:
+    env_file:
+      - ./env-templates/dev/flask.template.env
+    volumes:
+      - ./auth-service:/app
+    command: ["./wait-for", "auth-db:5432", "--", "./start-script-dev"]
+
+  note-service:
+    env_file:
+      - ./env-templates/dev/flask.template.env
+    volumes:
+      - ./note-service:/app
+
+    command: ["./wait-for", "note-db:5432", "--", "./start-script-dev"]
+
+  # Databases
+  user-db:
+    ports:
+      - 5433:5432 # Expose port for DB viewing on local machine
+
+  auth-db:
+    ports:
+      - 5432:5432
+
+  note-db:
+    ports:
+      - 5434:5432

@@ -1,14 +1,14 @@
 version: "3"
 
+# COMMON CONFIG FOR ALL ENVIRONMENTS. EDIT .ENV TEMPLATES FOR ENVIRONMENT SPECIFIC CONFIG
+# DON'T CHANGE
+
 services:
   frontend:
-    build: ./react
     networks:
       - app-network
     depends_on:
       - api-gateway
-      # api-gateway:
-      #   condition: service_healthy
 
   api-gateway:
     build: ./gateway
@@ -16,13 +16,10 @@ services:
       - app-network
     environment:
       - PORT=3000
-      - FRONTEND_URL=http://frontend:3000
-      - SECRET_KEY=5RG1uLnB++zZBlSEmP0nSKYc92eiJm9sMcvPFZ4fHGw=
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - SECRET_KEY=${SECRET_KEY}
+    ports:
+      - 8080:3000
+
     depends_on:
       user-service:
         condition: service_healthy
@@ -30,8 +27,6 @@ services:
         condition: service_healthy
       note-service:
         condition: service_healthy
-
-    command: ["npm", "run", "start"]
 
   user-service:
     build: ./user-service
@@ -49,56 +44,19 @@ services:
       timeout: 5s
       retries: 5
 
-    command: ["./wait-for", "user-db:5432", "--", "./start-script"]
-
-  user-db:
-    image: postgres:alpine
-    networks:
-      - app-network
-    volumes:
-      - user-db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=userdb
-      - POSTGRES_USER=user_service_user
-      - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
-
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user_service_user -d userdb"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   auth-service:
     build: ./auth-service
     networks:
       - app-network
     environment:
       - DATABASE_URL=postgresql://auth_service_user:${AUTH_DB_PASSWORD}@auth-db/authdb
-      - SECRET_KEY=5RG1uLnB++zZBlSEmP0nSKYc92eiJm9sMcvPFZ4fHGw=
+      - SECRET_KEY=${SECRET_KEY}
     depends_on:
       auth-db:
         condition: service_healthy
 
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-    command: ["./wait-for", "auth-db:5432", "--", "./start-script"]
-
-  auth-db:
-    image: postgres:alpine
-    networks:
-      - app-network
-    volumes:
-      - auth-db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=authdb
-      - POSTGRES_USER=auth_service_user
-      - POSTGRES_PASSWORD=${AUTH_DB_PASSWORD}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U auth_service_user -d authdb"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -119,7 +77,38 @@ services:
       timeout: 5s
       retries: 5
 
-    command: ["./wait-for", "note-db:5432", "--", "./start-script"]
+  # Databases
+  user-db:
+    image: postgres:alpine
+    networks:
+      - app-network
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=userdb
+      - POSTGRES_USER=user_service_user
+      - POSTGRES_PASSWORD=${USER_DB_PASSWORD} # Defined in root .env, see template
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user_service_user -d userdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  auth-db:
+    image: postgres:alpine
+    networks:
+      - app-network
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=authdb
+      - POSTGRES_USER=auth_service_user
+      - POSTGRES_PASSWORD=${AUTH_DB_PASSWORD} # Defined in root .env, see template
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auth_service_user -d authdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   note-db:
     image: postgres:alpine
@@ -130,13 +119,14 @@ services:
     environment:
       - POSTGRES_DB=notedb
       - POSTGRES_USER=note_service_user
-      - POSTGRES_PASSWORD=${NOTE_DB_PASSWORD}
+      - POSTGRES_PASSWORD=${NOTE_DB_PASSWORD} # Defined in root .env, see template
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U note_service_user -d notedb"]
       interval: 10s
       timeout: 5s
       retries: 5
 
+# Volumes & Network
 volumes:
   user-db-data:
   auth-db-data:

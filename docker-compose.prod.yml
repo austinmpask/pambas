@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  frontend:
+    build:
+      context: ./react
+      dockerfile: Dockerfile.prod
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./certbot/www:/var/www/certbot:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+      - ./react/default.conf:/etc/nginx/conf.d/default.conf:ro
+
+  api-gateway:
+    env_file:
+      - ./env-templates/prod/.env
+    command: ["npm", "run", "start"]
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --email ${SSL_EMAIL} -d www.${SSL_DOMAIN} -d ${SSL_DOMAIN} --agree-tos --non-interactive --verbose --debug
+
+  user-service:
+    env_file:
+      - ./env-templates/prod/flask.template.env
+    command: ["./wait-for", "user-db:5432", "--", "./start-script-prod"] # Start with gunicorn
+
+  auth-service:
+    env_file:
+      - ./env-templates/prod/flask.template.env
+    command: ["./wait-for", "auth-db:5432", "--", "./start-script-prod"]
+
+  note-service:
+    env_file:
+      - ./env-templates/prod/flask.template.env
+    command: ["./wait-for", "note-db:5432", "--", "./start-script-prod"]

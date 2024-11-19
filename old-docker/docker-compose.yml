@@ -1,0 +1,156 @@
+version: "3"
+
+
+
+services:
+  frontend:
+    build: ./react
+    networks:
+      - app-network
+    depends_on:
+      - api-gateway
+      # api-gateway:
+      #   condition: service_healthy
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes: 
+        - ./certbot/conf:/etc/letsencrypt
+        - ./certbot/www:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --email austinmpask@gmail.com -d www.pambas.io -d pambas.io --agree-tos --non-interactive --verbose --debug
+    
+  api-gateway:
+    build: ./gateway
+    networks:
+      - app-network
+    environment:
+      - PORT=3000
+      - SECRET_KEY=5RG1uLnB++zZBlSEmP0nSKYc92eiJm9sMcvPFZ4fHGw=
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      user-service:
+        condition: service_healthy
+      auth-service:
+        condition: service_healthy
+      note-service:
+        condition: service_healthy
+
+    command: ["npm", "run", "start"]
+
+  user-service:
+    build: ./user-service
+    networks:
+      - app-network
+    environment:
+      - DATABASE_URL=postgresql://user_service_user:${USER_DB_PASSWORD}@user-db/userdb
+    depends_on:
+      user-db:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    command: ["./wait-for", "user-db:5432", "--", "./start-script"]
+
+  user-db:
+    image: postgres:alpine
+    networks:
+      - app-network
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=userdb
+      - POSTGRES_USER=user_service_user
+      - POSTGRES_PASSWORD=${USER_DB_PASSWORD}
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user_service_user -d userdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  auth-service:
+    build: ./auth-service
+    networks:
+      - app-network
+    environment:
+      - DATABASE_URL=postgresql://auth_service_user:${AUTH_DB_PASSWORD}@auth-db/authdb
+      - SECRET_KEY=5RG1uLnB++zZBlSEmP0nSKYc92eiJm9sMcvPFZ4fHGw=
+    depends_on:
+      auth-db:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    command: ["./wait-for", "auth-db:5432", "--", "./start-script"]
+
+  auth-db:
+    image: postgres:alpine
+    networks:
+      - app-network
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=authdb
+      - POSTGRES_USER=auth_service_user
+      - POSTGRES_PASSWORD=${AUTH_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auth_service_user -d authdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  note-service:
+    build: ./note-service
+    networks:
+      - app-network
+    environment:
+      - DATABASE_URL=postgresql://note_service_user:${NOTE_DB_PASSWORD}@note-db/notedb
+    depends_on:
+      note-db:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5000/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    command: ["./wait-for", "note-db:5432", "--", "./start-script"]
+
+  note-db:
+    image: postgres:alpine
+    networks:
+      - app-network
+    volumes:
+      - note-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=notedb
+      - POSTGRES_USER=note_service_user
+      - POSTGRES_PASSWORD=${NOTE_DB_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U note_service_user -d notedb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  user-db-data:
+  auth-db-data:
+  note-db-data:
+
+networks:
+  app-network:
+    driver: bridge

@@ -4,5 +4,5 @@ echo !! Running db upgrade
 flask db upgrade
 echo !! Success
 
-echo !! Starting Flask
-flask run --host=0.0.0.0
+echo !! Starting Gunicorn
+gunicorn -w 4 -b 0.0.0:5000 wsgi:app

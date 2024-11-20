@@ -9,25 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: Production
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up GitHub CLI
-        uses: actions/setup-gh@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: "v${{ github.run_number }}"
-          release_name: "Release v${{ github.run_number }}"
-          body: |
-            This release was automatically created by the deployment workflow.
-          draft: false
-          prerelease: false
-    
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.0
         with:

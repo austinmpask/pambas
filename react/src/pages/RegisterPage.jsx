@@ -8,7 +8,7 @@ export default function RegisterPage() {
   return (
     <PageWrapper>
       <FunBackground />
-      <div className="sm:grid sm:register-grid h-dvh">
+      <div className="lg:grid lg:register-grid h-dvh">
         <div>
           <WelcomeCard />
         </div>

@@ -84,57 +84,15 @@ export default function RegisterForm() {
     <>
       <ToastContainer />
 
-      <div className="h-full sm:py-12">
+      <div className="h-full lg:py-12">
         <Card
           isBlurred
-          className="w-full rounded-b-3xl rounded-t-none sm:rounded-l-3xl sm:rounded-r-none h-full"
+          className="w-full rounded-none lg:rounded-l-3xl lg:rounded-r-none h-full"
         >
-          {/* <CardHeader className="flex gap-3">
-            <Image
-              alt="Logo"
-              height={40}
-              radius="sm"
-              src="/rings.png"
-              width={40}
-            />
-            <div className="flex flex-col">
-              <p className="text-lg font-bold">Register</p>
-              <div className="flex">
-                <p className="text-small text-default-500">
-                  Have an account?&nbsp;
-                </p>
-                <Link className="text-small" href="/login">
-                  Login
-                </Link>
-              </div>
-            </div>
-          </CardHeader>
-
-          <Divider /> */}
-
           <CardBody className="h-full p-6 flex flex-col justify-center items-center">
             <div className="flex flex-col items-center gap-10">
-              {/* <motion.div
-                className="w-[80px] h-[80px]"
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                transition={{
-                  delay: 0.1,
-                  duration: 0.7,
-                  ease: [0.22, 0.13, 0.16, 1],
-                }}
-              >
-                <Image
-                  alt="Logo"
-                  height={80}
-                  radius="none"
-                  src="/rings.png"
-                  width={80}
-                />
-              </motion.div> */}
-
               <p className="text-3xl font-semibold w-full text-slate-800">
-                New here?
+                Create an Account
               </p>
 
               <form

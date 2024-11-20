@@ -190,6 +190,17 @@
   --toastify-color-progress-success: #006b40;
   --toastify-color-progress-error: #6e0018;
 }
+
+.logo-font {
+  font-family: "Outfit", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+body {
+  font-family: "Outfit", sans-serif;
+}
 /* 
 * {
   font-family: "Poppins", sans-serif !important;

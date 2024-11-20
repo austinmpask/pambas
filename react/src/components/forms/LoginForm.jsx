@@ -19,7 +19,15 @@ import SubmitAlt from "src/components/forms/components/SubmitAlt";
 import { motion } from "framer-motion";
 
 //Children
-import { Card, CardBody, Image, Spacer, Link } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  Image,
+  Spacer,
+  Link,
+} from "@nextui-org/react";
+import GHButton from "src/components/GHButton";
 
 //Login form
 export default function LoginForm() {
@@ -146,6 +154,9 @@ export default function LoginForm() {
               </Link>
             </div>
           </CardBody>
+          <CardFooter className="flex flex-row items-center justify-center">
+            <GHButton />
+          </CardFooter>
         </Card>
       </div>
     </>

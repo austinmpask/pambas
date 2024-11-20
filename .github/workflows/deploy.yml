@@ -17,6 +17,9 @@ jobs:
           password: ${{ secrets.SERVER_PW }}
           script: |
             cd pambas/
-            git pull origin main
-            docker-compose -f docker-compose.base.yml -f docker-compose.prod.yml down
-            docker-compose -f docker-compose.base.yml -f docker-compose.prod.yml up -d --build
+            git fetch origin main
+            git reset --hard origin/main
+            docker-compose -f docker-compose.base.yml -f docker-compose.prod.yml stop
+            docker-compose -f docker-compose.base.yml -f docker-compose.prod.yml down --rmi local --remove-orphans
+            docker-compose -f docker-compose.base.yml -f docker-compose.prod.yml up -d --build --force-recreate
+            docker image prune -f --filter "dangling=true"

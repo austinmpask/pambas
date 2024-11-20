@@ -80,7 +80,7 @@
 - Node.js / Express API gateway
 - Python / Flask microservices (User Service, Auth Service, Note Service)
 - Multi-tenant
-- Loosely coupled service specific PostgreSQL DBs
+- Loosely coupled service specific PostgreSQL DB
 
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
